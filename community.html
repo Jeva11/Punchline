@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership — [Creator Name]</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: var(--cream); }
+    .membership-hero { background: var(--navy); padding: 64px 5%; text-align: center; }
+    .membership-hero h1 { color: var(--white); font-family: var(--font-brand); font-size: clamp(2.5rem, 7vw, 5rem); }
+    .membership-hero p { color: var(--cream); opacity: 0.75; margin-top: 10px; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    .membership-section { padding: 72px 5%; }
+    .membership-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px; max-width: 1100px; margin: 0 auto;
+    }
+    .membership-card {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 36px 28px; box-shadow: var(--shadow);
+      border: 2px solid transparent; display: flex; flex-direction: column;
+      gap: 20px; transition: var(--transition); position: relative; overflow: hidden;
+    }
+    .membership-card:hover { border-color: var(--pink); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .membership-card.featured { border-color: var(--pink); background: var(--navy); color: var(--white); }
+    .membership-card.featured li, .membership-card.featured .tier-desc { color: var(--cream); }
+    .membership-card .hot-badge {
+      position: absolute; top: 16px; right: -28px;
+      background: var(--pink); color: white;
+      font-size: 0.7rem; font-weight: 700; padding: 4px 36px;
+      transform: rotate(45deg); letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .tier-name { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); }
+    .tier-price { font-size: 2.8rem; font-weight: 800; color: var(--pink); line-height: 1; }
+    .tier-price .period { font-size: 0.9rem; font-weight: 400; opacity: 0.6; }
+    .tier-tagline { font-family: var(--font-brand); font-size: 1.1rem; color: var(--pink); }
+    .tier-desc { font-size: 0.87rem; opacity: 0.7; }
+    .tier-perks { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .tier-perks li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.87rem; }
+    .tier-perks li::before { content: '✓'; color: var(--pink); font-weight: 700; flex-shrink: 0; }
+    .cart-add {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 20px; background: var(--pink); color: white;
+      border: none; border-radius: var(--radius); font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; transition: var(--transition); justify-content: center;
+      text-decoration: none;
+    }
+    .cart-add:hover { background: var(--pink-dark); transform: translateY(-1px); }
+    .membership-card.featured .cart-add { background: var(--white); color: var(--navy); }
+    .membership-card.featured .cart-add:hover { background: var(--cream); }
+    .cart-icon { font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="community.html" class="logo">← <span style="font-family:var(--font-main);font-size:0.9rem;">Back to Community</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="community.html">Community</a>
+      <a href="home2.html">Home</a>
+    </div>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="membership-hero">
+    <span class="badge badge-pink mb-16">Membership</span>
+    <h1>"One of Us"</h1>
+    <p>Join [Creator Name]'s inner circle. Pick the tier that feels right and get access to the good stuff.</p>
+  </div>
+
+  <section class="membership-section">
+    <div class="membership-grid">
+
+      <!-- Tier 1 -->
+      <div class="membership-card">
+        <div class="tier-name">Tier 1</div>
+        <div class="tier-tagline">[Tier Name]</div>
+        <div class="tier-price">$5<span class="period">/mo</span></div>
+        <p class="tier-desc">For the casual fan who wants to support and stay in the loop.</p>
+        <ul class="tier-perks">
+          <li>Members-only forum access</li>
+          <li>Monthly newsletter</li>
+          <li>Early content announcements</li>
+          <li>Name in the credits</li>
+        </ul>
+        <a href="checkout2.html" class="cart-add"><span class="cart-icon">🛒</span> Add to Cart</a>
+      </div>
+
+      <!-- Tier 2 - featured -->
+      <div class="membership-card featured">
+        <div class="hot-badge">Popular</div>
+        <div class="tier-name">Tier 2</div>
+        <div class="tier-tagline">[Tier Name]</div>
+        <div class="tier-price">$12<span class="period">/mo</span></div>
+        <p class="tier-desc">The sweet spot — access to most perks at a great price.</p>
+        <ul class="tier-perks">
+          <li>Everything in Tier 1</li>
+          <li>Behind-the-scenes content</li>
+          <li>Exclusive Q&A access</li>
+          <li>Discount on merch (10%)</li>
+          <li>Voting on future content</li>
+        </ul>
+        <a href="checkout2.html" class="cart-add"><span class="cart-icon">🛒</span> Add to Cart</a>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="membership-card">
+        <div class="tier-name">Tier 3</div>
+        <div class="tier-tagline">[Tier Name]</div>
+        <div class="tier-price">$25<span class="period">/mo</span></div>
+        <p class="tier-desc">For the true fans who want the full experience.</p>
+        <ul class="tier-perks">
+          <li>Everything in Tier 2</li>
+          <li>Monthly live stream access</li>
+          <li>Early ticket pre-sales</li>
+          <li>Merch discount (20%)</li>
+          <li>Direct message access</li>
+          <li>Signed digital content</li>
+        </ul>
+        <a href="checkout2.html" class="cart-add"><span class="cart-icon">🛒</span> Add to Cart</a>
+      </div>
+
+      <!-- Tier 4 -->
+      <div class="membership-card">
+        <div class="tier-name">Tier 4</div>
+        <div class="tier-tagline">[Tier Name]</div>
+        <div class="tier-price">$50<span class="period">/mo</span></div>
+        <p class="tier-desc">The ultimate package. You are officially one of us.</p>
+        <ul class="tier-perks">
+          <li>Everything in Tier 3</li>
+          <li>Monthly 1-on-1 hangout</li>
+          <li>Exclusive merch drops</li>
+          <li>Backstage meet & greet passes</li>
+          <li>Credits in all productions</li>
+          <li>Executive Fan title</li>
+        </ul>
+        <a href="checkout2.html" class="cart-add"><span class="cart-icon">🛒</span> Add to Cart</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:32px;font-size:0.82rem;opacity:0.5;">All memberships are billed monthly. Cancel anytime from your account settings. Tier names and pricing are fully editable by the creator.</p>
+  </section>
+
+  <footer>
+    <span>© 2025 [Creator Name] · Powered by Punchline</span>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </footer>
+  <script>document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));</script>
+</body>
+</html>

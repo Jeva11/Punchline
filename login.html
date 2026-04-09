@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Punchline</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: var(--navy);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    .login-page {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 20px;
+      position: relative; overflow: hidden;
+    }
+    .login-page::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(242,39,110,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, rgba(234,227,204,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .login-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
+      width: min(440px, 96vw);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      position: relative; z-index: 1;
+      animation: fadeUp 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .login-logo {
+      font-family: var(--font-brand);
+      font-size: 2rem; color: var(--pink);
+      text-align: center; margin-bottom: 8px;
+      display: block;
+    }
+    .login-tagline { text-align: center; font-size: 0.85rem; opacity: 0.55; margin-bottom: 32px; }
+    .login-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 24px 0; font-size: 0.8rem; opacity: 0.5;
+    }
+    .login-divider::before, .login-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--cream-dark);
+    }
+    .social-btn {
+      width: 100%; padding: 12px; border-radius: var(--radius);
+      border: 2px solid var(--cream-dark);
+      background: var(--white); font-weight: 600; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      cursor: pointer; transition: var(--transition); margin-bottom: 10px;
+    }
+    .social-btn:hover { border-color: var(--navy); background: var(--gray-light); }
+    .social-icon { font-size: 1.1rem; }
+    .login-footer {
+      text-align: center; margin-top: 24px;
+      font-size: 0.85rem; opacity: 0.6;
+    }
+    .login-footer a { color: var(--pink); font-weight: 600; opacity: 1; }
+    .remember-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; font-size: 0.85rem;
+    }
+    .remember-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .remember-row input { accent-color: var(--pink); }
+    .remember-row a { color: var(--pink); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="index.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="signup.html">Create Account</a>
+    </div>
+    <div class="nav-actions">
+      <a href="signup.html" class="btn btn-primary btn-sm">Sign Up Free</a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="login-page">
+    <div class="login-card">
+      <a href="index.html" class="login-logo">Punchline</a>
+      <p class="login-tagline">Welcome back. The mic's been waiting.</p>
+
+      <!-- Social login -->
+      <button class="social-btn"><span class="social-icon">G</span> Continue with Google</button>
+      <button class="social-btn"><span class="social-icon">f</span> Continue with Facebook</button>
+
+      <div class="login-divider">or log in with email</div>
+
+      <div class="form-group">
+        <label for="loginEmail">Email or Username</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="loginPass">Password</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+
+      <div class="remember-row">
+        <label><input type="checkbox"> Remember me</label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;padding:14px;" onclick="window.location.href='home2.html'">
+        Log In
+      </button>
+
+      <div class="login-footer">
+        Don't have an account? <a href="signup.html">Sign up free</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2025 Punchline</span>
+    <div class="footer-links">
+      <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Help</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  </script>
+</body>
+</html>

@@ -1,379 +1,232 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home — [Creator Name] on Punchline</title>
+  <title>Events — [Creator Name]</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* Sticky nav */
-    .creator-nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--navy);
-      display: flex; align-items: center;
-      padding: 0 5%; height: 64px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-      gap: 20px;
-    }
-    .creator-nav .logo { font-family: var(--font-brand); color: var(--pink); font-size: 1.4rem; margin-right: 8px; flex-shrink: 0; }
-    .creator-nav .nav-main { display: flex; gap: 24px; flex: 1; }
-    .creator-nav .nav-main a { color: var(--cream); font-weight: 500; font-size: 0.88rem; letter-spacing: 0.02em; transition: var(--transition); }
-    .creator-nav .nav-main a:hover { color: var(--pink); }
-    .creator-nav .nav-right { display: flex; align-items: center; gap: 12px; }
-    .search-bar {
-      display: flex; align-items: center;
-      background: rgba(255,255,255,0.08);
-      border-radius: 100px; padding: 7px 16px; gap: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: var(--transition);
-    }
-    .search-bar:focus-within { border-color: var(--pink); background: rgba(255,255,255,0.12); }
-    .search-bar input { background: none; border: none; outline: none; color: var(--white); font-size: 0.85rem; width: 160px; }
-    .search-bar input::placeholder { color: rgba(255,255,255,0.35); }
-    .search-bar span { color: rgba(255,255,255,0.35); font-size: 0.9rem; }
-    .cart-btn {
-      background: none; border: none; color: var(--cream);
-      font-size: 1.2rem; cursor: pointer; position: relative;
-    }
-    .cart-count {
-      position: absolute; top: -4px; right: -6px;
-      background: var(--pink); color: white;
-      font-size: 0.65rem; font-weight: 700;
-      width: 16px; height: 16px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
+    body { background: var(--cream); }
+    .events-hero { background: var(--navy); padding: 64px 5% 48px; text-align: center; }
+    .events-hero h1 { color: var(--white); }
+    .events-hero p { color: var(--cream); opacity: 0.75; margin-top: 10px; }
 
-    /* Hero / Banner with image slider */
-    .hero-banner {
-      background: var(--navy);
-      position: relative; overflow: hidden;
-      min-height: 440px; display: flex; align-items: center;
-    }
-    .banner-slide {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #1a1a2e 0%, #2d1040 50%, #1a1a2e 100%);
-      display: flex; align-items: center; padding: 0 8%;
-      opacity: 0; transition: opacity 0.7s ease;
-    }
-    .banner-slide.active { opacity: 1; }
-    .banner-slide::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(242,39,110,0.2) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .banner-content { position: relative; z-index: 1; max-width: 560px; }
-    .banner-content .eyebrow { font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); font-weight: 700; margin-bottom: 12px; }
-    .banner-content h1 { color: var(--white); margin-bottom: 14px; }
-    .banner-content p { color: var(--cream); opacity: 0.8; margin-bottom: 28px; font-size: 1.05rem; }
-    .banner-placeholder {
-      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
-      width: 320px; height: 220px;
-      background: rgba(255,255,255,0.05);
-      border-radius: var(--radius-lg);
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.15); font-size: 0.75rem; letter-spacing: 0.1em;
-      border: 1px dashed rgba(255,255,255,0.1);
-    }
-    .banner-dots {
-      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 8px; z-index: 2;
-    }
-    .banner-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); border: none; cursor: pointer; transition: var(--transition); }
-    .banner-dot.active { background: var(--pink); width: 24px; border-radius: 4px; }
-    .banner-arrows {
-      position: absolute; bottom: 16px; right: 5%; display: flex; gap: 8px; z-index: 2;
-    }
-    .banner-arrow { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); border: none; color: white; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-    .banner-arrow:hover { background: var(--pink); }
+    .events-section { padding: 64px 5%; max-width: 1100px; margin: 0 auto; }
 
-    /* Popular section */
-    .popular-section { padding: 64px 5%; background: var(--cream); }
-    .popular-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
-    .popular-header h2 { }
-    .popular-header a { color: var(--pink); font-weight: 600; font-size: 0.9rem; }
-    .content-carousel { position: relative; overflow: hidden; }
-    .content-track {
-      display: flex; gap: 20px;
-      transition: transform 0.4s cubic-bezier(.4,0,.2,1);
-    }
-    .content-card {
-      min-width: 240px; background: var(--white);
-      border-radius: var(--radius-lg); overflow: hidden;
-      box-shadow: var(--shadow); flex-shrink: 0;
-      transition: var(--transition); cursor: pointer;
-    }
-    .content-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .content-thumb {
-      height: 140px; background: linear-gradient(135deg, var(--navy-light), #3d1060);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem; position: relative;
-    }
-    .content-thumb .play-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.3);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: var(--transition);
-    }
-    .content-card:hover .play-overlay { opacity: 1; }
-    .play-btn { width: 44px; height: 44px; background: var(--pink); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
-    .content-info { padding: 14px 16px; }
-    .content-info .title { font-weight: 700; font-size: 0.92rem; margin-bottom: 6px; }
-    .content-info .meta { font-size: 0.75rem; opacity: 0.55; display: flex; gap: 10px; }
-    .carousel-controls { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
-    .ctrl-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--navy); border: none; color: white; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
-    .ctrl-btn:hover { background: var(--pink); }
-
-    /* Limited time offer */
-    .promo-section {
-      background: var(--navy);
-      padding: 64px 5%;
-    }
-    .promo-inner {
-      max-width: 700px; margin: 0 auto; text-align: center;
-    }
-    .promo-inner h2 { color: var(--white); margin-bottom: 16px; }
-    .promo-inner p { color: var(--cream); opacity: 0.8; margin-bottom: 28px; font-size: 1.05rem; }
-    .promo-timer {
-      display: flex; justify-content: center; gap: 16px; margin-bottom: 28px;
-    }
-    .timer-block {
-      background: rgba(255,255,255,0.08); border-radius: var(--radius);
-      padding: 12px 20px; text-align: center; min-width: 72px;
-    }
-    .timer-block .num { font-size: 2rem; font-weight: 800; color: var(--pink); line-height: 1; }
-    .timer-block .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cream); opacity: 0.6; margin-top: 4px; }
-
-    /* Newsletter section */
-    .newsletter-section {
-      padding: 64px 5%; background: var(--cream);
-    }
-    .newsletter-inner {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
-      align-items: center; max-width: 1000px; margin: 0 auto;
-    }
-    .newsletter-img-slot {
+    /* Events carousel */
+    .events-slider { position: relative; overflow: hidden; border-radius: var(--radius-lg); margin-bottom: 48px; }
+    .events-track { display: flex; transition: transform 0.4s cubic-bezier(.4,0,.2,1); }
+    .event-slide {
+      min-width: 100%;
       background: linear-gradient(135deg, var(--navy-light), #3d1060);
-      border-radius: var(--radius-lg); aspect-ratio: 4/3;
+      min-height: 320px; position: relative;
+      display: flex; align-items: flex-end;
+      flex-shrink: 0;
+    }
+    .event-slide .slide-img-placeholder {
+      position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.15); font-size: 0.8rem; letter-spacing: 0.1em;
-      border: 2px dashed rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.1); font-size: 0.8rem; letter-spacing: 0.1em;
+      border: 2px dashed rgba(255,255,255,0.08);
     }
-    .newsletter-form h2 { margin-bottom: 12px; }
-    .newsletter-form p { opacity: 0.7; margin-bottom: 24px; }
-    .newsletter-input-row { display: flex; gap: 0; }
-    .newsletter-input-row input {
-      flex: 1; padding: 14px 18px;
-      border: 2px solid var(--cream-dark);
-      border-right: none;
-      border-radius: var(--radius) 0 0 var(--radius);
-      font-family: var(--font-main); font-size: 0.95rem; outline: none;
-      transition: var(--transition);
+    .event-slide .event-info {
+      position: relative; z-index: 1;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+      width: 100%; padding: 32px 28px 28px;
     }
-    .newsletter-input-row input:focus { border-color: var(--pink); }
-    .newsletter-input-row button {
-      border-radius: 0 var(--radius) var(--radius) 0;
-      white-space: nowrap;
+    .event-info h3 { color: var(--white); font-size: 1.4rem; margin-bottom: 8px; }
+    .event-info .event-meta { color: var(--cream); opacity: 0.8; font-size: 0.9rem; display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+    .event-info .event-meta span { display: flex; align-items: center; gap: 6px; }
+    .event-edit-label {
+      position: absolute; top: 12px; right: 12px; z-index: 2;
+      background: rgba(255,255,255,0.12); border: 1px dashed rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.5); font-size: 0.72rem; padding: 4px 10px;
+      border-radius: 4px; letter-spacing: 0.06em;
     }
+    .slider-controls { display: flex; justify-content: center; gap: 8px; padding: 12px 0; }
+    .slider-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cream-dark); border: none; cursor: pointer; transition: var(--transition); }
+    .slider-dot.active { background: var(--pink); width: 24px; border-radius: 4px; }
+    .slider-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 12px; pointer-events: none; }
+    .slider-arrow { pointer-events: all; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; color: white; cursor: pointer; font-size: 1.2rem; transition: var(--transition); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; }
+    .slider-arrow:hover { background: var(--pink); }
 
-    @media (max-width: 900px) {
-      .creator-nav .nav-main { display: none; }
-      .newsletter-inner { grid-template-columns: 1fr; }
-      .banner-placeholder { display: none; }
+    /* Events list */
+    .events-list { display: flex; flex-direction: column; gap: 16px; }
+    .event-row {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 24px 28px; display: flex; align-items: center; gap: 24px;
+      box-shadow: var(--shadow); transition: var(--transition);
     }
+    .event-row:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .event-date-block {
+      background: var(--pink); color: var(--white);
+      border-radius: var(--radius); padding: 10px 16px; text-align: center;
+      min-width: 64px; flex-shrink: 0;
+    }
+    .event-date-block .day { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .event-date-block .month { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.85; }
+    .event-row-info { flex: 1; }
+    .event-row-info h4 { margin-bottom: 4px; }
+    .event-row-info .location { font-size: 0.85rem; opacity: 0.6; display: flex; gap: 12px; flex-wrap: wrap; }
+    .event-row-actions { display: flex; gap: 10px; flex-shrink: 0; }
+
+    .booking-section { background: var(--navy); border-radius: var(--radius-lg); padding: 36px; margin-top: 48px; }
+    .booking-section h2 { color: var(--white); margin-bottom: 8px; }
+    .booking-section p { color: var(--cream); opacity: 0.75; margin-bottom: 24px; }
+    .booking-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 600px) { .event-row { flex-direction: column; align-items: flex-start; } .event-row-actions { width: 100%; } }
   </style>
 </head>
 <body>
-
-  <!-- STICKY NAV -->
-  <nav class="creator-nav">
-    <a href="home2.html" class="logo">PL</a>
-    <div class="search-bar">
-      <span>🔍</span>
-      <input type="text" placeholder="Search content...">
-    </div>
-    <div class="nav-main">
+  <nav class="navbar">
+    <a href="home2.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="home2.html">Home</a>
       <a href="about.html">About</a>
-      <a href="events.html">Events</a>
       <a href="community.html">Community</a>
       <a href="merch.html">Merch</a>
     </div>
-    <div class="nav-right">
-      <button class="cart-btn">🛒<span class="cart-count">2</span></button>
-      <a href="login.html" class="btn btn-outline-white btn-sm">Log Out</a>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
-  <!-- HERO BANNER / IMAGE SLIDER -->
-  <section class="hero-banner" id="heroBanner">
-    <div class="banner-slide active">
-      <div class="banner-content">
-        <div class="eyebrow">Now Available</div>
-        <h1>[Creator Name]'s<br>Latest Special</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Watch the full special now — only on Punchline.</p>
-        <div class="flex gap-16">
-          <a href="#" class="btn btn-primary btn-lg">▶ Watch Now</a>
-          <a href="community.html" class="btn btn-outline-white">Join Discussion</a>
+  <div class="events-hero">
+    <span class="badge badge-pink mb-8">Tour Dates</span>
+    <h1>Upcoming Events</h1>
+    <p>Catch [Creator Name] live. Check dates, locations, and grab your tickets below.</p>
+  </div>
+
+  <div class="events-section">
+    <!-- SLIDER -->
+    <div class="events-slider" id="eventsSlider">
+      <div class="events-track" id="eventsTrack">
+        <div class="event-slide">
+          <div class="slide-img-placeholder">[ UPLOAD EVENT IMAGE — EDITABLE ]</div>
+          <div class="event-edit-label">✏ Editable</div>
+          <div class="event-info">
+            <h3>[Show Title] — Chicago, IL</h3>
+            <div class="event-meta">
+              <span>📅 April 12, 2025</span>
+              <span>📍 The Comedy Cellar, Chicago</span>
+              <span>🕗 8:00 PM CT</span>
+            </div>
+            <div class="flex gap-12">
+              <a href="#tickets" class="btn btn-primary btn-sm">Buy Tickets Here</a>
+              <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-sm">📧 Click Here for Booking</a>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="banner-placeholder">[ HERO IMAGE / VIDEO THUMBNAIL ]</div>
-    </div>
-    <div class="banner-slide">
-      <div class="banner-content">
-        <div class="eyebrow">Coming Soon</div>
-        <h1>New Tour<br>Announced 🎤</h1>
-        <p>Tickets go on sale Friday. Get early access when you sign up for updates below.</p>
-        <a href="events.html" class="btn btn-primary btn-lg">See Events</a>
-      </div>
-      <div class="banner-placeholder">[ EVENT BANNER IMAGE ]</div>
-    </div>
-    <div class="banner-slide">
-      <div class="banner-content">
-        <div class="eyebrow">Community Highlight</div>
-        <h1>The Forum is<br>Buzzing 💬</h1>
-        <p>Fans are talking. Jump into the discussion — memes, lore, and everything in between.</p>
-        <a href="community.html" class="btn btn-primary btn-lg">Visit Community</a>
-      </div>
-      <div class="banner-placeholder">[ COMMUNITY IMAGE ]</div>
-    </div>
-
-    <div class="banner-dots" id="bannerDots">
-      <button class="banner-dot active" onclick="goSlide(0)"></button>
-      <button class="banner-dot" onclick="goSlide(1)"></button>
-      <button class="banner-dot" onclick="goSlide(2)"></button>
-    </div>
-    <div class="banner-arrows">
-      <button class="banner-arrow" onclick="shiftSlide(-1)">‹</button>
-      <button class="banner-arrow" onclick="shiftSlide(1)">›</button>
-    </div>
-  </section>
-
-  <!-- BROWSE POPULAR -->
-  <section class="popular-section">
-    <div class="container">
-      <div class="popular-header">
-        <h2>Browse Popular</h2>
-        <a href="#">View All →</a>
-      </div>
-      <div class="content-carousel">
-        <div class="content-track" id="contentTrack">
-          <div class="content-card">
-            <div class="content-thumb">🎙️<div class="play-overlay"><div class="play-btn">▶</div></div></div>
-            <div class="content-info"><div class="title">That Time at the Airport</div><div class="meta"><span>🎭 Sketch</span><span>👁 12.4k views</span></div></div>
+        <div class="event-slide">
+          <div class="slide-img-placeholder">[ UPLOAD EVENT IMAGE — EDITABLE ]</div>
+          <div class="event-edit-label">✏ Editable</div>
+          <div class="event-info">
+            <h3>[Show Title] — New York, NY</h3>
+            <div class="event-meta">
+              <span>📅 April 26, 2025</span>
+              <span>📍 Gotham Comedy Club, NYC</span>
+              <span>🕗 9:00 PM ET</span>
+            </div>
+            <div class="flex gap-12">
+              <a href="#tickets" class="btn btn-primary btn-sm">Buy Tickets Here</a>
+              <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-sm">📧 Click Here for Booking</a>
+            </div>
           </div>
-          <div class="content-card">
-            <div class="content-thumb">😂<div class="play-overlay"><div class="play-btn">▶</div></div></div>
-            <div class="content-info"><div class="title">Monday Morning Vibes</div><div class="meta"><span>🎤 Stand-up</span><span>👁 8.1k views</span></div></div>
-          </div>
-          <div class="content-card">
-            <div class="content-thumb">🎭<div class="play-overlay"><div class="play-btn">▶</div></div></div>
-            <div class="content-info"><div class="title">Corporate Life: A Horror Story</div><div class="meta"><span>🎭 Sketch</span><span>👁 22k views</span></div></div>
-          </div>
-          <div class="content-card">
-            <div class="content-thumb">🤣<div class="play-overlay"><div class="play-btn">▶</div></div></div>
-            <div class="content-info"><div class="title">My Dog Runs This House</div><div class="meta"><span>📖 Bit</span><span>👁 5.8k views</span></div></div>
-          </div>
-          <div class="content-card">
-            <div class="content-thumb">😅<div class="play-overlay"><div class="play-btn">▶</div></div></div>
-            <div class="content-info"><div class="title">Dating in 2025: A Field Report</div><div class="meta"><span>🎤 Stand-up</span><span>👁 18.2k views</span></div></div>
-          </div>
-          <div class="content-card">
-            <div class="content-thumb">🎪<div class="play-overlay"><div class="play-btn">▶</div></div></div>
-            <div class="content-info"><div class="title">The Grocery Store Chronicles</div><div class="meta"><span>🎭 Sketch</span><span>👁 9.3k views</span></div></div>
+        </div>
+        <div class="event-slide">
+          <div class="slide-img-placeholder">[ UPLOAD EVENT IMAGE — EDITABLE ]</div>
+          <div class="event-edit-label">✏ Editable</div>
+          <div class="event-info">
+            <h3>[Show Title] — Los Angeles, CA</h3>
+            <div class="event-meta">
+              <span>📅 May 10, 2025</span>
+              <span>📍 The Laugh Factory, LA</span>
+              <span>🕗 8:30 PM PT</span>
+            </div>
+            <div class="flex gap-12">
+              <a href="#tickets" class="btn btn-primary btn-sm">Buy Tickets Here</a>
+              <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-sm">📧 Click Here for Booking</a>
+            </div>
           </div>
         </div>
       </div>
-      <div class="carousel-controls">
-        <button class="ctrl-btn" onclick="scrollCarousel(-1)">‹</button>
-        <button class="ctrl-btn" onclick="scrollCarousel(1)">›</button>
+      <div class="slider-arrows">
+        <button class="slider-arrow" onclick="evtShift(-1)">‹</button>
+        <button class="slider-arrow" onclick="evtShift(1)">›</button>
       </div>
     </div>
-  </section>
-
-  <!-- LIMITED TIME OFFER -->
-  <section class="promo-section">
-    <div class="promo-inner">
-      <span class="badge badge-pink mb-16">Limited Time Offer</span>
-      <h2>Get the Full Experience</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Upgrade to a membership and get exclusive access to behind-the-scenes content, early ticket access, and more.</p>
-      <div class="promo-timer" id="promoTimer">
-        <div class="timer-block"><div class="num" id="timerH">02</div><div class="lbl">Hours</div></div>
-        <div class="timer-block"><div class="num" id="timerM">47</div><div class="lbl">Minutes</div></div>
-        <div class="timer-block"><div class="num" id="timerS">33</div><div class="lbl">Seconds</div></div>
-      </div>
-      <div class="flex-center gap-16">
-        <a href="membership.html" class="btn btn-primary btn-lg">Join Now</a>
-        <a href="merch.html" class="btn btn-outline-white">Browse Merch</a>
-      </div>
+    <div class="slider-controls" id="evtDots">
+      <button class="slider-dot active" onclick="evtGo(0)"></button>
+      <button class="slider-dot" onclick="evtGo(1)"></button>
+      <button class="slider-dot" onclick="evtGo(2)"></button>
     </div>
-  </section>
 
-  <!-- NEWSLETTER / UPDATES -->
-  <section class="newsletter-section">
-    <div class="container">
-      <div class="newsletter-inner">
-        <div class="newsletter-img-slot">[ UPLOAD IMAGE ]</div>
-        <div class="newsletter-form">
-          <span class="badge badge-pink mb-16">Stay Updated</span>
-          <h2>Sign Up for Updates</h2>
-          <p>Be the first to know about new content, tour dates, merch drops, and exclusive deals. No spam — just the good stuff.</p>
-          <div class="newsletter-input-row">
-            <input type="email" placeholder="Your email address">
-            <button class="btn btn-primary">Subscribe</button>
-          </div>
-          <p style="font-size:0.78rem;opacity:0.5;margin-top:12px;">No spam. Unsubscribe anytime.</p>
+    <!-- ALL DATES LIST -->
+    <h2 id="tickets" class="mb-24 mt-40">All Dates</h2>
+    <div class="events-list">
+      <div class="event-row">
+        <div class="event-date-block"><div class="day">12</div><div class="month">Apr</div></div>
+        <div class="event-row-info">
+          <h4>[Show Title]</h4>
+          <div class="location"><span>📍 Chicago, IL</span><span>🕗 8:00 PM</span><span>The Comedy Cellar</span></div>
+        </div>
+        <div class="event-row-actions">
+          <a href="checkout2.html" class="btn btn-primary btn-sm">Buy Tickets</a>
+          <a href="mailto:booking@placeholder.com" class="btn btn-outline btn-sm">Booking</a>
+        </div>
+      </div>
+      <div class="event-row">
+        <div class="event-date-block"><div class="day">26</div><div class="month">Apr</div></div>
+        <div class="event-row-info">
+          <h4>[Show Title]</h4>
+          <div class="location"><span>📍 New York, NY</span><span>🕗 9:00 PM</span><span>Gotham Comedy Club</span></div>
+        </div>
+        <div class="event-row-actions">
+          <a href="checkout2.html" class="btn btn-primary btn-sm">Buy Tickets</a>
+          <a href="mailto:booking@placeholder.com" class="btn btn-outline btn-sm">Booking</a>
+        </div>
+      </div>
+      <div class="event-row">
+        <div class="event-date-block"><div class="day">10</div><div class="month">May</div></div>
+        <div class="event-row-info">
+          <h4>[Show Title]</h4>
+          <div class="location"><span>📍 Los Angeles, CA</span><span>🕗 8:30 PM</span><span>The Laugh Factory</span></div>
+        </div>
+        <div class="event-row-actions">
+          <a href="checkout2.html" class="btn btn-primary btn-sm">Buy Tickets</a>
+          <a href="mailto:booking@placeholder.com" class="btn btn-outline btn-sm">Booking</a>
         </div>
       </div>
     </div>
-  </section>
 
-  <hr class="divider">
+    <!-- BOOKING CTA -->
+    <div class="booking-section">
+      <h2>Want to Book [Creator Name]?</h2>
+      <p>Interested in booking for your venue, festival, or private event? Reach out directly.</p>
+      <div class="booking-row">
+        <a href="checkout2.html" class="btn btn-primary btn-lg">Buy Tickets Here</a>
+        <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-lg">📧 Click Here for Booking Enquiries</a>
+      </div>
+    </div>
+  </div>
 
-  <!-- FOOTER -->
   <footer>
     <span>© 2025 [Creator Name] · Powered by Punchline</span>
-    <div class="footer-links">
-      <a href="#">Privacy</a><a href="#">Cookies</a><a href="#">Terms</a><a href="#">Data Preferences</a>
-    </div>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </footer>
 
   <script>
-    // Banner slider
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.banner-slide');
-    const dots = document.querySelectorAll('.banner-dot');
-
-    function goSlide(n) {
-      slides[currentSlide].classList.remove('active');
-      dots[currentSlide].classList.remove('active');
-      currentSlide = (n + slides.length) % slides.length;
-      slides[currentSlide].classList.add('active');
-      dots[currentSlide].classList.add('active');
+    let evtCurrent = 0;
+    const evtSlides = 3;
+    function evtGo(n) {
+      evtCurrent = n;
+      document.getElementById('eventsTrack').style.transform = `translateX(-${n * 100}%)`;
+      document.querySelectorAll('#evtDots .slider-dot').forEach((d, i) => d.classList.toggle('active', i === n));
     }
-    function shiftSlide(dir) { goSlide(currentSlide + dir); }
-    setInterval(() => shiftSlide(1), 5000);
-
-    // Content carousel
-    let carouselPos = 0;
-    function scrollCarousel(dir) {
-      const track = document.getElementById('contentTrack');
-      const cardWidth = 260;
-      carouselPos = Math.max(0, Math.min(carouselPos + dir * cardWidth, cardWidth * 3));
-      track.style.transform = `translateX(-${carouselPos}px)`;
-    }
-
-    // Countdown timer
-    let secs = 2 * 3600 + 47 * 60 + 33;
-    setInterval(() => {
-      if (secs <= 0) return;
-      secs--;
-      const h = Math.floor(secs / 3600);
-      const m = Math.floor((secs % 3600) / 60);
-      const s = secs % 60;
-      document.getElementById('timerH').textContent = String(h).padStart(2, '0');
-      document.getElementById('timerM').textContent = String(m).padStart(2, '0');
-      document.getElementById('timerS').textContent = String(s).padStart(2, '0');
-    }, 1000);
+    function evtShift(dir) { evtGo((evtCurrent + dir + evtSlides) % evtSlides); }
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
   </script>
-
 </body>
 </html>

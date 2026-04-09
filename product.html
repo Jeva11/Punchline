@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — [Creator Name]'s Shop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: var(--cream); }
+    .product-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      max-width: 1100px; margin: 0 auto; padding: 52px 5%;
+      align-items: start;
+    }
+    /* Image section */
+    .product-gallery {}
+    .main-img {
+      width: 100%; aspect-ratio: 1/1;
+      background: linear-gradient(135deg, var(--navy-light), #3d1060);
+      border-radius: var(--radius-lg); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem; position: relative; cursor: zoom-in;
+      margin-bottom: 12px;
+    }
+    .zoom-hint {
+      position: absolute; bottom: 12px; right: 12px;
+      background: rgba(0,0,0,0.5); color: white;
+      font-size: 0.72rem; letter-spacing: 0.06em; padding: 5px 10px;
+      border-radius: 4px; backdrop-filter: blur(4px);
+    }
+    .thumb-row { display: flex; gap: 8px; }
+    .thumb {
+      width: 72px; height: 72px; border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--navy-light), #2d1040);
+      cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+      border: 2px solid transparent; transition: var(--transition); flex-shrink: 0;
+    }
+    .thumb.active, .thumb:hover { border-color: var(--pink); }
+
+    /* Color swatches */
+    .swatch-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .color-swatch-item {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 3px solid transparent; cursor: pointer; transition: var(--transition);
+    }
+    .color-swatch-item.active, .color-swatch-item:hover { border-color: var(--navy); transform: scale(1.15); }
+
+    /* Size grid */
+    .size-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+    /* Product details */
+    .product-details {}
+    .product-details .breadcrumb { font-size: 0.8rem; opacity: 0.5; margin-bottom: 16px; }
+    .product-details .breadcrumb a { color: var(--navy); transition: var(--transition); }
+    .product-details .breadcrumb a:hover { color: var(--pink); }
+    .product-details h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin-bottom: 8px; }
+    .product-details .product-price-lg { font-size: 2rem; font-weight: 800; color: var(--pink); margin-bottom: 20px; }
+    .product-details .product-desc-full { opacity: 0.75; margin-bottom: 24px; line-height: 1.7; }
+    .detail-label { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.5; margin-bottom: 8px; }
+    .detail-section { margin-bottom: 22px; }
+    .product-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+    .product-actions .add-cart-btn { padding: 16px; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .product-actions .express-row { display: flex; gap: 10px; }
+    .product-actions .express-row button { flex: 1; padding: 13px; }
+
+    /* Zoom modal */
+    .zoom-modal {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.85); align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .zoom-modal.active { display: flex; }
+    .zoom-modal .zoom-img {
+      max-width: 90vw; max-height: 90vh;
+      background: linear-gradient(135deg, var(--navy-light), #3d1060);
+      border-radius: var(--radius-lg);
+      width: min(600px, 90vw); aspect-ratio: 1/1;
+      display: flex; align-items: center; justify-content: center; font-size: 10rem;
+      cursor: zoom-out;
+    }
+
+    @media (max-width: 800px) {
+      .product-layout { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="home2.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="merch.html">← Continue Shopping</a>
+    </div>
+    <div class="nav-actions">
+      <a href="checkout2.html" style="position:relative;display:flex;align-items:center;gap:6px;color:var(--cream);font-size:1.1rem;">
+        🛒 <span style="font-size:0.85rem;">Checkout</span>
+        <span style="position:absolute;top:-6px;right:-10px;background:var(--pink);color:white;font-size:0.65rem;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">3</span>
+      </a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="product-layout">
+    <!-- GALLERY (left) -->
+    <div class="product-gallery">
+      <div class="main-img" id="mainImg" onclick="openZoom()">
+        👕
+        <div class="zoom-hint">🔍 Click to zoom</div>
+      </div>
+      <div class="thumb-row">
+        <div class="thumb active">👕</div>
+        <div class="thumb">👕</div>
+        <div class="thumb">📐</div>
+        <div class="thumb">🏷️</div>
+      </div>
+    </div>
+
+    <!-- DETAILS (right) -->
+    <div class="product-details">
+      <div class="breadcrumb"><a href="merch.html">Shop</a> / <a href="merch.html">Shirts</a> / "The Bit" Classic Tee</div>
+      <span class="badge badge-pink mb-8">New Drop</span>
+      <h2>"The Bit" Classic Tee</h2>
+      <div class="product-price-lg">$29.99</div>
+      <p class="product-desc-full">
+        The classic tee you didn't know you needed until you needed it. Soft 100% cotton, unisex fit, and printed with a design that'll make every comedian in the room nod their head. Perfect for the bit that never dies.
+      </p>
+
+      <!-- Color selector -->
+      <div class="detail-section">
+        <div class="detail-label">Color: <strong id="selectedColor">Black</strong></div>
+        <div class="swatch-row">
+          <div class="color-swatch-item active" style="background:#1a1a2e;" title="Black" onclick="selectColor(this,'Black')"></div>
+          <div class="color-swatch-item" style="background:#F2276E;" title="Pink" onclick="selectColor(this,'Pink')"></div>
+          <div class="color-swatch-item" style="background:#EAE3CC;" title="Cream" onclick="selectColor(this,'Cream')"></div>
+          <div class="color-swatch-item" style="background:#555;" title="Charcoal" onclick="selectColor(this,'Charcoal')"></div>
+        </div>
+      </div>
+
+      <!-- Size selector -->
+      <div class="detail-section">
+        <div class="detail-label">Size: <strong id="selectedSize">M</strong></div>
+        <div class="size-grid">
+          <button class="size-btn" onclick="selectSize(this)">S</button>
+          <button class="size-btn active" onclick="selectSize(this)">M</button>
+          <button class="size-btn" onclick="selectSize(this)">L</button>
+          <button class="size-btn" onclick="selectSize(this)">XL</button>
+          <button class="size-btn" onclick="selectSize(this)">XXL</button>
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="detail-section">
+        <div class="detail-label">Quantity</div>
+        <div class="qty-control">
+          <button onclick="changeQty(-1)">−</button>
+          <input type="number" id="qtyInput" value="1" min="1" max="10" readonly>
+          <button onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="product-actions">
+        <button class="btn btn-primary add-cart-btn" onclick="alert('Added to cart! 🛒')">
+          🛒 Add to Cart
+        </button>
+        <div class="express-row">
+          <button class="btn" style="background:#000;color:#fff;border-color:#000;font-weight:700;" onclick="window.location.href='checkout2.html'">G Pay</button>
+          <button class="btn btn-outline" onclick="window.location.href='checkout2.html'">⚡ Express Checkout</button>
+        </div>
+      </div>
+
+      <hr class="divider-thin">
+      <p style="font-size:0.82rem;opacity:0.55;">🚚 Free shipping on orders over $50 &nbsp;|&nbsp; 30-day returns &nbsp;|&nbsp; Ships in 3–5 business days</p>
+    </div>
+  </div>
+
+  <!-- ZOOM MODAL -->
+  <div class="zoom-modal" id="zoomModal" onclick="closeZoom()">
+    <div class="zoom-img">👕</div>
+  </div>
+
+  <footer>
+    <span>© 2025 [Creator Name] · Powered by Punchline</span>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </footer>
+
+  <script>
+    function selectColor(el, name) {
+      document.querySelectorAll('.color-swatch-item').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('selectedColor').textContent = name;
+    }
+    function selectSize(el) {
+      document.querySelectorAll('.size-btn').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('selectedSize').textContent = el.textContent;
+    }
+    function changeQty(d) {
+      const inp = document.getElementById('qtyInput');
+      inp.value = Math.max(1, Math.min(10, parseInt(inp.value) + d));
+    }
+    function openZoom() { document.getElementById('zoomModal').classList.add('active'); }
+    function closeZoom() { document.getElementById('zoomModal').classList.remove('active'); }
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  </script>
+</body>
+</html>

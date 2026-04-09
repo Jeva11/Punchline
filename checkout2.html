@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — [Creator Name]'s Shop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: var(--cream); }
+    .checkout-layout {
+      max-width: 1100px; margin: 0 auto; padding: 52px 5%;
+      display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: start;
+    }
+
+    .express-checkout { background: var(--white); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 24px; box-shadow: var(--shadow); }
+    .express-checkout h3 { font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.5; margin-bottom: 14px; text-align: center; }
+    .express-btns { display: flex; gap: 12px; }
+    .express-btn { flex: 1; padding: 13px; border-radius: var(--radius); border: 2px solid var(--cream-dark); background: var(--white); font-weight: 700; cursor: pointer; transition: var(--transition); }
+    .express-btn.gpay { background: #000; color: white; border-color: #000; font-size: 1.1rem; }
+    .express-btn:hover { box-shadow: var(--shadow); }
+    .divider-or { display: flex; align-items: center; gap: 12px; margin: 18px 0; font-size: 0.8rem; opacity: 0.5; }
+    .divider-or::before, .divider-or::after { content: ''; flex: 1; height: 1px; background: var(--cream-dark); }
+
+    .payment-form { background: var(--white); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow); }
+    .payment-form h3 { margin-bottom: 20px; }
+    .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .card-field { display: flex; align-items: center; border: 2px solid var(--cream-dark); border-radius: var(--radius); padding: 11px 14px; background: var(--white); gap: 10px; transition: var(--transition); }
+    .card-field:focus-within { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(242,39,110,0.12); }
+    .card-field input { border: none; outline: none; flex: 1; font-family: var(--font-main); font-size: 0.9rem; }
+    .secure-note { display: flex; align-items: center; gap: 8px; font-size: 0.76rem; opacity: 0.5; margin-top: 14px; }
+    .complete-btn { width: 100%; padding: 16px; font-size: 1rem; margin-top: 18px; }
+
+    /* Order summary */
+    .order-summary { background: var(--white); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow); position: sticky; top: 80px; }
+    .order-summary h3 { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--cream); }
+    .order-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+    .order-item { display: flex; gap: 12px; align-items: center; }
+    .item-icon { width: 48px; height: 48px; border-radius: var(--radius); background: linear-gradient(135deg, var(--navy-light), #3d1060); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 600; font-size: 0.88rem; }
+    .item-meta { font-size: 0.75rem; opacity: 0.55; }
+    .item-price { font-weight: 700; font-size: 0.9rem; }
+    .item-remove { background: none; border: none; color: var(--gray-mid); font-size: 0.9rem; cursor: pointer; transition: var(--transition); }
+    .item-remove:hover { color: var(--pink); }
+    .order-totals { border-top: 1px solid var(--cream); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .total-row { display: flex; justify-content: space-between; font-size: 0.88rem; }
+    .total-row.grand { font-size: 1.05rem; font-weight: 800; padding-top: 8px; border-top: 2px solid var(--cream-dark); margin-top: 4px; }
+    .total-row.grand span:last-child { color: var(--pink); }
+    .promo-row { display: flex; gap: 8px; margin-top: 14px; }
+    .promo-row input { flex: 1; padding: 9px 12px; border: 2px solid var(--cream-dark); border-radius: var(--radius); font-family: var(--font-main); outline: none; font-size: 0.88rem; transition: var(--transition); }
+    .promo-row input:focus { border-color: var(--pink); }
+
+    @media (max-width: 900px) { .checkout-layout { grid-template-columns: 1fr; } .order-summary { position: static; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="home2.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="community.html">← Back to Community</a>
+      <a href="merch.html">Continue Shopping</a>
+    </div>
+    <div class="nav-actions">
+      <span style="color:var(--cream);font-size:0.82rem;opacity:0.7;">🔒 Secure Checkout</span>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="checkout-layout">
+    <!-- LEFT -->
+    <div>
+      <h2 style="margin-bottom:24px;">Checkout</h2>
+
+      <div class="express-checkout">
+        <h3>Express Checkout</h3>
+        <div class="express-btns">
+          <button class="express-btn gpay">G Pay</button>
+          <button class="express-btn">⚡ Express Pay</button>
+        </div>
+        <div class="divider-or">or pay with card</div>
+      </div>
+
+      <div class="payment-form">
+        <h3>Contact & Payment</h3>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@example.com"></div>
+        <div class="form-group">
+          <label>Card Number</label>
+          <div class="card-field">
+            <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+            <div style="display:flex;gap:4px;">
+              <div style="background:#1a1a2e;color:white;padding:2px 6px;border-radius:3px;font-size:0.6rem;font-weight:700;">VISA</div>
+              <div style="background:#eb5c11;color:white;padding:2px 6px;border-radius:3px;font-size:0.6rem;font-weight:700;">MC</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="form-group"><label>Expiry</label><input type="text" placeholder="MM / YY" maxlength="7"></div>
+          <div class="form-group"><label>CVC</label><input type="text" placeholder="•••" maxlength="4"></div>
+        </div>
+        <div class="form-group"><label>Name on Card</label><input type="text" placeholder="Full name"></div>
+        <hr class="divider-thin">
+        <h3>Shipping Address</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+        <div class="card-row">
+          <div class="form-group"><label>Country</label>
+            <select style="padding:12px;border:2px solid var(--cream-dark);border-radius:var(--radius);width:100%;font-family:var(--font-main);outline:none;">
+              <option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Zip / Postal</label><input type="text" placeholder="12345"></div>
+        </div>
+        <div class="form-group"><label>Street Address</label><input type="text" placeholder="123 Main Street"></div>
+        <div class="card-row">
+          <div class="form-group"><label>City</label><input type="text" placeholder="City"></div>
+          <div class="form-group"><label>State / Province</label><input type="text" placeholder="State"></div>
+        </div>
+        <div class="secure-note">🔒 Your information is encrypted and secure.</div>
+        <button class="btn btn-primary complete-btn" onclick="handleCheckout2()">Complete Order →</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: ORDER SUMMARY -->
+    <div class="order-summary">
+      <h3>Your Cart (3)</h3>
+      <div class="order-items">
+        <div class="order-item">
+          <div class="item-icon">👕</div>
+          <div class="item-info"><div class="item-name">"The Bit" Classic Tee</div><div class="item-meta">Black · M · Qty: 1</div></div>
+          <div class="item-price">$29.99</div>
+          <button class="item-remove">✕</button>
+        </div>
+        <div class="order-item">
+          <div class="item-icon">🧢</div>
+          <div class="item-info"><div class="item-name">Embroidered Dad Hat</div><div class="item-meta">Navy · One Size</div></div>
+          <div class="item-price">$28.99</div>
+          <button class="item-remove">✕</button>
+        </div>
+        <div class="order-item">
+          <div class="item-icon">⭐</div>
+          <div class="item-info"><div class="item-name">Tier 2 Membership</div><div class="item-meta">Monthly subscription</div></div>
+          <div class="item-price">$12.00</div>
+          <button class="item-remove">✕</button>
+        </div>
+      </div>
+      <div class="promo-row">
+        <input type="text" placeholder="Promo / gift code">
+        <button class="btn btn-outline btn-sm">Apply</button>
+      </div>
+      <div class="order-totals">
+        <div class="total-row"><span>Subtotal</span><span>$70.98</span></div>
+        <div class="total-row"><span>Shipping</span><span>Free</span></div>
+        <div class="total-row"><span>Tax</span><span>$0.00</span></div>
+        <div class="total-row grand"><span>Total</span><span>$70.98</span></div>
+      </div>
+      <p style="font-size:0.76rem;opacity:0.5;margin-top:14px;">
+        By completing your purchase you agree to our <a href="#" style="color:var(--pink);">Terms</a> and <a href="#" style="color:var(--pink);">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2025 [Creator Name] · Powered by Punchline</span>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Returns</a></div>
+  </footer>
+
+  <script>
+    function handleCheckout2() {
+      alert('Order placed! Thank you! 🎉\n(In production this would process payment and send a confirmation email.)');
+      window.location.href = 'home2.html';
+    }
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  </script>
+</body>
+</html>

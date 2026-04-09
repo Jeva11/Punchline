@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Punchline</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: var(--navy); }
+    .signup-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .signup-left {
+      background: var(--navy);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 80px 60px;
+      position: relative; overflow: hidden;
+    }
+    .signup-left::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(242,39,110,0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .signup-left .deco { font-size: 10rem; opacity: 0.05; position: absolute; bottom: -20px; right: -20px; }
+    .signup-left h1 { color: var(--white); position: relative; z-index: 1; }
+    .signup-left h1 .accent { color: var(--pink); }
+    .signup-left p { color: var(--cream); opacity: 0.75; margin-top: 16px; max-width: 380px; position: relative; z-index: 1; font-size: 1.05rem; }
+    .signup-perks { margin-top: 36px; display: flex; flex-direction: column; gap: 14px; position: relative; z-index: 1; }
+    .signup-perk { display: flex; align-items: center; gap: 12px; color: var(--cream); font-size: 0.9rem; }
+    .signup-perk .perk-icon { width: 32px; height: 32px; background: rgba(242,39,110,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+
+    .signup-right {
+      background: var(--cream);
+      padding: 60px 60px;
+      display: flex; flex-direction: column; justify-content: center;
+      overflow-y: auto;
+    }
+    .signup-right h2 { margin-bottom: 8px; }
+    .signup-right .sub { font-size: 0.9rem; opacity: 0.65; margin-bottom: 32px; }
+
+    /* Step indicator */
+    .steps {
+      display: flex; align-items: center; gap: 0;
+      margin-bottom: 36px;
+    }
+    .step-item { display: flex; align-items: center; gap: 8px; }
+    .step-num {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.82rem;
+      background: var(--cream-dark); color: var(--navy);
+      transition: var(--transition);
+    }
+    .step-item.active .step-num { background: var(--pink); color: var(--white); }
+    .step-item.done .step-num { background: var(--navy); color: var(--white); }
+    .step-label { font-size: 0.78rem; font-weight: 600; opacity: 0.6; }
+    .step-item.active .step-label { opacity: 1; color: var(--pink); }
+    .step-connector { flex: 1; height: 2px; background: var(--cream-dark); margin: 0 8px; min-width: 20px; }
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    /* Profile picture upload */
+    .avatar-upload {
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 24px;
+    }
+    .avatar-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--cream-dark);
+      border: 3px dashed var(--gray-mid);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; cursor: pointer;
+      transition: var(--transition); overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar-circle:hover { border-color: var(--pink); }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .avatar-upload input[type=file] { display: none; }
+
+    /* Comedy tags */
+    .comedy-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .comedy-tag {
+      padding: 6px 14px; border-radius: 100px;
+      border: 2px solid var(--cream-dark);
+      background: var(--white);
+      font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition);
+      user-select: none;
+    }
+    .comedy-tag.selected { border-color: var(--pink); background: rgba(242,39,110,0.1); color: var(--pink); }
+
+    /* Newsletter opt-in */
+    .opt-in-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 2px solid var(--cream-dark);
+      display: flex; align-items: flex-start; gap: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 8px;
+    }
+    .opt-in-box:has(input:checked) { border-color: var(--pink); background: rgba(242,39,110,0.04); }
+    .opt-in-box input { width: 18px; height: 18px; accent-color: var(--pink); margin-top: 2px; flex-shrink: 0; }
+    .opt-in-box .opt-text { font-size: 0.88rem; }
+    .opt-in-box .opt-text strong { display: block; margin-bottom: 4px; }
+
+    .form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; }
+    .form-nav .back-btn { background: none; border: none; color: var(--navy); font-weight: 600; opacity: 0.6; font-size: 0.9rem; transition: var(--transition); cursor: pointer; }
+    .form-nav .back-btn:hover { opacity: 1; color: var(--pink); }
+
+    .already-member { text-align: center; margin-top: 20px; font-size: 0.85rem; opacity: 0.6; }
+    .already-member a { color: var(--pink); font-weight: 600; opacity: 1; }
+
+    @media (max-width: 900px) {
+      .signup-layout { grid-template-columns: 1fr; }
+      .signup-left { padding: 60px 5%; min-height: auto; }
+      .signup-right { padding: 40px 5%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="login.html">Already a member? <strong>Login here</strong></a>
+    </div>
+    <div class="nav-actions">
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="signup-layout">
+    <!-- LEFT PANEL -->
+    <div class="signup-left">
+      <div class="deco">🎤</div>
+      <p class="badge badge-pink mb-16">Join the Platform</p>
+      <h1>Sign up!<br><span class="accent">Don't worry,</span><br>it's free to make an account.</h1>
+      <p>Set up your comedy home in minutes. No credit card required.</p>
+      <div class="signup-perks">
+        <div class="signup-perk"><div class="perk-icon">🎙️</div>Host unlimited content on the free tier</div>
+        <div class="signup-perk"><div class="perk-icon">👥</div>Instant access to the community</div>
+        <div class="signup-perk"><div class="perk-icon">📊</div>Basic analytics from day one</div>
+        <div class="signup-perk"><div class="perk-icon">🚀</div>Upgrade to Pro whenever you're ready</div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: FORM -->
+    <div class="signup-right">
+      <h2>Create Your Account</h2>
+      <p class="sub">Step by step — takes less than 2 minutes.</p>
+
+      <!-- STEP INDICATOR -->
+      <div class="steps">
+        <div class="step-item active" id="step1ind">
+          <div class="step-num">1</div>
+          <div class="step-label">Account</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" id="step2ind">
+          <div class="step-num">2</div>
+          <div class="step-label">Your Comedy</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" id="step3ind">
+          <div class="step-num">3</div>
+          <div class="step-label">Stay Connected</div>
+        </div>
+      </div>
+
+      <!-- STEP 1: Account Info -->
+      <div class="form-step active" id="step1">
+        <div class="avatar-upload">
+          <div class="avatar-circle" id="avatarCircle" title="Upload profile picture">
+            <img id="avatarPreview" alt="">
+            <span id="avatarIcon">📷</span>
+          </div>
+          <div>
+            <p style="font-weight:600;margin-bottom:4px;">Profile Picture</p>
+            <p style="font-size:0.82rem;opacity:0.6;">Click the circle to upload</p>
+            <input type="file" id="avatarInput" accept="image/*">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="username">Username <span style="color:var(--pink)">*</span></label>
+          <input type="text" id="username" placeholder="@yourcomedyname" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address <span style="color:var(--pink)">*</span></label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password <span style="color:var(--pink)">*</span></label>
+          <input type="password" id="password" placeholder="At least 8 characters" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPass">Confirm Password <span style="color:var(--pink)">*</span></label>
+          <input type="password" id="confirmPass" placeholder="Repeat password" required>
+        </div>
+        <div class="form-nav">
+          <span></span>
+          <button class="btn btn-primary" onclick="goToStep(2)">Next: Your Comedy →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Comedy Description -->
+      <div class="form-step" id="step2">
+        <div class="form-group">
+          <label for="bio">Describe Your Comedy</label>
+          <textarea id="bio" placeholder="Tell us about your style, influences, what makes your comedy unique..." rows="4"></textarea>
+        </div>
+        <div class="form-group">
+          <label>What type of comedy do you do? <small style="opacity:0.6">(pick all that apply)</small></label>
+          <div class="comedy-tags">
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Stand-up</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Sketches</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Improv</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Roast</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Satire</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Character Work</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Observational</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Dark Comedy</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Podcast</div>
+            <div class="comedy-tag" onclick="this.classList.toggle('selected')">Written</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="website">Your Website / Social (optional)</label>
+          <input type="url" id="website" placeholder="https://...">
+        </div>
+        <div class="form-nav">
+          <button class="back-btn" onclick="goToStep(1)">← Back</button>
+          <button class="btn btn-primary" onclick="goToStep(3)">Next: Stay Connected →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Newsletter -->
+      <div class="form-step" id="step3">
+        <h3 class="mb-16">One last thing — stay in the loop</h3>
+        <label class="opt-in-box">
+          <input type="checkbox" checked>
+          <div class="opt-text">
+            <strong>📬 Punchline Creator Newsletter</strong>
+            Platform updates, comedy industry news, and tips for growing your audience. No spam — ever.
+          </div>
+        </label>
+        <label class="opt-in-box mt-16">
+          <input type="checkbox">
+          <div class="opt-text">
+            <strong>🎉 Special Offers & Promotions</strong>
+            Early access to new features and occasional deals on Pro upgrades.
+          </div>
+        </label>
+        <p style="font-size:0.78rem;opacity:0.5;margin-top:16px;">
+          By creating an account you agree to our <a href="#" style="color:var(--pink);">Terms of Service</a> and <a href="#" style="color:var(--pink);">Privacy Policy</a>.
+        </p>
+        <div class="form-nav">
+          <button class="back-btn" onclick="goToStep(2)">← Back</button>
+          <button class="btn btn-primary btn-lg" onclick="handleSignup()">Create My Account 🎉</button>
+        </div>
+      </div>
+
+      <p class="already-member">Already have an account? <a href="login.html">Log in here</a></p>
+    </div>
+  </div>
+
+  <script>
+    function goToStep(n) {
+      document.querySelectorAll('.form-step').forEach((s, i) => s.classList.toggle('active', i === n - 1));
+      document.querySelectorAll('.step-item').forEach((s, i) => {
+        s.classList.remove('active', 'done');
+        if (i < n - 1) s.classList.add('done');
+        if (i === n - 1) s.classList.add('active');
+      });
+    }
+
+    function handleSignup() {
+      alert('Account created! Welcome to Punchline 🎤\n(This would redirect to your new dashboard in production.)');
+      window.location.href = 'home2.html';
+    }
+
+    // Avatar preview
+    document.getElementById('avatarCircle').addEventListener('click', () => document.getElementById('avatarInput').click());
+    document.getElementById('avatarInput').addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          document.getElementById('avatarPreview').src = e.target.result;
+          document.getElementById('avatarPreview').style.display = 'block';
+          document.getElementById('avatarIcon').style.display = 'none';
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  </script>
+
+</body>
+</html>

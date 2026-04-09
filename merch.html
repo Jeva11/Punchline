@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Creator Name]'s Shop</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: var(--cream); }
+
+    /* Shop header */
+    .shop-title-section {
+      background: var(--navy); padding: 52px 5% 36px; text-align: center;
+    }
+    .shop-title { font-family: var(--font-brand); font-size: clamp(2.5rem, 7vw, 5rem); color: var(--white); }
+    .shop-title span { color: var(--pink); }
+    .shop-subtitle { color: var(--cream); opacity: 0.7; margin-top: 8px; }
+
+    /* Shop layout */
+    .shop-layout { display: grid; grid-template-columns: 220px 1fr; gap: 32px; padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+
+    /* Sidebar */
+    .shop-sidebar { position: sticky; top: 88px; align-self: start; }
+    .sidebar-section { margin-bottom: 28px; }
+    .sidebar-section h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.5; margin-bottom: 12px; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: var(--radius);
+      font-weight: 500; font-size: 0.9rem; color: var(--navy);
+      transition: var(--transition); cursor: pointer;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active { background: var(--white); color: var(--pink); box-shadow: var(--shadow); }
+    .sidebar-nav a .count { margin-left: auto; font-size: 0.75rem; opacity: 0.5; }
+
+    /* Currency selector */
+    .currency-select {
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .currency-btn {
+      padding: 6px 12px; border-radius: var(--radius);
+      border: 2px solid var(--cream-dark); background: var(--white);
+      font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: var(--transition);
+    }
+    .currency-btn.active, .currency-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* Shop main */
+    .shop-main {}
+    .shop-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .shop-toolbar .result-count { font-size: 0.88rem; opacity: 0.6; }
+    .shop-toolbar select {
+      padding: 8px 14px; border: 2px solid var(--cream-dark); border-radius: var(--radius);
+      font-family: var(--font-main); font-size: 0.88rem; outline: none; background: var(--white);
+    }
+    .shop-toolbar select:focus { border-color: var(--pink); }
+
+    /* Product grid */
+    .product-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .product-card {
+      background: var(--white); border-radius: var(--radius-lg);
+      overflow: hidden; box-shadow: var(--shadow); transition: var(--transition);
+      cursor: pointer; position: relative;
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .product-img {
+      height: 200px; background: linear-gradient(135deg, var(--navy-light), #3d1060);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; position: relative; overflow: hidden;
+    }
+    .product-img::after {
+      content: 'VIEW'; position: absolute; inset: 0;
+      background: rgba(242,39,110,0.85); color: white;
+      font-size: 0.85rem; font-weight: 700; letter-spacing: 0.1em;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: var(--transition);
+    }
+    .product-card:hover .product-img::after { opacity: 1; }
+    .product-body { padding: 14px 16px; }
+    .product-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .product-price { color: var(--pink); font-weight: 800; font-size: 1rem; }
+    .product-desc { font-size: 0.78rem; opacity: 0.55; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cart-quick { position: absolute; bottom: 56px; right: 12px; z-index: 2; }
+    .cart-quick-btn {
+      background: var(--pink); color: white; border: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; transform: scale(0.8); transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(242,39,110,0.4);
+    }
+    .product-card:hover .cart-quick-btn { opacity: 1; transform: scale(1); }
+
+    /* Cart icon top right */
+    .cart-float {
+      position: fixed; bottom: 24px; right: 24px; z-index: 50;
+      background: var(--pink); color: white;
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; box-shadow: 0 4px 20px rgba(242,39,110,0.5);
+      cursor: pointer; transition: var(--transition); text-decoration: none;
+    }
+    .cart-float:hover { transform: scale(1.1); }
+    .cart-float .cart-num {
+      position: absolute; top: 0; right: 0;
+      background: var(--navy); color: white; width: 20px; height: 20px;
+      border-radius: 50%; font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .shop-layout { grid-template-columns: 1fr; }
+      .shop-sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- DEAL BANNER -->
+  <div class="deal-banner">
+    <div class="marquee">
+      🎉 USE CODE PUNCHLINE20 FOR 20% OFF — Free shipping on orders over $50 — 🎄 Holiday sale ends Sunday — New drop: "The Bit" tee just landed 🎤 &nbsp;&nbsp;&nbsp;
+      🎉 USE CODE PUNCHLINE20 FOR 20% OFF — Free shipping on orders over $50 — 🎄 Holiday sale ends Sunday — New drop: "The Bit" tee just landed 🎤 &nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <a href="home2.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="home2.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="events.html">Events</a>
+      <a href="community.html">Community</a>
+    </div>
+    <div class="nav-actions">
+      <a href="checkout2.html" class="cart-float" style="position:relative;width:40px;height:40px;font-size:1.1rem;bottom:auto;right:auto;">🛒<span class="cart-num">3</span></a>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- SHOP TITLE -->
+  <div class="shop-title-section">
+    <div class="shop-title"><span>[Creator Name]</span>'s Shop</div>
+    <p class="shop-subtitle">Official merch. Real good stuff.</p>
+  </div>
+
+  <div class="shop-layout">
+    <!-- SIDEBAR -->
+    <aside class="shop-sidebar">
+      <div class="sidebar-section">
+        <h4>Category</h4>
+        <div class="sidebar-nav">
+          <a class="active" onclick="filterCat('all',this)">All Products <span class="count">12</span></a>
+          <a onclick="filterCat('shirts',this)">👕 Shirts <span class="count">5</span></a>
+          <a onclick="filterCat('hats',this)">🧢 Hats <span class="count">3</span></a>
+          <a onclick="filterCat('sweaters',this)">🧥 Sweaters <span class="count">4</span></a>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <h4>Currency</h4>
+        <div class="currency-select">
+          <button class="currency-btn active" onclick="setCurrency('USD',this)">USD $</button>
+          <button class="currency-btn" onclick="setCurrency('EUR',this)">EUR €</button>
+          <button class="currency-btn" onclick="setCurrency('GBP',this)">GBP £</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN GRID -->
+    <div class="shop-main">
+      <div class="shop-toolbar">
+        <span class="result-count" id="resultCount">Showing 12 products</span>
+        <select id="sortSelect" onchange="sortProducts()">
+          <option value="default">Sort: Featured</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+          <option value="new">Newest First</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- Shirts -->
+        <div class="product-card" data-cat="shirts" onclick="window.location.href='product.html'">
+          <div class="product-img">👕</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">"The Bit" Classic Tee</div>
+            <div class="product-price" data-usd="29.99">$29.99</div>
+            <div class="product-desc">Unisex · S–XXL · 100% Cotton</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="shirts" onclick="window.location.href='product.html'">
+          <div class="product-img">👕</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Logo Pocket Tee</div>
+            <div class="product-price" data-usd="24.99">$24.99</div>
+            <div class="product-desc">Classic fit · 5 colors available</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="shirts" onclick="window.location.href='product.html'">
+          <div class="product-img">👕</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Tour '25 Tee</div>
+            <div class="product-price" data-usd="34.99">$34.99</div>
+            <div class="product-desc">Limited edition · All tour dates on back</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="shirts" onclick="window.location.href='product.html'">
+          <div class="product-img">👕</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Graphic Long Sleeve</div>
+            <div class="product-price" data-usd="32.99">$32.99</div>
+            <div class="product-desc">Premium weight · Fitted</div>
+          </div>
+        </div>
+        <!-- Hats -->
+        <div class="product-card" data-cat="hats" onclick="window.location.href='product.html'">
+          <div class="product-img">🧢</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Embroidered Dad Hat</div>
+            <div class="product-price" data-usd="28.99">$28.99</div>
+            <div class="product-desc">Adjustable · One size · 3 colors</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="hats" onclick="window.location.href='product.html'">
+          <div class="product-img">🧢</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Snapback Cap</div>
+            <div class="product-price" data-usd="35.00">$35.00</div>
+            <div class="product-desc">Flat brim · Structured · Logo front</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="hats" onclick="window.location.href='product.html'">
+          <div class="product-img">🧢</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Beanie</div>
+            <div class="product-price" data-usd="22.99">$22.99</div>
+            <div class="product-desc">Ribbed knit · Black & Navy</div>
+          </div>
+        </div>
+        <!-- Sweaters -->
+        <div class="product-card" data-cat="sweaters" onclick="window.location.href='product.html'">
+          <div class="product-img">🧥</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Classic Crewneck</div>
+            <div class="product-price" data-usd="54.99">$54.99</div>
+            <div class="product-desc">Heavyweight fleece · Unisex · S–XXL</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="sweaters" onclick="window.location.href='product.html'">
+          <div class="product-img">🧥</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Zip Hoodie</div>
+            <div class="product-price" data-usd="64.99">$64.99</div>
+            <div class="product-desc">Full zip · Logo embroidered chest</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="sweaters" onclick="window.location.href='product.html'">
+          <div class="product-img">🧥</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Pullover Hoodie</div>
+            <div class="product-price" data-usd="59.99">$59.99</div>
+            <div class="product-desc">Premium fleece · 4 colors</div>
+          </div>
+        </div>
+        <div class="product-card" data-cat="sweaters" onclick="window.location.href='product.html'">
+          <div class="product-img">🧥</div>
+          <div class="cart-quick"><button class="cart-quick-btn" onclick="event.stopPropagation();addToCart()">🛒</button></div>
+          <div class="product-body">
+            <div class="product-name">Quarter-Zip</div>
+            <div class="product-price" data-usd="49.99">$49.99</div>
+            <div class="product-desc">Lightweight · Perfect layering</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating cart -->
+  <a href="checkout2.html" class="cart-float">🛒<span class="cart-num" id="floatCartCount">3</span></a>
+
+  <footer>
+    <span>© 2025 [Creator Name] · Powered by Punchline</span>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </footer>
+
+  <script>
+    let cartCount = 3;
+    const rates = { USD: 1, EUR: 0.92, GBP: 0.79 };
+    const symbols = { USD: '$', EUR: '€', GBP: '£' };
+    let currentCurrency = 'USD';
+
+    function filterCat(cat, el) {
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      el.classList.add('active');
+      const cards = document.querySelectorAll('.product-card');
+      let count = 0;
+      cards.forEach(c => {
+        const show = cat === 'all' || c.dataset.cat === cat;
+        c.style.display = show ? '' : 'none';
+        if (show) count++;
+      });
+      document.getElementById('resultCount').textContent = `Showing ${count} products`;
+    }
+
+    function setCurrency(code, el) {
+      document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      currentCurrency = code;
+      document.querySelectorAll('.product-price').forEach(p => {
+        const usd = parseFloat(p.dataset.usd);
+        const converted = (usd * rates[code]).toFixed(2);
+        p.textContent = symbols[code] + converted;
+      });
+    }
+
+    function addToCart() {
+      cartCount++;
+      document.getElementById('floatCartCount').textContent = cartCount;
+    }
+
+    function sortProducts() {
+      // UI only for now
+    }
+
+    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  </script>
+</body>
+</html>
