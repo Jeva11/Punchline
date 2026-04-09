@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Punchline — Your Jokes Should Kill</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Page-specific styles */
+    .home-hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 5% 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 30%, rgba(242,39,110,0.22) 0%, transparent 60%),
+                  radial-gradient(ellipse at 10% 80%, rgba(234,227,204,0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .home-hero .tagline {
+      font-family: var(--font-brand);
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      color: var(--white);
+      line-height: 1.05;
+      position: relative; z-index: 1;
+    }
+    .home-hero .tagline .accent { color: var(--pink); }
+    .home-hero h2 {
+      color: var(--cream);
+      font-weight: 400;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      margin-top: 20px;
+      max-width: 540px;
+      opacity: 0.85;
+      position: relative; z-index: 1;
+    }
+    .home-hero .hero-cta {
+      display: flex; gap: 16px; margin-top: 44px;
+      flex-wrap: wrap; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    /* Floating mic decoration */
+    .hero-deco {
+      position: absolute;
+      font-size: 12rem;
+      opacity: 0.03;
+      user-select: none;
+      pointer-events: none;
+    }
+    .hero-deco-1 { top: -20px; right: -40px; transform: rotate(20deg); }
+    .hero-deco-2 { bottom: -60px; left: -40px; transform: rotate(-15deg); font-size: 18rem; }
+
+    /* Inline login form */
+    .login-inline {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: 36px 40px;
+      width: min(420px, 90vw);
+      backdrop-filter: blur(8px);
+      position: relative; z-index: 1;
+    }
+    .login-inline h3 {
+      color: var(--white);
+      margin-bottom: 24px;
+      font-size: 1.2rem;
+    }
+    .login-inline .form-group label { color: var(--cream); }
+    .login-inline .form-group input {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+    .login-inline .form-group input::placeholder { color: rgba(255,255,255,0.35); }
+    .login-inline .form-group input:focus { border-color: var(--pink); background: rgba(255,255,255,0.12); }
+    .login-inline .form-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 20px;
+    }
+    .login-inline .form-footer a { color: var(--cream); font-size: 0.85rem; opacity: 0.7; transition: var(--transition); }
+    .login-inline .form-footer a:hover { color: var(--pink); opacity: 1; }
+    .forgot-pw { display: block; text-align: right; margin-top: 8px; font-size: 0.82rem; color: var(--cream); opacity: 0.6; transition: var(--transition); }
+    .forgot-pw:hover { color: var(--pink); opacity: 1; }
+
+    /* Two col layout in hero */
+    .hero-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1100px;
+      width: 100%;
+      position: relative; z-index: 1;
+    }
+    .hero-left { text-align: left; }
+    .hero-left .tagline, .hero-left h2 { text-align: left; }
+    .hero-left .hero-cta { justify-content: flex-start; }
+
+    /* Features strip */
+    .features-strip {
+      background: var(--pink);
+      padding: 20px 5%;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .features-strip .feat {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--white); font-weight: 600; font-size: 0.9rem;
+    }
+    .features-strip .feat span { font-size: 1.3rem; }
+
+    /* Why section */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 48px;
+    }
+    .why-item {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      border-left: 4px solid var(--pink);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    .why-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .why-item .icon { font-size: 2rem; margin-bottom: 16px; }
+    .why-item h3 { margin-bottom: 10px; }
+
+    /* CTA banner */
+    .cta-banner {
+      background: var(--navy);
+      padding: 72px 5%;
+      text-align: center;
+    }
+    .cta-banner h2 { color: var(--white); margin-bottom: 12px; }
+    .cta-banner p { color: var(--cream); opacity: 0.75; max-width: 500px; margin: 0 auto 32px; }
+
+    @media (max-width: 900px) {
+      .hero-cols { grid-template-columns: 1fr; gap: 40px; }
+      .hero-left { text-align: center; }
+      .hero-left .tagline, .hero-left h2 { text-align: center; }
+      .hero-left .hero-cta { justify-content: center; }
+      .why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="pricing.html">See Pricing</a>
+      <a href="signup.html">Sign Up</a>
+    </div>
+    <div class="nav-actions">
+      <a href="#" class="btn btn-outline-white btn-sm" id="openLogin">Login</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Get Started</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="home-hero">
+    <div class="hero-deco hero-deco-1">🎤</div>
+    <div class="hero-deco hero-deco-2">🎭</div>
+
+    <div class="hero-cols">
+      <div class="hero-left">
+        <p class="badge badge-pink mb-16">The Platform Built for Comedians</p>
+        <h1 class="tagline">Welcome to<br><span class="accent">Punchline.</span></h1>
+        <h2>Your jokes should kill.<br>The algorithm shouldn't.</h2>
+        <div class="hero-cta">
+          <a href="signup.html" class="btn btn-primary btn-lg">Create Free Account</a>
+          <a href="pricing.html" class="btn btn-outline-white btn-lg">See Pricing</a>
+        </div>
+      </div>
+
+      <!-- Inline Login -->
+      <div class="login-inline">
+        <h3>Welcome back 👋</h3>
+        <div class="form-group">
+          <label for="loginEmail">Email or Username</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="loginPass">Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••">
+        </div>
+        <a href="#" class="forgot-pw">Forgot password?</a>
+        <div class="login-inline form-footer" style="background:transparent;border:none;padding:0;width:auto;">
+          <a href="signup.html">No account? Sign up free</a>
+          <button class="btn btn-primary">Log In</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES STRIP -->
+  <div class="features-strip">
+    <div class="feat"><span>🎙️</span> Host Your Own Content</div>
+    <div class="feat"><span>📁</span> Organize Everything</div>
+    <div class="feat"><span>💬</span> Built-in Community</div>
+    <div class="feat"><span>🚫</span> Zero Algorithms</div>
+  </div>
+
+  <!-- WHY PUNCHLINE -->
+  <section class="section" style="background: var(--cream);">
+    <div class="container">
+      <div class="section-title text-center">
+        <p class="badge badge-pink mb-8">Why Punchline</p>
+        <h2>Your comedy. Your rules.</h2>
+        <p>Stop fighting algorithms. Start building a real audience.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="icon">🗂️</div>
+          <h3>Centralized Archive</h3>
+          <p>Keep every sketch, bit, and joke in one organized place. No more scattered links.</p>
+        </div>
+        <div class="why-item">
+          <div class="icon">🎯</div>
+          <h3>Intentional Browsing</h3>
+          <p>Fans browse your work on their terms, not because an algorithm pushed it at them.</p>
+        </div>
+        <div class="why-item">
+          <div class="icon">💬</div>
+          <h3>Real Discussion</h3>
+          <p>Discussion spaces tied directly to your content. Comments where they belong.</p>
+        </div>
+        <div class="why-item">
+          <div class="icon">📱</div>
+          <h3>Works Everywhere</h3>
+          <p>Designed to look great on any device, any screen size, any time.</p>
+        </div>
+        <div class="why-item">
+          <div class="icon">🎨</div>
+          <h3>Your Brand</h3>
+          <p>Cohesive visual identity that reflects your comedy style and personality.</p>
+        </div>
+        <div class="why-item">
+          <div class="icon">🔒</div>
+          <h3>Owned by You</h3>
+          <p>Your content, your audience, your data. Not rented from a platform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container text-center">
+      <h2>Ready to own your comedy?</h2>
+      <p>Join thousands of comedians who stopped chasing the algorithm and started building real audiences.</p>
+      <div class="flex-center gap-16">
+        <a href="signup.html" class="btn btn-primary btn-lg">Create Free Account</a>
+        <a href="pricing.html" class="btn btn-outline-white btn-lg">View Pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 Punchline. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Cookies</a>
+      <a href="#">Terms</a>
+      <a href="#">Data Preferences</a>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+
+</body>
+</html>
