@@ -273,9 +273,9 @@
         <h3>Welcome back 👋</h3>
         <div class="login-alert" id="loginAlert">Incorrect email or password. Please try again.</div>
         <div class="form-group">
-          <label for="loginEmail">Email</label>
-          <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
-          <span class="field-error" id="emailError">Please enter a valid email address.</span>
+          <label for="loginEmail">Email or Username</label>
+          <input type="text" id="loginEmail" placeholder="you@example.com or @handle" autocomplete="username">
+          <span class="field-error" id="emailError">Please enter your email or username.</span>
         </div>
         <div class="form-group">
           <label for="loginPass">Password</label>
@@ -398,11 +398,11 @@
       [emailErr, passErr].forEach(el => el.classList.remove('visible'));
       alert.classList.remove('visible');
 
-      const email = emailEl.value.trim();
-      const pass  = passEl.value;
+      const identifier = emailEl.value.trim();
+      const pass       = passEl.value;
       let valid = true;
 
-      if (!isValidEmail(email)) {
+      if (!identifier) {
         emailEl.classList.add('input-error');
         emailErr.classList.add('visible');
         valid = false;
@@ -414,9 +414,26 @@
       }
       if (!valid) return;
 
-      // Check credentials
+      // Resolve identifier — could be an email or a username
       const users = JSON.parse(localStorage.getItem('punchline_users') || '{}');
-      const user  = users[email.toLowerCase()];
+      let matchedEmail = null;
+      let user = null;
+
+      if (isValidEmail(identifier)) {
+        // Treat as email
+        matchedEmail = identifier.toLowerCase();
+        user = users[matchedEmail];
+      } else {
+        // Treat as username — search all accounts
+        const stripped = identifier.replace(/^@/, '').toLowerCase();
+        for (const [em, u] of Object.entries(users)) {
+          if ((u.name || '').toLowerCase() === stripped) {
+            matchedEmail = em;
+            user = u;
+            break;
+          }
+        }
+      }
 
       if (!user || user.password !== pass) {
         alert.classList.add('visible');
@@ -427,8 +444,8 @@
 
       // Save session
       localStorage.setItem('punchline_session', JSON.stringify({
-        email: email.toLowerCase(),
-        name:  user.name || email.split('@')[0]
+        email: matchedEmail,
+        name:  user.name || matchedEmail.split('@')[0]
       }));
 
       window.location.href = 'home2.html';
