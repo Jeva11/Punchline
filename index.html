@@ -6,7 +6,6 @@
   <title>Punchline — Your Jokes Should Kill</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* Page-specific styles */
     .home-hero {
       min-height: 100vh;
       background: var(--navy);
@@ -48,7 +47,6 @@
       flex-wrap: wrap; justify-content: center;
       position: relative; z-index: 1;
     }
-    /* Floating mic decoration */
     .hero-deco {
       position: absolute;
       font-size: 12rem;
@@ -59,7 +57,7 @@
     .hero-deco-1 { top: -20px; right: -40px; transform: rotate(20deg); }
     .hero-deco-2 { bottom: -60px; left: -40px; transform: rotate(-15deg); font-size: 18rem; }
 
-    /* Inline login form */
+    /* ---- LOGIN CARD ---- */
     .login-inline {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.1);
@@ -82,16 +80,51 @@
     }
     .login-inline .form-group input::placeholder { color: rgba(255,255,255,0.35); }
     .login-inline .form-group input:focus { border-color: var(--pink); background: rgba(255,255,255,0.12); }
-    .login-inline .form-footer {
-      display: flex; justify-content: space-between; align-items: center;
+
+    /* error state */
+    .login-inline .form-group input.input-error { border-color: #ff6b6b; box-shadow: 0 0 0 3px rgba(255,107,107,0.18); }
+    .field-error {
+      color: #ff8a8a;
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* login-level error (wrong credentials) */
+    .login-alert {
+      background: rgba(255,107,107,0.15);
+      border: 1px solid rgba(255,107,107,0.35);
+      border-radius: var(--radius);
+      color: #ff8a8a;
+      font-size: 0.85rem;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .login-alert.visible { display: block; }
+
+    .login-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-top: 20px;
     }
-    .login-inline .form-footer a { color: var(--cream); font-size: 0.85rem; opacity: 0.7; transition: var(--transition); }
-    .login-inline .form-footer a:hover { color: var(--pink); opacity: 1; }
-    .forgot-pw { display: block; text-align: right; margin-top: 8px; font-size: 0.82rem; color: var(--cream); opacity: 0.6; transition: var(--transition); }
+    .login-card-footer a { color: var(--cream); font-size: 0.85rem; opacity: 0.7; transition: var(--transition); padding-left: 4px; }
+    .login-card-footer a:hover { color: var(--pink); opacity: 1; }
+    .forgot-pw {
+      display: block;
+      text-align: right;
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: var(--cream);
+      opacity: 0.6;
+      transition: var(--transition);
+      cursor: pointer;
+    }
     .forgot-pw:hover { color: var(--pink); opacity: 1; }
 
-    /* Two col layout in hero */
+    /* hero two-col */
     .hero-cols {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -105,7 +138,7 @@
     .hero-left .tagline, .hero-left h2 { text-align: left; }
     .hero-left .hero-cta { justify-content: flex-start; }
 
-    /* Features strip */
+    /* features strip */
     .features-strip {
       background: var(--pink);
       padding: 20px 5%;
@@ -120,7 +153,7 @@
     }
     .features-strip .feat span { font-size: 1.3rem; }
 
-    /* Why section */
+    /* why section */
     .why-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -139,7 +172,6 @@
     .why-item .icon { font-size: 2rem; margin-bottom: 16px; }
     .why-item h3 { margin-bottom: 10px; }
 
-    /* CTA banner */
     .cta-banner {
       background: var(--navy);
       padding: 72px 5%;
@@ -147,6 +179,52 @@
     }
     .cta-banner h2 { color: var(--white); margin-bottom: 12px; }
     .cta-banner p { color: var(--cream); opacity: 0.75; max-width: 500px; margin: 0 auto 32px; }
+
+    /* ---- FORGOT PASSWORD MODAL ---- */
+    .fp-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(26,26,46,0.75);
+      backdrop-filter: blur(5px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .fp-overlay.active { display: flex; }
+    .fp-modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      width: min(400px, 92vw);
+      position: relative;
+      box-shadow: var(--shadow-lg);
+      animation: modalIn 0.22s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .fp-modal h3 { margin-bottom: 8px; }
+    .fp-modal .fp-sub { font-size: 0.9rem; opacity: 0.65; margin-bottom: 24px; }
+    .fp-close {
+      position: absolute; top: 14px; right: 18px;
+      background: none; border: none;
+      font-size: 1.4rem; color: var(--gray-mid);
+      cursor: pointer; transition: var(--transition);
+    }
+    .fp-close:hover { color: var(--pink); }
+    .fp-success {
+      display: none;
+      background: rgba(50,200,100,0.1);
+      border: 1px solid rgba(50,200,100,0.3);
+      border-radius: var(--radius);
+      color: #2a9d5c;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      margin-top: 16px;
+    }
+    .fp-success.visible { display: block; }
+    .fp-form-area { transition: var(--transition); }
 
     @media (max-width: 900px) {
       .hero-cols { grid-template-columns: 1fr; gap: 40px; }
@@ -167,7 +245,6 @@
       <a href="signup.html">Sign Up</a>
     </div>
     <div class="nav-actions">
-      <a href="#" class="btn btn-outline-white btn-sm" id="openLogin">Login</a>
       <a href="signup.html" class="btn btn-primary btn-sm">Get Started</a>
       <button class="hamburger" id="hamburger" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -191,21 +268,24 @@
         </div>
       </div>
 
-      <!-- Inline Login -->
+      <!-- LOGIN CARD -->
       <div class="login-inline">
         <h3>Welcome back 👋</h3>
+        <div class="login-alert" id="loginAlert">Incorrect email or password. Please try again.</div>
         <div class="form-group">
-          <label for="loginEmail">Email or Username</label>
-          <input type="email" id="loginEmail" placeholder="you@example.com">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+          <span class="field-error" id="emailError">Please enter a valid email address.</span>
         </div>
         <div class="form-group">
           <label for="loginPass">Password</label>
-          <input type="password" id="loginPass" placeholder="••••••••">
+          <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+          <span class="field-error" id="passError">Password cannot be empty.</span>
         </div>
-        <a href="#" class="forgot-pw">Forgot password?</a>
-        <div class="login-inline form-footer" style="background:transparent;border:none;padding:0;width:auto;">
+        <span class="forgot-pw" id="forgotPwLink">Forgot password?</span>
+        <div class="login-card-footer">
           <a href="signup.html">No account? Sign up free</a>
-          <button class="btn btn-primary">Log In</button>
+          <button class="btn btn-primary" id="loginBtn">Log In</button>
         </div>
       </div>
     </div>
@@ -228,36 +308,12 @@
         <p>Stop fighting algorithms. Start building a real audience.</p>
       </div>
       <div class="why-grid">
-        <div class="why-item">
-          <div class="icon">🗂️</div>
-          <h3>Centralized Archive</h3>
-          <p>Keep every sketch, bit, and joke in one organized place. No more scattered links.</p>
-        </div>
-        <div class="why-item">
-          <div class="icon">🎯</div>
-          <h3>Intentional Browsing</h3>
-          <p>Fans browse your work on their terms, not because an algorithm pushed it at them.</p>
-        </div>
-        <div class="why-item">
-          <div class="icon">💬</div>
-          <h3>Real Discussion</h3>
-          <p>Discussion spaces tied directly to your content. Comments where they belong.</p>
-        </div>
-        <div class="why-item">
-          <div class="icon">📱</div>
-          <h3>Works Everywhere</h3>
-          <p>Designed to look great on any device, any screen size, any time.</p>
-        </div>
-        <div class="why-item">
-          <div class="icon">🎨</div>
-          <h3>Your Brand</h3>
-          <p>Cohesive visual identity that reflects your comedy style and personality.</p>
-        </div>
-        <div class="why-item">
-          <div class="icon">🔒</div>
-          <h3>Owned by You</h3>
-          <p>Your content, your audience, your data. Not rented from a platform.</p>
-        </div>
+        <div class="why-item"><div class="icon">🗂️</div><h3>Centralized Archive</h3><p>Keep every sketch, bit, and joke in one organized place. No more scattered links.</p></div>
+        <div class="why-item"><div class="icon">🎯</div><h3>Intentional Browsing</h3><p>Fans browse your work on their terms, not because an algorithm pushed it at them.</p></div>
+        <div class="why-item"><div class="icon">💬</div><h3>Real Discussion</h3><p>Discussion spaces tied directly to your content. Comments where they belong.</p></div>
+        <div class="why-item"><div class="icon">📱</div><h3>Works Everywhere</h3><p>Designed to look great on any device, any screen size, any time.</p></div>
+        <div class="why-item"><div class="icon">🎨</div><h3>Your Brand</h3><p>Cohesive visual identity that reflects your comedy style and personality.</p></div>
+        <div class="why-item"><div class="icon">🔒</div><h3>Owned by You</h3><p>Your content, your audience, your data. Not rented from a platform.</p></div>
       </div>
     </div>
   </section>
@@ -278,19 +334,144 @@
   <footer>
     <span>© 2025 Punchline. All rights reserved.</span>
     <div class="footer-links">
-      <a href="#">Privacy</a>
-      <a href="#">Cookies</a>
-      <a href="#">Terms</a>
-      <a href="#">Data Preferences</a>
+      <a href="#">Privacy</a><a href="#">Cookies</a><a href="#">Terms</a><a href="#">Data Preferences</a>
     </div>
   </footer>
 
+  <!-- FORGOT PASSWORD MODAL -->
+  <div class="fp-overlay" id="fpOverlay">
+    <div class="fp-modal">
+      <button class="fp-close" id="fpClose">×</button>
+      <h3>Reset your password</h3>
+      <p class="fp-sub">Enter the email address on your account and we'll send a reset link.</p>
+      <div class="fp-form-area" id="fpFormArea">
+        <div class="form-group">
+          <label for="fpEmail">Email address</label>
+          <input type="email" id="fpEmail" placeholder="you@example.com">
+          <span class="field-error" id="fpEmailError">Please enter a valid email address.</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%; margin-top:4px;" id="fpSubmit">Send Reset Link</button>
+      </div>
+      <div class="fp-success" id="fpSuccess">
+        ✓ If that email is registered, you'll receive a reset link shortly. Check your inbox (and spam folder).
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Hamburger
+    // ---- SEED a demo user so login actually works out of the box ----
+    // In production this would come from signup.html writing to localStorage.
+    // Format: punchline_users = { "email": { password, name } }
+    (function seedDemoUser() {
+      const users = JSON.parse(localStorage.getItem('punchline_users') || '{}');
+      if (!users['demo@punchline.com']) {
+        users['demo@punchline.com'] = { password: 'Demo1234', name: 'Demo User' };
+        localStorage.setItem('punchline_users', JSON.stringify(users));
+      }
+    })();
+
+    // ---- If already logged in, skip straight to home2 ----
+    if (localStorage.getItem('punchline_session')) {
+      window.location.href = 'home2.html';
+    }
+
+    // ---- Hamburger ----
     document.getElementById('hamburger').addEventListener('click', () => {
       document.getElementById('navLinks').classList.toggle('open');
     });
-  </script>
 
+    // ---- Helpers ----
+    function isValidEmail(v) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    }
+
+    // ---- Login ----
+    document.getElementById('loginBtn').addEventListener('click', function () {
+      const emailEl  = document.getElementById('loginEmail');
+      const passEl   = document.getElementById('loginPass');
+      const emailErr = document.getElementById('emailError');
+      const passErr  = document.getElementById('passError');
+      const alert    = document.getElementById('loginAlert');
+
+      // reset
+      [emailEl, passEl].forEach(el => el.classList.remove('input-error'));
+      [emailErr, passErr].forEach(el => el.classList.remove('visible'));
+      alert.classList.remove('visible');
+
+      const email = emailEl.value.trim();
+      const pass  = passEl.value;
+      let valid = true;
+
+      if (!isValidEmail(email)) {
+        emailEl.classList.add('input-error');
+        emailErr.classList.add('visible');
+        valid = false;
+      }
+      if (!pass) {
+        passEl.classList.add('input-error');
+        passErr.classList.add('visible');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Check credentials
+      const users = JSON.parse(localStorage.getItem('punchline_users') || '{}');
+      const user  = users[email.toLowerCase()];
+
+      if (!user || user.password !== pass) {
+        alert.classList.add('visible');
+        emailEl.classList.add('input-error');
+        passEl.classList.add('input-error');
+        return;
+      }
+
+      // Save session
+      localStorage.setItem('punchline_session', JSON.stringify({
+        email: email.toLowerCase(),
+        name:  user.name || email.split('@')[0]
+      }));
+
+      window.location.href = 'home2.html';
+    });
+
+    // Allow Enter key to submit
+    ['loginEmail', 'loginPass'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('loginBtn').click();
+      });
+    });
+
+    // ---- Forgot Password ----
+    document.getElementById('forgotPwLink').addEventListener('click', () => {
+      document.getElementById('fpOverlay').classList.add('active');
+      document.getElementById('fpEmail').value = document.getElementById('loginEmail').value;
+      document.getElementById('fpSuccess').classList.remove('visible');
+      document.getElementById('fpFormArea').style.display = '';
+      document.getElementById('fpEmailError').classList.remove('visible');
+      document.getElementById('fpEmail').classList.remove('input-error');
+    });
+    document.getElementById('fpClose').addEventListener('click', () => {
+      document.getElementById('fpOverlay').classList.remove('active');
+    });
+    document.getElementById('fpOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('fpOverlay'))
+        document.getElementById('fpOverlay').classList.remove('active');
+    });
+    document.getElementById('fpSubmit').addEventListener('click', () => {
+      const fpEmailEl  = document.getElementById('fpEmail');
+      const fpEmailErr = document.getElementById('fpEmailError');
+      fpEmailEl.classList.remove('input-error');
+      fpEmailErr.classList.remove('visible');
+
+      if (!isValidEmail(fpEmailEl.value)) {
+        fpEmailEl.classList.add('input-error');
+        fpEmailErr.classList.add('visible');
+        return;
+      }
+      // Show confirmation regardless (don't leak whether email exists)
+      document.getElementById('fpFormArea').style.display = 'none';
+      document.getElementById('fpSuccess').classList.add('visible');
+    });
+  </script>
 </body>
 </html>
