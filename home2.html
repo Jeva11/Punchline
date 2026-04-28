@@ -7,6 +7,68 @@
   <link rel="stylesheet" href="css/styles.css">
   <style>
     body { background: var(--cream); }
+
+    /* ---- AVATAR / USER MENU ---- */
+    .user-menu-wrap { position: relative; }
+    .user-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--pink);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.2);
+      transition: var(--transition);
+      user-select: none;
+      letter-spacing: 0.03em;
+    }
+    .user-avatar:hover { border-color: rgba(255,255,255,0.7); transform: scale(1.06); }
+
+    .user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      min-width: 210px;
+      overflow: hidden;
+      animation: dropIn 0.18s cubic-bezier(.4,0,.2,1);
+      z-index: 200;
+    }
+    .user-dropdown.open { display: block; }
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .ud-header {
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+    .ud-header .ud-name  { font-weight: 700; font-size: 0.95rem; color: var(--navy); }
+    .ud-header .ud-email { font-size: 0.76rem; color: var(--gray-mid); margin-top: 2px; }
+
+    .ud-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 18px;
+      font-size: 0.88rem; font-weight: 500;
+      color: var(--navy);
+      cursor: pointer;
+      transition: var(--transition);
+      border: none; background: none;
+      width: 100%; text-align: left;
+      font-family: var(--font-main);
+      text-decoration: none;
+    }
+    .ud-item:hover { background: var(--gray-light); color: var(--pink); }
+    .ud-item.logout { color: #c0392b; }
+    .ud-item.logout:hover { background: #fff0ee; }
+    .ud-divider { height: 1px; background: var(--cream-dark); margin: 4px 0; }
+
+    /* ---- PAGE STYLES ---- */
     .about-section {
       max-width: 900px; margin: 0 auto;
       padding: 72px 5%;
@@ -25,10 +87,12 @@
     .stat { text-align: center; }
     .stat .num { font-size: 2rem; font-weight: 800; color: var(--pink); }
     .stat .lbl { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; margin-top: 4px; }
+
     @media (max-width: 700px) { .about-section { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
+
   <nav class="navbar">
     <a href="home2.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
@@ -38,6 +102,20 @@
       <a href="merch.html">Merch</a>
     </div>
     <div class="nav-actions">
+      <!-- Avatar inserted by JS once session is confirmed -->
+      <div class="user-menu-wrap" id="userMenuWrap" style="display:none;">
+        <div class="user-avatar" id="userAvatar" role="button" tabindex="0" title="Account menu"></div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="ud-header">
+            <div class="ud-name"  id="udName"></div>
+            <div class="ud-email" id="udEmail"></div>
+          </div>
+          <a href="profile.html"  class="ud-item">👤 &nbsp;My Profile</a>
+          <a href="settings.html" class="ud-item">⚙️ &nbsp;Settings</a>
+          <div class="ud-divider"></div>
+          <button class="ud-item logout" id="logoutBtn">🚪 &nbsp;Log Out</button>
+        </div>
+      </div>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     </div>
   </nav>
@@ -66,6 +144,47 @@
     <span>© 2025 [Creator Name] · Powered by Punchline</span>
     <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </footer>
-  <script>document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));</script>
+
+  <script>
+    // ---- Session check ----
+    const session = JSON.parse(localStorage.getItem('punchline_session') || 'null');
+
+    if (!session) {
+      window.location.href = 'index.html';
+    } else {
+      const name     = session.name || session.email.split('@')[0];
+      const initials = name.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0, 2).join('');
+
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('udName').textContent     = name;
+      document.getElementById('udEmail').textContent    = session.email;
+      document.getElementById('userMenuWrap').style.display = 'block';
+    }
+
+    // ---- Dropdown toggle ----
+    document.getElementById('userAvatar').addEventListener('click', function (e) {
+      e.stopPropagation();
+      document.getElementById('userDropdown').classList.toggle('open');
+    });
+    document.getElementById('userAvatar').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ')
+        document.getElementById('userDropdown').classList.toggle('open');
+    });
+    document.addEventListener('click', function () {
+      document.getElementById('userDropdown').classList.remove('open');
+    });
+
+    // ---- Logout ----
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      localStorage.removeItem('punchline_session');
+      window.location.href = 'index.html';
+    });
+
+    // ---- Hamburger ----
+    document.getElementById('hamburger').addEventListener('click', function () {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+  </script>
+
 </body>
 </html>
