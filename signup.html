@@ -43,10 +43,7 @@
     .signup-right .sub { font-size: 0.9rem; opacity: 0.65; margin-bottom: 32px; }
 
     /* Step indicator */
-    .steps {
-      display: flex; align-items: center; gap: 0;
-      margin-bottom: 36px;
-    }
+    .steps { display: flex; align-items: center; gap: 0; margin-bottom: 36px; }
     .step-item { display: flex; align-items: center; gap: 8px; }
     .step-num {
       width: 30px; height: 30px; border-radius: 50%;
@@ -64,19 +61,65 @@
     .form-step { display: none; }
     .form-step.active { display: block; }
 
-    /* Profile picture upload */
-    .avatar-upload {
-      display: flex; align-items: center; gap: 20px;
-      margin-bottom: 24px;
+    /* Validation states */
+    .form-group input.input-error,
+    .form-group textarea.input-error {
+      border-color: #e74c3c !important;
+      box-shadow: 0 0 0 3px rgba(231,76,60,0.15) !important;
     }
+    .form-group input.input-ok {
+      border-color: #27ae60 !important;
+      box-shadow: 0 0 0 3px rgba(39,174,96,0.12) !important;
+    }
+    .field-error {
+      color: #c0392b;
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* Password strength bar */
+    .pw-strength-bar {
+      height: 3px;
+      border-radius: 2px;
+      margin-top: 6px;
+      background: var(--cream-dark);
+      overflow: hidden;
+    }
+    .pw-strength-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+    .pw-strength-label {
+      font-size: 0.74rem;
+      margin-top: 4px;
+      opacity: 0.6;
+      min-height: 1em;
+    }
+
+    /* Bio char counter */
+    .bio-counter {
+      font-size: 0.76rem;
+      text-align: right;
+      margin-top: 4px;
+      opacity: 0.5;
+      transition: var(--transition);
+    }
+    .bio-counter.warn { color: #e67e22; opacity: 1; }
+    .bio-counter.ok   { color: #27ae60; opacity: 1; }
+
+    /* Avatar upload */
+    .avatar-upload { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
     .avatar-circle {
       width: 80px; height: 80px; border-radius: 50%;
       background: var(--cream-dark);
       border: 3px dashed var(--gray-mid);
       display: flex; align-items: center; justify-content: center;
       font-size: 2rem; cursor: pointer;
-      transition: var(--transition); overflow: hidden;
-      flex-shrink: 0;
+      transition: var(--transition); overflow: hidden; flex-shrink: 0;
     }
     .avatar-circle:hover { border-color: var(--pink); }
     .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: none; }
@@ -89,8 +132,7 @@
       border: 2px solid var(--cream-dark);
       background: var(--white);
       font-size: 0.82rem; font-weight: 600;
-      cursor: pointer; transition: var(--transition);
-      user-select: none;
+      cursor: pointer; transition: var(--transition); user-select: none;
     }
     .comedy-tag.selected { border-color: var(--pink); background: rgba(242,39,110,0.1); color: var(--pink); }
 
@@ -101,9 +143,7 @@
       padding: 20px;
       border: 2px solid var(--cream-dark);
       display: flex; align-items: flex-start; gap: 14px;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-top: 8px;
+      cursor: pointer; transition: var(--transition); margin-top: 8px;
     }
     .opt-in-box:has(input:checked) { border-color: var(--pink); background: rgba(242,39,110,0.04); }
     .opt-in-box input { width: 18px; height: 18px; accent-color: var(--pink); margin-top: 2px; flex-shrink: 0; }
@@ -126,12 +166,11 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
-      <a href="login.html">Already a member? <strong>Login here</strong></a>
+      <a href="index.html">Already a member? <strong>Login here</strong></a>
     </div>
     <div class="nav-actions">
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
@@ -153,7 +192,7 @@
       </div>
     </div>
 
-    <!-- RIGHT PANEL: FORM -->
+    <!-- RIGHT PANEL -->
     <div class="signup-right">
       <h2>Create Your Account</h2>
       <p class="sub">Step by step — takes less than 2 minutes.</p>
@@ -176,7 +215,7 @@
         </div>
       </div>
 
-      <!-- STEP 1: Account Info -->
+      <!-- STEP 1 -->
       <div class="form-step active" id="step1">
         <div class="avatar-upload">
           <div class="avatar-circle" id="avatarCircle" title="Upload profile picture">
@@ -185,37 +224,47 @@
           </div>
           <div>
             <p style="font-weight:600;margin-bottom:4px;">Profile Picture</p>
-            <p style="font-size:0.82rem;opacity:0.6;">Click the circle to upload</p>
+            <p style="font-size:0.82rem;opacity:0.6;">Click the circle to upload (optional)</p>
             <input type="file" id="avatarInput" accept="image/*">
           </div>
         </div>
+
         <div class="form-group">
           <label for="username">Username <span style="color:var(--pink)">*</span></label>
-          <input type="text" id="username" placeholder="@yourcomedyname" required>
+          <input type="text" id="username" placeholder="@yourcomedyname" autocomplete="username">
+          <span class="field-error" id="usernameError"></span>
         </div>
         <div class="form-group">
-          <label for="email">Email Address <span style="color:var(--pink)">*</span></label>
-          <input type="email" id="email" placeholder="you@example.com" required>
+          <label for="signupEmail">Email Address <span style="color:var(--pink)">*</span></label>
+          <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email">
+          <span class="field-error" id="emailError"></span>
         </div>
         <div class="form-group">
-          <label for="password">Password <span style="color:var(--pink)">*</span></label>
-          <input type="password" id="password" placeholder="At least 8 characters" required>
+          <label for="signupPassword">Password <span style="color:var(--pink)">*</span></label>
+          <input type="password" id="signupPassword" placeholder="At least 8 characters" autocomplete="new-password">
+          <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwStrengthFill"></div></div>
+          <div class="pw-strength-label" id="pwStrengthLabel"></div>
+          <span class="field-error" id="passwordError"></span>
         </div>
         <div class="form-group">
           <label for="confirmPass">Confirm Password <span style="color:var(--pink)">*</span></label>
-          <input type="password" id="confirmPass" placeholder="Repeat password" required>
+          <input type="password" id="confirmPass" placeholder="Repeat password" autocomplete="new-password">
+          <span class="field-error" id="confirmError"></span>
         </div>
+
         <div class="form-nav">
           <span></span>
-          <button class="btn btn-primary" onclick="goToStep(2)">Next: Your Comedy →</button>
+          <button class="btn btn-primary" id="toStep2Btn">Next: Your Comedy →</button>
         </div>
       </div>
 
-      <!-- STEP 2: Comedy Description -->
+      <!-- STEP 2 -->
       <div class="form-step" id="step2">
         <div class="form-group">
-          <label for="bio">Describe Your Comedy</label>
+          <label for="bio">Describe Your Comedy <span style="color:var(--pink)">*</span></label>
           <textarea id="bio" placeholder="Tell us about your style, influences, what makes your comedy unique..." rows="4"></textarea>
+          <div class="bio-counter" id="bioCounter">0 / 10 minimum</div>
+          <span class="field-error" id="bioError"></span>
         </div>
         <div class="form-group">
           <label>What type of comedy do you do? <small style="opacity:0.6">(pick all that apply)</small></label>
@@ -238,22 +287,22 @@
         </div>
         <div class="form-nav">
           <button class="back-btn" onclick="goToStep(1)">← Back</button>
-          <button class="btn btn-primary" onclick="goToStep(3)">Next: Stay Connected →</button>
+          <button class="btn btn-primary" id="toStep3Btn">Next: Stay Connected →</button>
         </div>
       </div>
 
-      <!-- STEP 3: Newsletter -->
+      <!-- STEP 3 -->
       <div class="form-step" id="step3">
         <h3 class="mb-16">One last thing — stay in the loop</h3>
         <label class="opt-in-box">
-          <input type="checkbox" checked>
+          <input type="checkbox" id="optNewsletter" checked>
           <div class="opt-text">
             <strong>📬 Punchline Creator Newsletter</strong>
             Platform updates, comedy industry news, and tips for growing your audience. No spam — ever.
           </div>
         </label>
         <label class="opt-in-box mt-16">
-          <input type="checkbox">
+          <input type="checkbox" id="optOffers">
           <div class="opt-text">
             <strong>🎉 Special Offers & Promotions</strong>
             Early access to new features and occasional deals on Pro upgrades.
@@ -264,15 +313,36 @@
         </p>
         <div class="form-nav">
           <button class="back-btn" onclick="goToStep(2)">← Back</button>
-          <button class="btn btn-primary btn-lg" onclick="handleSignup()">Create My Account 🎉</button>
+          <button class="btn btn-primary btn-lg" id="createAccountBtn">Create My Account 🎉</button>
         </div>
       </div>
 
-      <p class="already-member">Already have an account? <a href="login.html">Log in here</a></p>
+      <p class="already-member">Already have an account? <a href="index.html">Log in here</a></p>
     </div>
   </div>
 
   <script>
+    // ---- Helpers ----
+    function isValidEmail(v) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    }
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.classList.add('visible');
+    }
+    function clearError(id) {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      el.classList.remove('visible');
+    }
+    function setInputState(el, state) {
+      el.classList.remove('input-error', 'input-ok');
+      if (state === 'error') el.classList.add('input-error');
+      if (state === 'ok')    el.classList.add('input-ok');
+    }
+
+    // ---- Step navigation ----
     function goToStep(n) {
       document.querySelectorAll('.form-step').forEach((s, i) => s.classList.toggle('active', i === n - 1));
       document.querySelectorAll('.step-item').forEach((s, i) => {
@@ -280,16 +350,159 @@
         if (i < n - 1) s.classList.add('done');
         if (i === n - 1) s.classList.add('active');
       });
+      // Scroll right panel to top on step change
+      document.querySelector('.signup-right').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function handleSignup() {
-      alert('Account created! Welcome to Punchline 🎤\n(This would redirect to your new dashboard in production.)');
+    // ---- Password strength ----
+    document.getElementById('signupPassword').addEventListener('input', function () {
+      const val   = this.value;
+      const fill  = document.getElementById('pwStrengthFill');
+      const label = document.getElementById('pwStrengthLabel');
+      let score = 0;
+      if (val.length >= 8)  score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+      const levels = [
+        { w: '0%',   color: '',          text: '' },
+        { w: '25%',  color: '#e74c3c',   text: 'Weak' },
+        { w: '50%',  color: '#e67e22',   text: 'Fair' },
+        { w: '75%',  color: '#f1c40f',   text: 'Good' },
+        { w: '100%', color: '#27ae60',   text: 'Strong' },
+      ];
+      const lvl = val.length === 0 ? levels[0] : levels[score];
+      fill.style.width      = lvl.w;
+      fill.style.background = lvl.color;
+      label.textContent     = lvl.text;
+      // live clear error once typing
+      if (val.length > 0) { clearError('passwordError'); setInputState(this, ''); }
+    });
+
+    // ---- Bio character counter ----
+    document.getElementById('bio').addEventListener('input', function () {
+      const len     = this.value.trim().length;
+      const counter = document.getElementById('bioCounter');
+      if (len < 10) {
+        counter.textContent = `${len} / 10 minimum`;
+        counter.className = 'bio-counter warn';
+      } else {
+        counter.textContent = `${len} characters ✓`;
+        counter.className = 'bio-counter ok';
+        clearError('bioError');
+        setInputState(this, 'ok');
+      }
+    });
+
+    // ---- Step 1 → Step 2 ----
+    document.getElementById('toStep2Btn').addEventListener('click', function () {
+      const username  = document.getElementById('username');
+      const email     = document.getElementById('signupEmail');
+      const password  = document.getElementById('signupPassword');
+      const confirm   = document.getElementById('confirmPass');
+      let valid = true;
+
+      // Username
+      if (!username.value.trim()) {
+        showError('usernameError', 'Username is required.');
+        setInputState(username, 'error');
+        valid = false;
+      } else {
+        clearError('usernameError');
+        setInputState(username, 'ok');
+      }
+
+      // Email
+      if (!isValidEmail(email.value)) {
+        showError('emailError', 'Please enter a valid email address.');
+        setInputState(email, 'error');
+        valid = false;
+      } else {
+        // Check if email already registered
+        const users = JSON.parse(localStorage.getItem('punchline_users') || '{}');
+        if (users[email.value.trim().toLowerCase()]) {
+          showError('emailError', 'An account with this email already exists.');
+          setInputState(email, 'error');
+          valid = false;
+        } else {
+          clearError('emailError');
+          setInputState(email, 'ok');
+        }
+      }
+
+      // Password length
+      if (password.value.length < 8) {
+        showError('passwordError', 'Password must be at least 8 characters.');
+        setInputState(password, 'error');
+        valid = false;
+      } else {
+        clearError('passwordError');
+        setInputState(password, 'ok');
+      }
+
+      // Passwords match
+      if (!confirm.value) {
+        showError('confirmError', 'Please confirm your password.');
+        setInputState(confirm, 'error');
+        valid = false;
+      } else if (confirm.value !== password.value) {
+        showError('confirmError', 'Passwords do not match.');
+        setInputState(confirm, 'error');
+        valid = false;
+      } else if (password.value.length >= 8) {
+        clearError('confirmError');
+        setInputState(confirm, 'ok');
+      }
+
+      if (valid) goToStep(2);
+    });
+
+    // ---- Step 2 → Step 3 ----
+    document.getElementById('toStep3Btn').addEventListener('click', function () {
+      const bio = document.getElementById('bio');
+      if (bio.value.trim().length < 10) {
+        showError('bioError', 'Please write at least 10 characters about your comedy.');
+        setInputState(bio, 'error');
+        return;
+      }
+      clearError('bioError');
+      setInputState(bio, 'ok');
+      goToStep(3);
+    });
+
+    // ---- Create Account ----
+    document.getElementById('createAccountBtn').addEventListener('click', function () {
+      const email    = document.getElementById('signupEmail').value.trim().toLowerCase();
+      const password = document.getElementById('signupPassword').value;
+      const username = document.getElementById('username').value.trim();
+      const bio      = document.getElementById('bio').value.trim();
+
+      // Collect comedy tags
+      const tags = [...document.querySelectorAll('.comedy-tag.selected')].map(t => t.textContent);
+
+      // Build user record
+      const users = JSON.parse(localStorage.getItem('punchline_users') || '{}');
+      users[email] = {
+        password,
+        name:     username,
+        bio,
+        tags,
+        website:  document.getElementById('website').value.trim(),
+        newsletter: document.getElementById('optNewsletter').checked,
+        offers:     document.getElementById('optOffers').checked,
+        createdAt:  new Date().toISOString()
+      };
+      localStorage.setItem('punchline_users', JSON.stringify(users));
+
+      // Create session so they land logged in
+      localStorage.setItem('punchline_session', JSON.stringify({ email, name: username }));
+
       window.location.href = 'home2.html';
-    }
+    });
 
-    // Avatar preview
+    // ---- Avatar preview ----
     document.getElementById('avatarCircle').addEventListener('click', () => document.getElementById('avatarInput').click());
-    document.getElementById('avatarInput').addEventListener('change', function() {
+    document.getElementById('avatarInput').addEventListener('change', function () {
       if (this.files && this.files[0]) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -301,8 +514,22 @@
       }
     });
 
-    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
-  </script>
+    // ---- Hamburger ----
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
 
+    // ---- Live confirm password check ----
+    document.getElementById('confirmPass').addEventListener('input', function () {
+      const pw = document.getElementById('signupPassword').value;
+      if (this.value && this.value !== pw) {
+        showError('confirmError', 'Passwords do not match.');
+        setInputState(this, 'error');
+      } else if (this.value && this.value === pw) {
+        clearError('confirmError');
+        setInputState(this, 'ok');
+      }
+    });
+  </script>
 </body>
 </html>
