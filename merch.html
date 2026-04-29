@@ -103,6 +103,45 @@
     .toggle-switch input:checked + .toggle-track::after { left: 21px; }
     .toggle-label { font-size: 0.82rem; font-weight: 600; }
 
+    /* promo code builder */
+    .banner-edit-bar { flex-direction: column; align-items: stretch; gap: 14px; }
+    .banner-top-row  { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .banner-top-row input[type="text"] { flex: 1; min-width: 180px; }
+    .insert-code-btn {
+      background: rgba(242,39,110,0.12); border: 1px solid var(--pink); color: var(--pink);
+      border-radius: var(--radius); padding: 5px 10px; font-size: 0.75rem; font-weight: 700;
+      cursor: pointer; font-family: var(--font-main); white-space: nowrap; transition: var(--transition);
+    }
+    .insert-code-btn:hover { background: var(--pink); color: white; }
+    .promo-builder { border-top: 1px solid rgba(242,39,110,0.2); padding-top: 12px; }
+    .promo-builder-title { font-weight: 700; font-size: 0.82rem; margin-bottom: 10px; color: var(--navy); }
+    .promo-code-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .promo-code-row { display: flex; align-items: center; gap: 8px; }
+    .promo-code-row input[type="text"] {
+      width: 120px; padding: 7px 10px; border: 2px solid var(--cream-dark);
+      border-radius: var(--radius); font-family: var(--font-main); font-size: 0.85rem;
+      font-weight: 700; text-transform: uppercase; outline: none; flex-shrink: 0;
+    }
+    .promo-code-row input[type="text"]:focus { border-color: var(--pink); }
+    .promo-pct-wrap { display: flex; align-items: center; gap: 4px; }
+    .promo-pct-wrap input[type="number"] {
+      width: 64px; padding: 7px 10px; border: 2px solid var(--cream-dark);
+      border-radius: var(--radius); font-family: var(--font-main); font-size: 0.85rem;
+      font-weight: 700; outline: none; text-align: center;
+    }
+    .promo-pct-wrap input[type="number"]:focus { border-color: var(--pink); }
+    .promo-pct-wrap span { font-size: 0.82rem; font-weight: 600; opacity: 0.6; }
+    .promo-code-remove {
+      background: none; border: none; color: var(--gray-mid); cursor: pointer;
+      font-size: 0.9rem; padding: 0 4px; transition: var(--transition); font-family: var(--font-main);
+    }
+    .promo-code-remove:hover { color: #c0392b; }
+    .promo-code-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(242,39,110,0.1); border: 1px solid rgba(242,39,110,0.25);
+      border-radius: 100px; padding: 3px 10px; font-size: 0.75rem; font-weight: 700; color: var(--pink);
+    }
+
     /* ============================================================
        SHOP HEADER
     ============================================================ */
@@ -358,13 +397,23 @@
   </div>
 
   <div class="banner-edit-bar" id="bannerEditBar">
-    <label>Promo Banner:</label>
-    <label class="toggle-switch">
-      <input type="checkbox" id="bannerToggle">
-      <div class="toggle-track"></div>
-      <span class="toggle-label">Show banner</span>
-    </label>
-    <input type="text" id="bannerTextInput" placeholder="e.g. 🎉 USE CODE SAVE20 FOR 20% OFF — Free shipping over $50">
+    <!-- Row 1: toggle + text + insert helper -->
+    <div class="banner-top-row">
+      <label>Promo Banner:</label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="bannerToggle">
+        <div class="toggle-track"></div>
+        <span class="toggle-label">Show banner</span>
+      </label>
+      <input type="text" id="bannerTextInput" placeholder="e.g. 🎉 Free shipping over $50 — use code SOFT for 20% off">
+      <button class="insert-code-btn" id="insertCodeBtn" title="Insert your first promo code into the banner text">＋ Insert code</button>
+    </div>
+    <!-- Row 2: promo code builder -->
+    <div class="promo-builder">
+      <div class="promo-builder-title">🏷️ Promo Codes <span style="font-weight:400;opacity:0.5;">(up to 3 — used for checkout validation)</span></div>
+      <div class="promo-code-rows" id="promoCodeRows"></div>
+      <button class="btn btn-outline btn-sm" id="addPromoCodeBtn" style="font-size:0.78rem;">＋ Add Code</button>
+    </div>
   </div>
 
   <div class="shop-title-section">
@@ -605,15 +654,71 @@
     document.getElementById('dealMarquee').textContent = text + '   \u00a0\u00a0\u00a0   ' + text;
     document.getElementById('dealBanner').classList.toggle('active', !!data.banner.active);
   }
+
   function syncBannerBar(data) {
     document.getElementById('bannerToggle').checked  = !!data.banner.active;
     document.getElementById('bannerTextInput').value = data.banner.text || '';
+    renderPromoCodeRows(data.banner.promoCodes || []);
   }
+
   document.getElementById('bannerToggle').addEventListener('change', function () {
     tempData.banner.active = this.checked; applyBanner(tempData);
   });
   document.getElementById('bannerTextInput').addEventListener('input', function () {
     tempData.banner.text = this.value; applyBanner(tempData);
+  });
+
+  // Insert first code into banner text as a helper
+  document.getElementById('insertCodeBtn').addEventListener('click', () => {
+    const codes = tempData.banner.promoCodes || [];
+    if (codes.length === 0) { alert('Add a promo code below first.'); return; }
+    const c = codes[0];
+    const input = document.getElementById('bannerTextInput');
+    const snippet = ` — use code ${c.code} for ${c.pct}% off`;
+    if (!input.value.includes(c.code)) {
+      input.value += snippet;
+      tempData.banner.text = input.value;
+      applyBanner(tempData);
+    }
+  });
+
+  // ---- Promo code rows ----
+  function renderPromoCodeRows(codes) {
+    const container = document.getElementById('promoCodeRows');
+    container.innerHTML = '';
+    codes.forEach((c, i) => {
+      const row = document.createElement('div');
+      row.className = 'promo-code-row';
+      row.innerHTML = `
+        <input type="text" value="${c.code}" placeholder="CODE" maxlength="20"
+               style="text-transform:uppercase;" data-idx="${i}" data-field="code">
+        <div class="promo-pct-wrap">
+          <input type="number" value="${c.pct}" min="1" max="100" data-idx="${i}" data-field="pct">
+          <span>% off</span>
+        </div>
+        <button class="promo-code-remove" data-idx="${i}">✕</button>`;
+      row.querySelector('[data-field="code"]').addEventListener('input', e => {
+        tempData.banner.promoCodes[i].code = e.target.value.toUpperCase().replace(/\s/g,'');
+      });
+      row.querySelector('[data-field="pct"]').addEventListener('input', e => {
+        tempData.banner.promoCodes[i].pct = parseInt(e.target.value) || 0;
+      });
+      row.querySelector('.promo-code-remove').addEventListener('click', () => {
+        tempData.banner.promoCodes.splice(i, 1);
+        renderPromoCodeRows(tempData.banner.promoCodes);
+      });
+      container.appendChild(row);
+    });
+    // Show/hide add button
+    document.getElementById('addPromoCodeBtn').style.display =
+      codes.length >= 3 ? 'none' : 'inline-flex';
+  }
+
+  document.getElementById('addPromoCodeBtn').addEventListener('click', () => {
+    if (!tempData.banner.promoCodes) tempData.banner.promoCodes = [];
+    if (tempData.banner.promoCodes.length >= 3) return;
+    tempData.banner.promoCodes.push({ code: '', pct: 10 });
+    renderPromoCodeRows(tempData.banner.promoCodes);
   });
 
   // ================================================================
