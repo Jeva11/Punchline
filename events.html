@@ -1,62 +1,176 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Events — [Creator Name]</title>
+  <title>Events — Punchline</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
     body { background: var(--cream); }
+
+    /* ============================================================
+       AVATAR / USER MENU (shared pattern)
+    ============================================================ */
+    .user-menu-wrap { position: relative; }
+    .user-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--pink); color: var(--white);
+      font-weight: 700; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 2px solid rgba(255,255,255,0.2);
+      transition: var(--transition); user-select: none;
+      letter-spacing: 0.03em; overflow: hidden;
+    }
+    .user-avatar:hover { border-color: rgba(255,255,255,0.7); transform: scale(1.06); }
+    .user-dropdown {
+      display: none; position: absolute; top: calc(100% + 10px); right: 0;
+      background: var(--white); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg); min-width: 210px; overflow: hidden;
+      animation: dropIn 0.18s cubic-bezier(.4,0,.2,1); z-index: 200;
+    }
+    .user-dropdown.open { display: block; }
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .ud-header { padding: 14px 18px 12px; border-bottom: 1px solid var(--cream-dark); }
+    .ud-header .ud-name  { font-weight: 700; font-size: 0.95rem; color: var(--navy); }
+    .ud-header .ud-email { font-size: 0.76rem; color: var(--gray-mid); margin-top: 2px; }
+    .ud-item {
+      display: flex; align-items: center; gap: 10px; padding: 11px 18px;
+      font-size: 0.88rem; font-weight: 500; color: var(--navy); cursor: pointer;
+      transition: var(--transition); border: none; background: none;
+      width: 100%; text-align: left; font-family: var(--font-main); text-decoration: none;
+    }
+    .ud-item:hover { background: var(--gray-light); color: var(--pink); }
+    .ud-item.logout { color: #c0392b; }
+    .ud-item.logout:hover { background: #fff0ee; }
+
+    /* ============================================================
+       EDIT TOOLBAR
+    ============================================================ */
+    .edit-toolbar {
+      display: none; position: sticky; top: 68px; z-index: 90;
+      background: var(--navy); border-bottom: 2px solid var(--pink);
+      padding: 10px 5%; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .edit-toolbar.visible { display: flex; }
+    .edit-toolbar span { color: var(--cream); font-size: 0.82rem; opacity: 0.7; margin-right: auto; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
     .events-hero { background: var(--navy); padding: 64px 5% 48px; text-align: center; }
     .events-hero h1 { color: var(--white); }
-    .events-hero p { color: var(--cream); opacity: 0.75; margin-top: 10px; }
+    .events-hero p  { color: var(--cream); opacity: 0.75; margin-top: 10px; }
 
+    /* ============================================================
+       MAIN SECTION
+    ============================================================ */
     .events-section { padding: 64px 5%; max-width: 1100px; margin: 0 auto; }
 
-    /* Events carousel */
-    .events-slider { position: relative; overflow: hidden; border-radius: var(--radius-lg); margin-bottom: 48px; }
-    .events-track { display: flex; transition: transform 0.4s cubic-bezier(.4,0,.2,1); }
-    .event-slide {
-      min-width: 100%;
+    /* ============================================================
+       FEATURED MEDIA BLOCK
+    ============================================================ */
+    .featured-block { margin-bottom: 48px; }
+
+    /* Edit controls — only in edit mode */
+    .featured-edit-bar {
+      display: none;
+      align-items: center; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .edit-mode .featured-edit-bar { display: flex; }
+    .featured-edit-bar label {
+      font-weight: 600; font-size: 0.88rem; color: var(--navy);
+    }
+
+    /* Single photo */
+    .featured-single {
+      border-radius: var(--radius-lg); overflow: hidden;
+      position: relative; background: linear-gradient(135deg, var(--navy-light), #3d1060);
+      min-height: 320px; display: flex; align-items: center; justify-content: center;
+    }
+    .featured-single img {
+      width: 100%; max-height: 480px; object-fit: cover;
+      display: block; border-radius: var(--radius-lg);
+    }
+    .featured-placeholder {
+      color: rgba(255,255,255,0.18); font-size: 0.82rem;
+      letter-spacing: 0.1em; padding: 80px 20px; text-align: center;
+    }
+    .featured-caption {
+      margin-top: 10px; font-size: 0.88rem; opacity: 0.6;
+      text-align: center; font-style: italic;
+    }
+    .edit-mode .featured-caption[contenteditable="true"] {
+      outline: none; border-bottom: 2px dashed var(--pink);
+      padding-bottom: 2px; cursor: text; font-style: normal;
+    }
+    .edit-mode .featured-caption[contenteditable="true"]:focus { background: rgba(242,39,110,0.08); border-radius: 3px; }
+
+    /* Slider */
+    .featured-slider { position: relative; border-radius: var(--radius-lg); overflow: hidden; }
+    .featured-track { display: flex; transition: transform 0.4s cubic-bezier(.4,0,.2,1); }
+    .featured-slide {
+      min-width: 100%; position: relative;
       background: linear-gradient(135deg, var(--navy-light), #3d1060);
-      min-height: 320px; position: relative;
-      display: flex; align-items: flex-end;
-      flex-shrink: 0;
-    }
-    .event-slide .slide-img-placeholder {
-      position: absolute; inset: 0;
+      min-height: 320px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,0.1); font-size: 0.8rem; letter-spacing: 0.1em;
-      border: 2px dashed rgba(255,255,255,0.08);
     }
-    .event-slide .event-info {
-      position: relative; z-index: 1;
-      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-      width: 100%; padding: 32px 28px 28px;
+    .featured-slide img {
+      width: 100%; max-height: 480px; object-fit: cover; display: block;
     }
-    .event-info h3 { color: var(--white); font-size: 1.4rem; margin-bottom: 8px; }
-    .event-info .event-meta { color: var(--cream); opacity: 0.8; font-size: 0.9rem; display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
-    .event-info .event-meta span { display: flex; align-items: center; gap: 6px; }
-    .event-edit-label {
-      position: absolute; top: 12px; right: 12px; z-index: 2;
-      background: rgba(255,255,255,0.12); border: 1px dashed rgba(255,255,255,0.3);
-      color: rgba(255,255,255,0.5); font-size: 0.72rem; padding: 4px 10px;
-      border-radius: 4px; letter-spacing: 0.06em;
+    .featured-slide .slide-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%);
+      color: var(--white); padding: 32px 24px 18px;
+      font-size: 0.95rem; font-style: italic;
     }
-    .slider-controls { display: flex; justify-content: center; gap: 8px; padding: 12px 0; }
-    .slider-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cream-dark); border: none; cursor: pointer; transition: var(--transition); }
-    .slider-dot.active { background: var(--pink); width: 24px; border-radius: 4px; }
-    .slider-arrows { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 12px; pointer-events: none; }
-    .slider-arrow { pointer-events: all; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; color: white; cursor: pointer; font-size: 1.2rem; transition: var(--transition); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; }
+    .edit-mode .featured-slide .slide-caption[contenteditable="true"] {
+      outline: none; border-bottom: 2px dashed rgba(255,255,255,0.6);
+      cursor: text;
+    }
+    /* Remove slide button */
+    .slide-remove-btn {
+      display: none;
+      position: absolute; top: 10px; right: 10px; z-index: 10;
+      background: rgba(0,0,0,0.5); color: white; border: none;
+      border-radius: var(--radius); padding: 5px 10px;
+      font-size: 0.78rem; cursor: pointer; font-family: var(--font-main);
+      transition: var(--transition);
+    }
+    .slide-remove-btn:hover { background: #c0392b; }
+    .edit-mode .slide-remove-btn { display: block; }
+
+    /* Arrows */
+    .slider-arrows {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 100%; display: flex; justify-content: space-between;
+      padding: 0 12px; pointer-events: none; z-index: 5;
+    }
+    .slider-arrow {
+      pointer-events: all; width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      cursor: pointer; font-size: 1.2rem; transition: var(--transition);
+      backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center;
+    }
     .slider-arrow:hover { background: var(--pink); }
 
-    /* Events list */
+    /* Add slide button */
+    .add-slide-btn {
+      display: none;
+    }
+    .edit-mode .add-slide-btn { display: inline-flex; }
+
+    /* ============================================================
+       EVENTS LIST
+    ============================================================ */
     .events-list { display: flex; flex-direction: column; gap: 16px; }
     .event-row {
       background: var(--white); border-radius: var(--radius-lg);
       padding: 24px 28px; display: flex; align-items: center; gap: 24px;
-      box-shadow: var(--shadow); transition: var(--transition);
+      box-shadow: var(--shadow); transition: var(--transition); position: relative;
     }
     .event-row:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
     .event-date-block {
@@ -64,169 +178,489 @@
       border-radius: var(--radius); padding: 10px 16px; text-align: center;
       min-width: 64px; flex-shrink: 0;
     }
-    .event-date-block .day { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .event-date-block .day   { font-size: 1.8rem; font-weight: 800; line-height: 1; }
     .event-date-block .month { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.85; }
     .event-row-info { flex: 1; }
     .event-row-info h4 { margin-bottom: 4px; }
     .event-row-info .location { font-size: 0.85rem; opacity: 0.6; display: flex; gap: 12px; flex-wrap: wrap; }
-    .event-row-actions { display: flex; gap: 10px; flex-shrink: 0; }
+    .event-row-actions { display: flex; gap: 10px; flex-shrink: 0; align-items: center; }
 
-    .booking-section { background: var(--navy); border-radius: var(--radius-lg); padding: 36px; margin-top: 48px; }
+    /* Remove event button */
+    .event-remove-btn {
+      display: none;
+      background: none; border: 2px solid #e74c3c; color: #e74c3c;
+      border-radius: var(--radius); padding: 6px 12px;
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      font-family: var(--font-main); transition: var(--transition);
+    }
+    .event-remove-btn:hover { background: #e74c3c; color: white; }
+    .edit-mode .event-remove-btn { display: inline-flex; }
+
+    /* Empty state */
+    .events-empty {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 48px 24px; text-align: center;
+      border: 2px dashed var(--cream-dark); color: var(--navy); opacity: 0.5;
+    }
+    .events-empty p { margin: 0; }
+
+    /* Add event form (edit mode only) */
+    .add-event-form {
+      display: none;
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 28px; box-shadow: var(--shadow);
+      border: 2px dashed var(--pink); margin-top: 16px;
+    }
+    .edit-mode .add-event-form { display: block; }
+    .add-event-form h4 { margin-bottom: 20px; color: var(--navy); }
+    .add-event-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;
+    }
+    .add-event-grid .full { grid-column: 1 / -1; }
+    .add-event-form .form-group { margin-bottom: 0; }
+    .add-event-form .form-group label { font-size: 0.82rem; }
+    .add-event-form .form-group input {
+      padding: 9px 12px; font-size: 0.88rem;
+    }
+
+    /* ============================================================
+       BOOKING SECTION
+    ============================================================ */
+    .booking-section {
+      background: var(--navy); border-radius: var(--radius-lg);
+      padding: 36px; margin-top: 48px;
+    }
     .booking-section h2 { color: var(--white); margin-bottom: 8px; }
-    .booking-section p { color: var(--cream); opacity: 0.75; margin-bottom: 24px; }
+    .booking-section p  { color: var(--cream); opacity: 0.75; margin-bottom: 24px; }
     .booking-row { display: flex; gap: 16px; flex-wrap: wrap; }
 
-    @media (max-width: 600px) { .event-row { flex-direction: column; align-items: flex-start; } .event-row-actions { width: 100%; } }
+    /* ============================================================
+       EDIT MODE FIELD STYLES
+    ============================================================ */
+    .edit-mode [contenteditable="true"] {
+      outline: none; border-bottom: 2px dashed var(--pink);
+      padding-bottom: 2px; cursor: text; border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .edit-mode [contenteditable="true"]:hover { background: rgba(242,39,110,0.06); }
+    .edit-mode [contenteditable="true"]:focus { background: rgba(242,39,110,0.1); border-bottom-style: solid; }
+
+    @media (max-width: 600px) {
+      .event-row { flex-direction: column; align-items: flex-start; }
+      .event-row-actions { width: 100%; }
+      .add-event-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="home2.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
       <a href="home2.html">Home</a>
-      <a href="about.html">About</a>
+      <a href="home2.html">About</a>
       <a href="community.html">Community</a>
       <a href="merch.html">Merch</a>
     </div>
     <div class="nav-actions">
+      <button class="btn btn-outline-white btn-sm" id="editToggleBtn" style="display:none;">✏️ Edit Page</button>
+      <div class="user-menu-wrap" id="userMenuWrap" style="display:none;">
+        <div class="user-avatar" id="userAvatar" role="button" tabindex="0" title="Account menu">
+          <img id="userAvatarImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+          <span id="userAvatarInitials"></span>
+        </div>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="ud-header">
+            <div class="ud-name"  id="udName"></div>
+            <div class="ud-email" id="udEmail"></div>
+          </div>
+          <button class="ud-item logout" id="logoutBtn">🚪 &nbsp;Log Out</button>
+        </div>
+      </div>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
+  <!-- EDIT TOOLBAR -->
+  <div class="edit-toolbar" id="editToolbar">
+    <span>✏️ &nbsp;Edit mode — update your events page</span>
+    <button class="btn btn-primary btn-sm" id="saveBtn">💾 Save Changes</button>
+    <button class="btn btn-outline-white btn-sm" id="cancelBtn">Cancel</button>
+  </div>
+
+  <!-- HERO -->
   <div class="events-hero">
     <span class="badge badge-pink mb-8">Tour Dates</span>
     <h1>Upcoming Events</h1>
-    <p>Catch [Creator Name] live. Check dates, locations, and grab your tickets below.</p>
+    <p>Catch <span id="heroCreatorName">the creator</span> live. Check dates, locations, and grab your tickets below.</p>
   </div>
 
   <div class="events-section">
-    <!-- SLIDER -->
-    <div class="events-slider" id="eventsSlider">
-      <div class="events-track" id="eventsTrack">
-        <div class="event-slide">
-          <div class="slide-img-placeholder">[ UPLOAD EVENT IMAGE — EDITABLE ]</div>
-          <div class="event-edit-label">✏ Editable</div>
-          <div class="event-info">
-            <h3>[Show Title] — Chicago, IL</h3>
-            <div class="event-meta">
-              <span>📅 April 12, 2025</span>
-              <span>📍 The Comedy Cellar, Chicago</span>
-              <span>🕗 8:00 PM CT</span>
-            </div>
-            <div class="flex gap-12">
-              <a href="#tickets" class="btn btn-primary btn-sm">Buy Tickets Here</a>
-              <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-sm">📧 Click Here for Booking</a>
-            </div>
-          </div>
-        </div>
-        <div class="event-slide">
-          <div class="slide-img-placeholder">[ UPLOAD EVENT IMAGE — EDITABLE ]</div>
-          <div class="event-edit-label">✏ Editable</div>
-          <div class="event-info">
-            <h3>[Show Title] — New York, NY</h3>
-            <div class="event-meta">
-              <span>📅 April 26, 2025</span>
-              <span>📍 Gotham Comedy Club, NYC</span>
-              <span>🕗 9:00 PM ET</span>
-            </div>
-            <div class="flex gap-12">
-              <a href="#tickets" class="btn btn-primary btn-sm">Buy Tickets Here</a>
-              <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-sm">📧 Click Here for Booking</a>
-            </div>
-          </div>
-        </div>
-        <div class="event-slide">
-          <div class="slide-img-placeholder">[ UPLOAD EVENT IMAGE — EDITABLE ]</div>
-          <div class="event-edit-label">✏ Editable</div>
-          <div class="event-info">
-            <h3>[Show Title] — Los Angeles, CA</h3>
-            <div class="event-meta">
-              <span>📅 May 10, 2025</span>
-              <span>📍 The Laugh Factory, LA</span>
-              <span>🕗 8:30 PM PT</span>
-            </div>
-            <div class="flex gap-12">
-              <a href="#tickets" class="btn btn-primary btn-sm">Buy Tickets Here</a>
-              <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-sm">📧 Click Here for Booking</a>
-            </div>
-          </div>
-        </div>
+
+    <!-- FEATURED MEDIA BLOCK -->
+    <div class="featured-block" id="featuredBlock">
+
+      <!-- Edit controls -->
+      <div class="featured-edit-bar">
+        <label>Featured image(s):</label>
+        <button class="btn btn-primary btn-sm add-slide-btn" id="addSlideBtn">＋ Add Photo</button>
+        <input type="file" id="slidePhotoInput" accept="image/*" style="display:none;">
       </div>
-      <div class="slider-arrows">
-        <button class="slider-arrow" onclick="evtShift(-1)">‹</button>
-        <button class="slider-arrow" onclick="evtShift(1)">›</button>
-      </div>
-    </div>
-    <div class="slider-controls" id="evtDots">
-      <button class="slider-dot active" onclick="evtGo(0)"></button>
-      <button class="slider-dot" onclick="evtGo(1)"></button>
-      <button class="slider-dot" onclick="evtGo(2)"></button>
+
+      <!-- Rendered by JS -->
+      <div id="featuredRender"></div>
     </div>
 
-    <!-- ALL DATES LIST -->
+    <!-- ALL DATES -->
     <h2 id="tickets" class="mb-24 mt-40">All Dates</h2>
-    <div class="events-list">
-      <div class="event-row">
-        <div class="event-date-block"><div class="day">12</div><div class="month">Apr</div></div>
-        <div class="event-row-info">
-          <h4>[Show Title]</h4>
-          <div class="location"><span>📍 Chicago, IL</span><span>🕗 8:00 PM</span><span>The Comedy Cellar</span></div>
+    <div class="events-list" id="eventsList"></div>
+
+    <!-- ADD EVENT FORM (edit mode only) -->
+    <div class="add-event-form" id="addEventForm">
+      <h4>＋ Add a New Event</h4>
+      <div class="add-event-grid">
+        <div class="form-group full">
+          <label>Show Title</label>
+          <input type="text" id="evtTitle" placeholder="e.g. One Night Only">
         </div>
-        <div class="event-row-actions">
-          <a href="checkout2.html" class="btn btn-primary btn-sm">Buy Tickets</a>
-          <a href="mailto:booking@placeholder.com" class="btn btn-outline btn-sm">Booking</a>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="evtDate">
         </div>
-      </div>
-      <div class="event-row">
-        <div class="event-date-block"><div class="day">26</div><div class="month">Apr</div></div>
-        <div class="event-row-info">
-          <h4>[Show Title]</h4>
-          <div class="location"><span>📍 New York, NY</span><span>🕗 9:00 PM</span><span>Gotham Comedy Club</span></div>
+        <div class="form-group">
+          <label>Time</label>
+          <input type="time" id="evtTime">
         </div>
-        <div class="event-row-actions">
-          <a href="checkout2.html" class="btn btn-primary btn-sm">Buy Tickets</a>
-          <a href="mailto:booking@placeholder.com" class="btn btn-outline btn-sm">Booking</a>
+        <div class="form-group">
+          <label>Venue</label>
+          <input type="text" id="evtVenue" placeholder="e.g. The Comedy Cellar">
         </div>
-      </div>
-      <div class="event-row">
-        <div class="event-date-block"><div class="day">10</div><div class="month">May</div></div>
-        <div class="event-row-info">
-          <h4>[Show Title]</h4>
-          <div class="location"><span>📍 Los Angeles, CA</span><span>🕗 8:30 PM</span><span>The Laugh Factory</span></div>
+        <div class="form-group">
+          <label>City, State</label>
+          <input type="text" id="evtCity" placeholder="e.g. Chicago, IL">
         </div>
-        <div class="event-row-actions">
-          <a href="checkout2.html" class="btn btn-primary btn-sm">Buy Tickets</a>
-          <a href="mailto:booking@placeholder.com" class="btn btn-outline btn-sm">Booking</a>
+        <div class="form-group full">
+          <label>Ticket Link (optional)</label>
+          <input type="url" id="evtTickets" placeholder="https://...">
         </div>
       </div>
+      <button class="btn btn-primary btn-sm" id="addEventBtn">Add Event</button>
     </div>
 
     <!-- BOOKING CTA -->
     <div class="booking-section">
-      <h2>Want to Book [Creator Name]?</h2>
+      <h2>Want to Book <span id="bookingCreatorName">the creator</span>?</h2>
       <p>Interested in booking for your venue, festival, or private event? Reach out directly.</p>
       <div class="booking-row">
         <a href="checkout2.html" class="btn btn-primary btn-lg">Buy Tickets Here</a>
-        <a href="mailto:booking@placeholder.com" class="btn btn-outline-white btn-lg">📧 Click Here for Booking Enquiries</a>
+        <a id="bookingEmailBtn" href="#" class="btn btn-outline-white btn-lg">📧 Booking Enquiries</a>
       </div>
     </div>
+
   </div>
 
   <footer>
-    <span>© 2025 [Creator Name] · Powered by Punchline</span>
+    <span>© 2025 Punchline</span>
     <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </footer>
 
   <script>
-    let evtCurrent = 0;
-    const evtSlides = 3;
-    function evtGo(n) {
-      evtCurrent = n;
-      document.getElementById('eventsTrack').style.transform = `translateX(-${n * 100}%)`;
-      document.querySelectorAll('#evtDots .slider-dot').forEach((d, i) => d.classList.toggle('active', i === n));
+  // ================================================================
+  //  SESSION
+  // ================================================================
+  const session = JSON.parse(localStorage.getItem('punchline_session') || 'null');
+  if (!session) { window.location.href = 'index.html'; }
+
+  const users   = JSON.parse(localStorage.getItem('punchline_users') || '{}');
+  const userRec = users[session.email] || {};
+  const userName = session.name || session.email.split('@')[0];
+
+  // Pull stage name from home2 page data if set
+  const PAGE_HOME_KEY  = 'punchline_page_' + session.email;
+  const homePageData   = JSON.parse(localStorage.getItem(PAGE_HOME_KEY) || 'null');
+  const stageName      = (homePageData && homePageData.name) ? homePageData.name : userName;
+
+  // Inject name into hero + booking
+  document.getElementById('heroCreatorName').textContent    = stageName;
+  document.getElementById('bookingCreatorName').textContent = stageName;
+
+  // Booking email
+  document.getElementById('bookingEmailBtn').href = 'mailto:' + session.email;
+
+  // Avatar
+  const avatarImg      = document.getElementById('userAvatarImg');
+  const avatarInitials = document.getElementById('userAvatarInitials');
+  if (userRec.avatarDataUrl) {
+    avatarImg.src = userRec.avatarDataUrl;
+    avatarImg.style.display = 'block';
+    avatarInitials.style.display = 'none';
+  } else {
+    const initials = stageName.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0,2).join('');
+    avatarInitials.textContent   = initials;
+    avatarInitials.style.display = 'inline';
+  }
+  document.getElementById('udName').textContent  = stageName;
+  document.getElementById('udEmail').textContent = session.email;
+  document.getElementById('userMenuWrap').style.display  = 'block';
+  document.getElementById('editToggleBtn').style.display = 'inline-flex';
+
+  // Dropdown
+  document.getElementById('userAvatar').addEventListener('click', e => {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', () => document.getElementById('userDropdown').classList.remove('open'));
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('punchline_session');
+    window.location.href = 'index.html';
+  });
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ================================================================
+  //  PAGE DATA
+  // ================================================================
+  const EVENTS_KEY = 'punchline_events_' + session.email;
+
+  function loadData() {
+    return JSON.parse(localStorage.getItem(EVENTS_KEY) || 'null') || {
+      slides: [],   // [{ dataUrl, caption }]
+      events: []    // [{ title, date, time, venue, city, ticketLink }]
+    };
+  }
+  function saveData(d) { localStorage.setItem(EVENTS_KEY, JSON.stringify(d)); }
+
+  let pageData    = loadData();
+  let editMode    = false;
+  let tempData    = null;   // working copy
+
+  // ================================================================
+  //  RENDER FEATURED MEDIA
+  // ================================================================
+  function renderFeatured(slides) {
+    const container = document.getElementById('featuredRender');
+    container.innerHTML = '';
+
+    if (!slides || slides.length === 0) {
+      container.innerHTML = `
+        <div class="featured-single">
+          <div class="featured-placeholder">
+            ${editMode ? '📷 Click "Add Photo" above to upload a featured image' : '[ No featured image yet ]'}
+          </div>
+        </div>`;
+      return;
     }
-    function evtShift(dir) { evtGo((evtCurrent + dir + evtSlides) % evtSlides); }
-    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+
+    if (slides.length === 1) {
+      // Single image
+      const s = slides[0];
+      container.innerHTML = `
+        <div class="featured-single" style="position:relative;">
+          ${s.dataUrl ? `<img src="${s.dataUrl}" alt="${s.caption || ''}">` : '<div class="featured-placeholder">[ image ]</div>'}
+          ${editMode ? `<button class="slide-remove-btn" data-idx="0">✕ Remove</button>` : ''}
+        </div>
+        <div class="featured-caption" ${editMode ? 'contenteditable="true"' : ''} data-idx="0">${s.caption || (editMode ? 'Add a caption…' : '')}</div>`;
+
+      if (editMode) {
+        container.querySelector('.featured-caption').addEventListener('blur', e => {
+          tempData.slides[0].caption = e.target.textContent.trim();
+        });
+        const rmBtn = container.querySelector('.slide-remove-btn');
+        if (rmBtn) rmBtn.addEventListener('click', () => { tempData.slides.splice(0,1); renderFeatured(tempData.slides); });
+      }
+
+    } else {
+      // Slider (arrows only, no dots)
+      let current = 0;
+
+      const sliderEl = document.createElement('div');
+      sliderEl.className = 'featured-slider';
+
+      const track = document.createElement('div');
+      track.className = 'featured-track';
+      track.id = 'featTrack';
+
+      slides.forEach((s, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'featured-slide';
+        slide.innerHTML = `
+          ${s.dataUrl ? `<img src="${s.dataUrl}" alt="">` : '<div class="featured-placeholder" style="width:100%;">[ image ]</div>'}
+          <div class="slide-caption" ${editMode ? 'contenteditable="true"' : ''} data-idx="${i}">${s.caption || (editMode ? 'Add a caption…' : '')}</div>
+          ${editMode ? `<button class="slide-remove-btn" data-idx="${i}">✕ Remove</button>` : ''}`;
+
+        if (editMode) {
+          slide.querySelector('.slide-caption').addEventListener('blur', e => {
+            tempData.slides[i].caption = e.target.textContent.trim();
+          });
+          slide.querySelector('.slide-remove-btn').addEventListener('click', () => {
+            tempData.slides.splice(i, 1);
+            renderFeatured(tempData.slides);
+          });
+        }
+        track.appendChild(slide);
+      });
+
+      const arrowsEl = document.createElement('div');
+      arrowsEl.className = 'slider-arrows';
+      arrowsEl.innerHTML = `
+        <button class="slider-arrow" id="featPrev">‹</button>
+        <button class="slider-arrow" id="featNext">›</button>`;
+
+      sliderEl.appendChild(track);
+      sliderEl.appendChild(arrowsEl);
+      container.appendChild(sliderEl);
+
+      function goTo(n) {
+        current = (n + slides.length) % slides.length;
+        track.style.transform = `translateX(-${current * 100}%)`;
+      }
+      arrowsEl.querySelector('#featPrev').addEventListener('click', () => goTo(current - 1));
+      arrowsEl.querySelector('#featNext').addEventListener('click', () => goTo(current + 1));
+    }
+  }
+
+  // ================================================================
+  //  RENDER EVENTS LIST
+  // ================================================================
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function renderEvents(events) {
+    const list = document.getElementById('eventsList');
+    list.innerHTML = '';
+
+    if (!events || events.length === 0) {
+      list.innerHTML = `<div class="events-empty"><p>${editMode ? 'No events yet — use the form below to add one.' : 'No upcoming events at this time. Check back soon!'}</p></div>`;
+      return;
+    }
+
+    // Sort by date ascending
+    const sorted = [...events].sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    sorted.forEach((ev, idx) => {
+      const d     = new Date(ev.date + 'T12:00:00'); // noon to avoid tz issues
+      const day   = d.getDate();
+      const month = MONTHS[d.getMonth()];
+
+      // Format time
+      let timeStr = '';
+      if (ev.time) {
+        const [h, m] = ev.time.split(':');
+        const hour = parseInt(h);
+        timeStr = `${hour > 12 ? hour - 12 : hour || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
+      }
+
+      const row = document.createElement('div');
+      row.className = 'event-row';
+      row.innerHTML = `
+        <div class="event-date-block">
+          <div class="day">${day}</div>
+          <div class="month">${month}</div>
+        </div>
+        <div class="event-row-info">
+          <h4>${ev.title || 'Untitled Show'}</h4>
+          <div class="location">
+            ${ev.city   ? `<span>📍 ${ev.city}</span>` : ''}
+            ${timeStr   ? `<span>🕗 ${timeStr}</span>` : ''}
+            ${ev.venue  ? `<span>${ev.venue}</span>`   : ''}
+          </div>
+        </div>
+        <div class="event-row-actions">
+          ${ev.ticketLink ? `<a href="${ev.ticketLink}" target="_blank" class="btn btn-primary btn-sm">Buy Tickets</a>` : ''}
+          <button class="event-remove-btn" data-orig-idx="${events.indexOf(ev)}">✕ Remove</button>
+        </div>`;
+
+      row.querySelector('.event-remove-btn').addEventListener('click', function () {
+        const origIdx = parseInt(this.dataset.origIdx);
+        tempData.events.splice(origIdx, 1);
+        renderEvents(tempData.events);
+      });
+
+      list.appendChild(row);
+    });
+  }
+
+  // ================================================================
+  //  INITIAL RENDER
+  // ================================================================
+  function renderAll(data) {
+    renderFeatured(data.slides);
+    renderEvents(data.events);
+  }
+  renderAll(pageData);
+
+  // ================================================================
+  //  EDIT MODE
+  // ================================================================
+  function enterEditMode() {
+    editMode  = true;
+    tempData  = JSON.parse(JSON.stringify(pageData));
+    document.body.classList.add('edit-mode');
+    document.getElementById('editToolbar').classList.add('visible');
+    document.getElementById('editToggleBtn').textContent = '👁 Preview';
+    renderAll(tempData);
+  }
+
+  function exitEditMode(save) {
+    if (save) {
+      pageData = tempData;
+      saveData(pageData);
+    }
+    editMode = false;
+    tempData = null;
+    document.body.classList.remove('edit-mode');
+    document.getElementById('editToolbar').classList.remove('visible');
+    document.getElementById('editToggleBtn').textContent = '✏️ Edit Page';
+    renderAll(pageData);
+  }
+
+  document.getElementById('editToggleBtn').addEventListener('click', () => editMode ? exitEditMode(false) : enterEditMode());
+  document.getElementById('saveBtn').addEventListener('click',   () => exitEditMode(true));
+  document.getElementById('cancelBtn').addEventListener('click', () => exitEditMode(false));
+
+  // ================================================================
+  //  ADD PHOTO TO SLIDER
+  // ================================================================
+  document.getElementById('addSlideBtn').addEventListener('click', () => {
+    document.getElementById('slidePhotoInput').click();
+  });
+  document.getElementById('slidePhotoInput').addEventListener('change', function () {
+    if (!this.files || !this.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      tempData.slides.push({ dataUrl: e.target.result, caption: '' });
+      renderFeatured(tempData.slides);
+    };
+    reader.readAsDataURL(this.files[0]);
+    this.value = ''; // allow re-uploading same file
+  });
+
+  // ================================================================
+  //  ADD EVENT
+  // ================================================================
+  document.getElementById('addEventBtn').addEventListener('click', () => {
+    const title   = document.getElementById('evtTitle').value.trim();
+    const date    = document.getElementById('evtDate').value;
+    const time    = document.getElementById('evtTime').value;
+    const venue   = document.getElementById('evtVenue').value.trim();
+    const city    = document.getElementById('evtCity').value.trim();
+    const tickets = document.getElementById('evtTickets').value.trim();
+
+    if (!title || !date) {
+      alert('Please enter at least a show title and date.');
+      return;
+    }
+
+    tempData.events.push({ title, date, time, venue, city, ticketLink: tickets });
+    renderEvents(tempData.events);
+
+    // Clear form
+    ['evtTitle','evtDate','evtTime','evtVenue','evtCity','evtTickets'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  });
+
   </script>
 </body>
 </html>
