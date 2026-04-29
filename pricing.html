@@ -20,33 +20,25 @@
     }
     .toggle-wrap span { font-weight: 600; color: var(--cream); font-size: 0.95rem; }
     .toggle-switch {
-      position: relative; width: 56px; height: 28px;
-      cursor: pointer;
+      position: relative; width: 56px; height: 28px; cursor: pointer;
     }
     .toggle-switch input { opacity: 0; width: 0; height: 0; }
     .toggle-track {
       position: absolute; inset: 0;
       background: rgba(255,255,255,0.2);
-      border-radius: 100px;
-      transition: var(--transition);
+      border-radius: 100px; transition: var(--transition);
     }
     .toggle-switch input:checked + .toggle-track { background: var(--pink); }
     .toggle-thumb {
       position: absolute; top: 3px; left: 3px;
       width: 22px; height: 22px;
-      background: var(--white);
-      border-radius: 50%;
-      transition: var(--transition);
+      background: var(--white); border-radius: 50%; transition: var(--transition);
     }
     .toggle-switch input:checked ~ .toggle-thumb { left: 31px; }
     .save-badge {
-      background: var(--pink);
-      color: var(--white);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 100px;
-      letter-spacing: 0.05em;
+      background: var(--pink); color: var(--white);
+      font-size: 0.72rem; font-weight: 700; padding: 3px 8px;
+      border-radius: 100px; letter-spacing: 0.05em;
     }
 
     .pricing-section { padding: 72px 5%; background: var(--cream); }
@@ -56,20 +48,14 @@
     .pricing-grid-full {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-      max-width: 1100px;
-      margin: 0 auto;
+      gap: 24px; max-width: 1100px; margin: 0 auto;
     }
     .pricing-card-full {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 36px 28px;
-      box-shadow: var(--shadow);
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 36px 28px; box-shadow: var(--shadow);
       border: 2px solid transparent;
       display: flex; flex-direction: column; gap: 20px;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
+      transition: var(--transition); position: relative; overflow: hidden;
     }
     .pricing-card-full:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
     .pricing-card-full.featured { border-color: var(--pink); background: var(--navy); color: var(--white); }
@@ -78,13 +64,10 @@
       position: absolute; top: 16px; right: -28px;
       background: var(--pink); color: var(--white);
       font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
-      padding: 4px 36px;
-      transform: rotate(45deg);
-      text-transform: uppercase;
+      padding: 4px 36px; transform: rotate(45deg); text-transform: uppercase;
     }
     .tier-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pink); }
     .tier-price { font-size: 3rem; font-weight: 800; line-height: 1; color: var(--pink); }
-    .tier-price sub { font-size: 1rem; font-weight: 500; opacity: 0.6; }
     .tier-price .period { font-size: 0.9rem; font-weight: 400; opacity: 0.6; }
     .tier-desc { font-size: 0.88rem; opacity: 0.7; }
     .tier-features { display: flex; flex-direction: column; gap: 10px; flex: 1; }
@@ -95,15 +78,10 @@
     .compare-section { padding: 60px 5%; }
     .compare-section h2 { text-align: center; margin-bottom: 32px; }
     .compare-table {
-      width: 100%; border-collapse: collapse;
-      font-size: 0.9rem; background: var(--white);
-      border-radius: var(--radius-lg); overflow: hidden;
-      box-shadow: var(--shadow);
+      width: 100%; border-collapse: collapse; font-size: 0.9rem;
+      background: var(--white); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow);
     }
-    .compare-table th {
-      background: var(--navy); color: var(--white);
-      padding: 16px 20px; text-align: left; font-weight: 600;
-    }
+    .compare-table th { background: var(--navy); color: var(--white); padding: 16px 20px; text-align: left; font-weight: 600; }
     .compare-table th:first-child { background: var(--navy-light); }
     .compare-table td { padding: 14px 20px; border-bottom: 1px solid var(--cream); }
     .compare-table tr:last-child td { border-bottom: none; }
@@ -112,31 +90,50 @@
     .cross { color: var(--gray-mid); }
 
     .faq-section { padding: 60px 5%; background: var(--cream); }
-    .faq-item {
-      background: var(--white); border-radius: var(--radius);
-      margin-bottom: 8px; overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .faq-question {
-      padding: 18px 20px; font-weight: 600; cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center;
-      transition: var(--transition);
-    }
+    .faq-item { background: var(--white); border-radius: var(--radius); margin-bottom: 8px; overflow: hidden; box-shadow: var(--shadow); }
+    .faq-question { padding: 18px 20px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); }
     .faq-question:hover { color: var(--pink); }
     .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: all 0.3s ease; font-size: 0.9rem; opacity: 0.8; }
     .faq-answer.open { padding: 0 20px 18px; max-height: 200px; }
     .faq-arrow { transition: var(--transition); }
     .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    /* Contact inquiry modal */
+    .inquiry-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(26,26,46,0.75); backdrop-filter: blur(4px);
+      z-index: 300; align-items: center; justify-content: center; padding: 20px;
+    }
+    .inquiry-overlay.active { display: flex; }
+    .inquiry-modal {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 40px; width: min(480px, 96vw);
+      box-shadow: var(--shadow-lg);
+      animation: modalIn 0.22s cubic-bezier(.4,0,.2,1);
+      position: relative;
+    }
+    @keyframes modalIn { from { opacity:0; transform:translateY(20px) scale(0.97); } to { opacity:1; transform:none; } }
+    .inquiry-close {
+      position: absolute; top: 14px; right: 18px;
+      background: none; border: none; font-size: 1.4rem; color: var(--gray-mid);
+      cursor: pointer; transition: var(--transition);
+    }
+    .inquiry-close:hover { color: var(--pink); }
+    .inquiry-success {
+      display: none; background: rgba(39,174,96,0.1);
+      border: 1px solid rgba(39,174,96,0.3); border-radius: var(--radius);
+      color: #27ae60; padding: 14px 16px; font-size: 0.88rem; margin-top: 16px;
+    }
+    .inquiry-success.visible { display: block; }
   </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
-      <a href="#" id="navLogin">Already a member? <strong>Login here</strong></a>
+      <a href="index.html" id="navLogin">Already a member? <strong>Login here</strong></a>
     </div>
     <div class="nav-actions">
       <a href="signup.html" class="btn btn-primary btn-sm">Sign Up Free</a>
@@ -144,12 +141,10 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <section class="pricing-hero">
     <p class="badge badge-pink mb-8">Pricing</p>
     <h1>Simple, Transparent Pricing</h1>
     <p>Start free. Upgrade when your comedy career demands it.</p>
-
     <div class="toggle-wrap">
       <span>Monthly</span>
       <label class="toggle-switch">
@@ -161,8 +156,8 @@
     </div>
   </section>
 
-  <!-- MONTHLY PRICING -->
   <section class="pricing-section">
+    <!-- MONTHLY -->
     <div id="monthlyPricing" class="pricing-tab active">
       <h2 class="text-center mb-24">Monthly Plans</h2>
       <div class="pricing-grid-full">
@@ -171,12 +166,8 @@
           <div class="tier-price">$0<span class="period">/mo</span></div>
           <p class="tier-desc">Perfect for getting started and testing the waters.</p>
           <ul class="tier-features">
-            <li>5 hosted sketches</li>
-            <li>Basic profile page</li>
-            <li>Community access</li>
-            <li class="no">Custom domain</li>
-            <li class="no">Analytics</li>
-            <li class="no">Merch store</li>
+            <li>5 hosted sketches</li><li>Basic profile page</li><li>Community access</li>
+            <li class="no">Custom domain</li><li class="no">Analytics</li><li class="no">Merch store</li>
           </ul>
           <a href="signup.html" class="btn btn-outline">Get Started Free</a>
         </div>
@@ -186,46 +177,37 @@
           <div class="tier-price">$12<span class="period">/mo</span></div>
           <p class="tier-desc">For working comedians ready to build a real audience.</p>
           <ul class="tier-features">
-            <li>Unlimited sketches</li>
-            <li>Custom domain</li>
-            <li>Analytics dashboard</li>
-            <li>Community forums</li>
-            <li>Email list tools</li>
-            <li class="no">Merch store</li>
+            <li>Unlimited sketches</li><li>Custom domain</li><li>Analytics dashboard</li>
+            <li>Community forums</li><li>Email list tools</li><li class="no">Merch store</li>
           </ul>
-          <a href="checkout.html" class="btn btn-primary">Get Creator</a>
+          <a href="checkout.html" class="btn btn-primary checkout-link"
+             data-plan="Creator" data-billing="Monthly" data-price="12.00">Get Creator</a>
         </div>
         <div class="pricing-card-full">
           <div class="tier-name">Pro</div>
           <div class="tier-price">$29<span class="period">/mo</span></div>
           <p class="tier-desc">Everything you need to run a full comedy business.</p>
           <ul class="tier-features">
-            <li>Everything in Creator</li>
-            <li>Merch store (5% fee)</li>
-            <li>Ticketed events</li>
-            <li>Subscription tiers</li>
-            <li>Priority support</li>
-            <li>White-label option</li>
+            <li>Everything in Creator</li><li>Merch store (5% fee)</li><li>Ticketed events</li>
+            <li>Subscription tiers</li><li>Priority support</li><li>White-label option</li>
           </ul>
-          <a href="checkout.html" class="btn btn-outline">Get Pro</a>
+          <a href="checkout.html" class="btn btn-outline checkout-link"
+             data-plan="Pro" data-billing="Monthly" data-price="29.00">Get Pro</a>
         </div>
         <div class="pricing-card-full">
           <div class="tier-name">Enterprise</div>
           <div class="tier-price" style="font-size:2rem;">Custom</div>
           <p class="tier-desc">For comedy collectives, studios, and management companies.</p>
           <ul class="tier-features">
-            <li>Everything in Pro</li>
-            <li>Multiple creators</li>
-            <li>Dedicated support</li>
-            <li>Custom integrations</li>
-            <li>SLA guarantee</li>
-            <li>Invoiced billing</li>
+            <li>Everything in Pro</li><li>Multiple creators</li><li>Dedicated support</li>
+            <li>Custom integrations</li><li>SLA guarantee</li><li>Invoiced billing</li>
           </ul>
-          <a href="#" class="btn btn-outline">Contact Us</a>
+          <button class="btn btn-outline contact-us-btn">Contact Us</button>
         </div>
       </div>
     </div>
 
+    <!-- ANNUAL -->
     <div id="annualPricing" class="pricing-tab">
       <h2 class="text-center mb-24">Annual Plans <span class="badge badge-pink">20% Off</span></h2>
       <div class="pricing-grid-full">
@@ -234,12 +216,8 @@
           <div class="tier-price">$0<span class="period">/yr</span></div>
           <p class="tier-desc">Perfect for getting started and testing the waters.</p>
           <ul class="tier-features">
-            <li>5 hosted sketches</li>
-            <li>Basic profile page</li>
-            <li>Community access</li>
-            <li class="no">Custom domain</li>
-            <li class="no">Analytics</li>
-            <li class="no">Merch store</li>
+            <li>5 hosted sketches</li><li>Basic profile page</li><li>Community access</li>
+            <li class="no">Custom domain</li><li class="no">Analytics</li><li class="no">Merch store</li>
           </ul>
           <a href="signup.html" class="btn btn-outline">Get Started Free</a>
         </div>
@@ -249,60 +227,43 @@
           <div class="tier-price">$9.60<span class="period">/mo</span></div>
           <p class="tier-desc" style="color:var(--cream)">Billed as $115/yr. Save $29 vs monthly.</p>
           <ul class="tier-features">
-            <li>Unlimited sketches</li>
-            <li>Custom domain</li>
-            <li>Analytics dashboard</li>
-            <li>Community forums</li>
-            <li>Email list tools</li>
-            <li class="no">Merch store</li>
+            <li>Unlimited sketches</li><li>Custom domain</li><li>Analytics dashboard</li>
+            <li>Community forums</li><li>Email list tools</li><li class="no">Merch store</li>
           </ul>
-          <a href="checkout.html" class="btn btn-primary">Get Creator Annual</a>
+          <a href="checkout.html" class="btn btn-primary checkout-link"
+             data-plan="Creator" data-billing="Annual" data-price="115.00" data-monthly="9.60">Get Creator Annual</a>
         </div>
         <div class="pricing-card-full">
           <div class="tier-name">Pro</div>
           <div class="tier-price">$23.20<span class="period">/mo</span></div>
           <p class="tier-desc">Billed as $278/yr. Save $70 vs monthly.</p>
           <ul class="tier-features">
-            <li>Everything in Creator</li>
-            <li>Merch store (5% fee)</li>
-            <li>Ticketed events</li>
-            <li>Subscription tiers</li>
-            <li>Priority support</li>
-            <li>White-label option</li>
+            <li>Everything in Creator</li><li>Merch store (5% fee)</li><li>Ticketed events</li>
+            <li>Subscription tiers</li><li>Priority support</li><li>White-label option</li>
           </ul>
-          <a href="checkout.html" class="btn btn-outline">Get Pro Annual</a>
+          <a href="checkout.html" class="btn btn-outline checkout-link"
+             data-plan="Pro" data-billing="Annual" data-price="278.00" data-monthly="23.20">Get Pro Annual</a>
         </div>
         <div class="pricing-card-full">
           <div class="tier-name">Enterprise</div>
           <div class="tier-price" style="font-size:2rem;">Custom</div>
           <p class="tier-desc">Volume discounts available for multi-creator setups.</p>
           <ul class="tier-features">
-            <li>Everything in Pro</li>
-            <li>Multiple creators</li>
-            <li>Dedicated support</li>
-            <li>Custom integrations</li>
-            <li>SLA guarantee</li>
-            <li>Invoiced billing</li>
+            <li>Everything in Pro</li><li>Multiple creators</li><li>Dedicated support</li>
+            <li>Custom integrations</li><li>SLA guarantee</li><li>Invoiced billing</li>
           </ul>
-          <a href="#" class="btn btn-outline">Contact Us</a>
+          <button class="btn btn-outline contact-us-btn">Contact Us</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- COMPARE TABLE -->
   <section class="compare-section">
     <div class="container">
       <h2>Compare Plans</h2>
       <table class="compare-table">
         <thead>
-          <tr>
-            <th>Feature</th>
-            <th>Free</th>
-            <th>Creator</th>
-            <th>Pro</th>
-            <th>Enterprise</th>
-          </tr>
+          <tr><th>Feature</th><th>Free</th><th>Creator</th><th>Pro</th><th>Enterprise</th></tr>
         </thead>
         <tbody>
           <tr><td>Hosted content</td><td>5 items</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
@@ -318,9 +279,8 @@
     </div>
   </section>
 
-  <!-- FAQ -->
   <section class="faq-section">
-    <div class="container" style="max-width: 700px;">
+    <div class="container" style="max-width:700px;">
       <h2 class="text-center mb-24">Frequently Asked Questions</h2>
       <div class="faq-item">
         <div class="faq-question">Can I cancel at any time? <span class="faq-arrow">▾</span></div>
@@ -341,25 +301,36 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <span>© 2025 Punchline. All rights reserved.</span>
     <div class="footer-links">
-      <a href="#">Privacy</a><a href="#">Cookies</a><a href="#">Terms</a><a href="#">Data Preferences</a>
+      <a href="#">Privacy</a><a href="#">Terms</a>
     </div>
   </footer>
 
-  <!-- LOGIN MODAL -->
-  <div class="modal-overlay" id="loginModal">
-    <div class="modal">
-      <button class="modal-close" id="closeLogin">✕</button>
-      <h2>Log In</h2>
-      <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com"></div>
-      <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••"></div>
-      <button class="btn btn-primary" style="width:100%;margin-top:8px;">Log In</button>
-      <p style="text-align:center;margin-top:16px;font-size:0.85rem;opacity:0.6;">
-        Don't have an account? <a href="signup.html" style="color:var(--pink);">Sign up free</a>
-      </p>
+  <!-- CONTACT / INQUIRY MODAL -->
+  <div class="inquiry-overlay" id="inquiryOverlay">
+    <div class="inquiry-modal">
+      <button class="inquiry-close" id="inquiryClose">×</button>
+      <h3 style="margin-bottom:8px;">Enterprise Inquiry</h3>
+      <p style="font-size:0.88rem;opacity:0.65;margin-bottom:24px;">Tell us about your setup and we'll be in touch within one business day.</p>
+      <div id="inquiryFormArea">
+        <div class="form-group"><label>Your Name</label><input type="text" id="iqName" placeholder="Full name"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="iqEmail" placeholder="you@example.com"></div>
+        <div class="form-group"><label>Organisation / Comedy Collective</label><input type="text" id="iqOrg" placeholder="e.g. The Laugh Co."></div>
+        <div class="form-group"><label>Number of Creators</label>
+          <select id="iqSize" style="padding:12px;border:2px solid var(--cream-dark);border-radius:var(--radius);width:100%;font-family:var(--font-main);outline:none;font-size:0.95rem;">
+            <option value="">Select…</option>
+            <option>2–5</option><option>6–15</option><option>16–50</option><option>50+</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message (optional)</label><textarea id="iqMessage" placeholder="Anything else we should know?" style="min-height:80px;resize:vertical;"></textarea></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px;" id="iqSubmit">Send Inquiry →</button>
+        <p id="iqError" style="color:#c0392b;font-size:0.78rem;margin-top:8px;display:none;">Please fill in your name and email.</p>
+      </div>
+      <div class="inquiry-success" id="inquirySuccess">
+        ✓ Thanks! We've received your inquiry and will be in touch shortly.
+      </div>
     </div>
   </div>
 
@@ -380,14 +351,52 @@
       });
     });
 
-    // Login modal
-    document.getElementById('navLogin').addEventListener('click', e => { e.preventDefault(); document.getElementById('loginModal').classList.add('active'); });
-    document.getElementById('closeLogin').addEventListener('click', () => document.getElementById('loginModal').classList.remove('active'));
-    document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('active'); });
+    // Checkout links — store plan info in localStorage before navigating
+    document.querySelectorAll('.checkout-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const plan    = this.dataset.plan;
+        const billing = this.dataset.billing;
+        const price   = this.dataset.price;
+        const monthly = this.dataset.monthly || price;
+        localStorage.setItem('punchline_checkout_plan', JSON.stringify({
+          plan, billing, price, monthly,
+          label: plan + ' (' + billing + ')',
+          displayPrice: billing === 'Annual'
+            ? '$' + monthly + '/mo — billed as $' + price + '/yr'
+            : '$' + price + '/mo'
+        }));
+        window.location.href = 'checkout.html';
+      });
+    });
 
-    // Hamburger
+    // Contact us → inquiry modal
+    document.querySelectorAll('.contact-us-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('inquirySuccess').classList.remove('visible');
+        document.getElementById('inquiryFormArea').style.display = '';
+        document.getElementById('iqError').style.display = 'none';
+        document.getElementById('inquiryOverlay').classList.add('active');
+      });
+    });
+    document.getElementById('inquiryClose').addEventListener('click', () => {
+      document.getElementById('inquiryOverlay').classList.remove('active');
+    });
+    document.getElementById('inquiryOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('inquiryOverlay'))
+        document.getElementById('inquiryOverlay').classList.remove('active');
+    });
+    document.getElementById('iqSubmit').addEventListener('click', () => {
+      const name  = document.getElementById('iqName').value.trim();
+      const email = document.getElementById('iqEmail').value.trim();
+      const errEl = document.getElementById('iqError');
+      if (!name || !email) { errEl.style.display = 'block'; return; }
+      errEl.style.display = 'none';
+      document.getElementById('inquiryFormArea').style.display = 'none';
+      document.getElementById('inquirySuccess').classList.add('visible');
+    });
+
     document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
   </script>
-
 </body>
 </html>

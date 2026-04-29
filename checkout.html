@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,105 +8,71 @@
   <style>
     body { background: var(--cream); }
     .checkout-layout {
-      max-width: 1100px; margin: 0 auto;
-      padding: 48px 5%;
-      display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 40px;
-      align-items: start;
+      max-width: 1100px; margin: 0 auto; padding: 48px 5%;
+      display: grid; grid-template-columns: 1fr 420px; gap: 40px; align-items: start;
     }
     .checkout-left h2 { margin-bottom: 28px; }
 
-    /* Express checkout */
     .express-checkout {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: var(--shadow);
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 28px; margin-bottom: 28px; box-shadow: var(--shadow);
     }
     .express-checkout h3 { font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.5; margin-bottom: 16px; text-align: center; }
-    .express-btns { display: flex; gap: 12px; }
-    .express-btn {
-      flex: 1; padding: 14px; border-radius: var(--radius);
-      border: 2px solid var(--cream-dark); background: var(--white);
-      font-weight: 700; font-size: 0.95rem; cursor: pointer;
-      transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .express-btn:hover { border-color: var(--navy); box-shadow: var(--shadow); }
-    .express-btn.gpay { background: #000; color: #fff; border-color: #000; font-size: 1.1rem; }
-    .express-btn.gpay:hover { background: #222; }
-    .divider-or {
-      display: flex; align-items: center; gap: 12px;
-      margin: 20px 0; font-size: 0.82rem; opacity: 0.5;
-    }
+    .divider-or { display: flex; align-items: center; gap: 12px; margin: 20px 0; font-size: 0.82rem; opacity: 0.5; }
     .divider-or::before, .divider-or::after { content: ''; flex: 1; height: 1px; background: var(--cream-dark); }
 
-    /* Payment form */
-    .payment-form {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      box-shadow: var(--shadow);
-    }
+    .payment-form { background: var(--white); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow); }
     .payment-form h3 { margin-bottom: 20px; }
     .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    /* Card input mockup */
     .card-field {
       display: flex; align-items: center;
-      border: 2px solid var(--cream-dark);
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      background: var(--white);
-      transition: var(--transition);
-      gap: 10px;
+      border: 2px solid var(--cream-dark); border-radius: var(--radius);
+      padding: 12px 16px; background: var(--white); transition: var(--transition); gap: 10px;
     }
     .card-field:focus-within { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(242,39,110,0.12); }
     .card-field input { border: none; outline: none; flex: 1; font-family: var(--font-main); font-size: 0.95rem; }
-    .card-icons { display: flex; gap: 6px; align-items: center; }
-    .card-icon { width: 32px; height: 20px; border-radius: 3px; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; }
-
     .secure-note { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; opacity: 0.55; margin-top: 16px; }
     .complete-btn { width: 100%; padding: 16px; margin-top: 20px; font-size: 1.05rem; }
 
-    /* Order summary (right) */
+    /* Order summary */
     .order-summary {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      box-shadow: var(--shadow);
-      position: sticky; top: 88px;
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 28px; box-shadow: var(--shadow); position: sticky; top: 88px;
     }
     .order-summary h3 { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid var(--cream); }
-    .order-items { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
-    .order-item {
-      display: flex; align-items: center; gap: 14px;
+    .plan-display {
+      background: var(--cream); border-radius: var(--radius);
+      padding: 16px 18px; margin-bottom: 20px; display: flex; gap: 14px; align-items: center;
     }
-    .order-item-img {
-      width: 52px; height: 52px; border-radius: var(--radius);
-      background: linear-gradient(135deg, var(--navy-light), #3d1060);
-      flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
-    }
-    .order-item-info { flex: 1; }
-    .order-item-info .name { font-weight: 600; font-size: 0.92rem; margin-bottom: 3px; }
-    .order-item-info .meta { font-size: 0.78rem; opacity: 0.55; }
-    .order-item .price { font-weight: 700; }
+    .plan-icon { font-size: 1.8rem; }
+    .plan-name { font-weight: 700; font-size: 1rem; }
+    .plan-billing { font-size: 0.78rem; opacity: 0.55; margin-top: 2px; }
+    .plan-price-display { font-size: 1.5rem; font-weight: 800; color: var(--pink); margin-left: auto; white-space: nowrap; }
+
     .order-totals { border-top: 1px solid var(--cream); padding-top: 16px; display: flex; flex-direction: column; gap: 10px; }
     .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; }
     .total-row.grand { font-size: 1.1rem; font-weight: 800; padding-top: 10px; border-top: 2px solid var(--cream-dark); margin-top: 4px; }
     .total-row.grand span:last-child { color: var(--pink); }
-    .promo-row {
-      display: flex; gap: 8px; margin-top: 16px;
-    }
-    .promo-row input { flex: 1; padding: 10px 14px; border: 2px solid var(--cream-dark); border-radius: var(--radius); font-family: var(--font-main); outline: none; transition: var(--transition); }
+    .total-row.discount { color: #27ae60; font-weight: 600; }
+
+    .promo-row { display: flex; gap: 8px; margin-top: 16px; }
+    .promo-row input { flex: 1; padding: 10px 14px; border: 2px solid var(--cream-dark); border-radius: var(--radius); font-family: var(--font-main); outline: none; transition: var(--transition); font-size: 0.88rem; }
     .promo-row input:focus { border-color: var(--pink); }
-    .promo-row button { padding: 10px 16px; white-space: nowrap; }
+    .promo-msg { font-size: 0.78rem; margin-top: 6px; min-height: 1.2em; }
+    .promo-msg.ok  { color: #27ae60; }
+    .promo-msg.err { color: #c0392b; }
+
+    .no-plan-msg {
+      background: rgba(242,39,110,0.08); border: 2px dashed var(--pink);
+      border-radius: var(--radius); padding: 20px; text-align: center;
+      font-size: 0.9rem; margin-bottom: 20px;
+    }
 
     @media (max-width: 900px) {
       .checkout-layout { grid-template-columns: 1fr; }
       .order-summary { position: static; }
     }
+    @media (max-width: 600px) { .card-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -124,112 +89,144 @@
   </nav>
 
   <div class="checkout-layout">
-
-    <!-- LEFT: PAYMENT -->
     <div class="checkout-left">
       <h2>Complete Your Order</h2>
 
-      <!-- Express Checkout -->
+      <!-- Stripe wordmark -->
       <div class="express-checkout">
-        <h3>Express Checkout</h3>
-        <div class="express-btns">
-          <button class="express-btn gpay">G Pay</button>
-          <button class="express-btn">⚡ Express Pay</button>
+        <h3>Powered by</h3>
+        <div style="display:flex;align-items:center;justify-content:center;padding:10px 0;">
+          <div style="font-family:'Helvetica Neue',Helvetica,sans-serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;background:linear-gradient(135deg,#635BFF 0%,#8B7FFF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none;">stripe</div>
         </div>
-        <div class="divider-or">or pay with card</div>
+        <div class="divider-or">pay with card below</div>
       </div>
 
-      <!-- Payment Form -->
       <div class="payment-form">
         <h3>Payment Details</h3>
-
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="you@example.com">
-        </div>
-
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@example.com"></div>
         <div class="form-group">
           <label>Card Number</label>
           <div class="card-field">
             <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
-            <div class="card-icons">
-              <div class="card-icon" style="background:#1a1a2e;color:white;">VISA</div>
-              <div class="card-icon" style="background:#eb5c11;color:white;">MC</div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div style="width:32px;height:20px;border-radius:3px;background:#1a1a2e;color:white;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;">VISA</div>
+              <div style="width:32px;height:20px;border-radius:3px;background:#eb5c11;color:white;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;">MC</div>
             </div>
           </div>
         </div>
-
         <div class="card-row">
-          <div class="form-group">
-            <label>Expiry Date</label>
-            <input type="text" placeholder="MM / YY" maxlength="7">
-          </div>
-          <div class="form-group">
-            <label>CVC</label>
-            <input type="text" placeholder="•••" maxlength="4">
-          </div>
+          <div class="form-group"><label>Expiry Date</label><input type="text" placeholder="MM / YY" maxlength="7"></div>
+          <div class="form-group"><label>CVC</label><input type="text" placeholder="•••" maxlength="4"></div>
         </div>
-
-        <div class="form-group">
-          <label>Name on Card</label>
-          <input type="text" placeholder="Full name as it appears on card">
-        </div>
-
-        <div class="secure-note">
-          🔒 Your payment info is encrypted and never stored on our servers.
-        </div>
-
-        <button class="btn btn-primary complete-btn" onclick="handleCheckout()">
-          Complete Order →
-        </button>
+        <div class="form-group"><label>Name on Card</label><input type="text" placeholder="Full name as it appears on card"></div>
+        <div class="secure-note">🔒 Your payment info is encrypted and never stored on our servers.</div>
+        <button class="btn btn-primary complete-btn" id="completeBtn">Complete Order →</button>
       </div>
     </div>
 
-    <!-- RIGHT: ORDER SUMMARY -->
+    <!-- ORDER SUMMARY -->
     <div class="order-summary">
       <h3>Order Summary</h3>
-      <div class="order-items">
-        <div class="order-item">
-          <div class="order-item-img">🎙️</div>
-          <div class="order-item-info">
-            <div class="name">Punchline Creator Plan</div>
-            <div class="meta">Monthly · Billed every 30 days</div>
-          </div>
-          <div class="price">$12.00</div>
-        </div>
-      </div>
+      <div id="planDisplay"></div>
 
       <div class="promo-row">
-        <input type="text" placeholder="Promo code">
-        <button class="btn btn-outline btn-sm">Apply</button>
+        <input type="text" id="promoInput" placeholder="Promo code">
+        <button class="btn btn-outline btn-sm" id="promoApplyBtn">Apply</button>
       </div>
+      <div class="promo-msg" id="promoMsg"></div>
 
-      <div class="order-totals">
-        <div class="total-row"><span>Subtotal</span><span>$12.00</span></div>
-        <div class="total-row"><span>Tax</span><span>$0.00</span></div>
-        <div class="total-row"><span>Discount</span><span>—</span></div>
-        <div class="total-row grand"><span>Total</span><span>$12.00</span></div>
-      </div>
+      <div class="order-totals" id="orderTotals"></div>
 
       <p style="font-size:0.78rem;opacity:0.5;margin-top:16px;line-height:1.5;">
-        By completing your purchase you agree to our <a href="#" style="color:var(--pink);">Terms of Service</a>. You can cancel anytime from your account settings.
+        By completing your purchase you agree to our <a href="#" style="color:var(--pink);">Terms of Service</a>. Cancel anytime from your account settings.
       </p>
     </div>
-
   </div>
 
   <footer>
     <span>© 2025 Punchline. All rights reserved.</span>
     <div class="footer-links">
-      <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Refund Policy</a>
+      <a href="#">Privacy</a><a href="#">Terms</a>
     </div>
   </footer>
 
   <script>
-    function handleCheckout() {
-      alert('Order complete! Welcome to Punchline Creator 🎉\n(In production this would process payment and redirect to your dashboard.)');
-      window.location.href = 'home2.html';
+    // ---- Load plan from localStorage ----
+    const planData = JSON.parse(localStorage.getItem('punchline_checkout_plan') || 'null');
+
+    const planDisplay  = document.getElementById('planDisplay');
+    const orderTotals  = document.getElementById('orderTotals');
+
+    let basePrice    = 0;
+    let appliedCode  = '';
+    let appliedPct   = 0;
+
+    if (planData) {
+      basePrice = parseFloat(planData.price);
+      planDisplay.innerHTML = `
+        <div class="plan-display">
+          <div class="plan-icon">🎙️</div>
+          <div>
+            <div class="plan-name">Punchline ${planData.plan}</div>
+            <div class="plan-billing">${planData.billing} plan${planData.billing === 'Annual' ? ' · billed yearly' : ' · billed monthly'}</div>
+          </div>
+          <div class="plan-price-display">$${parseFloat(planData.monthly).toFixed(2)}<span style="font-size:0.75rem;font-weight:400;opacity:0.6;">/mo</span></div>
+        </div>`;
+    } else {
+      planDisplay.innerHTML = `
+        <div class="no-plan-msg">
+          No plan selected. <a href="pricing.html" style="color:var(--pink);font-weight:600;">← Choose a plan</a>
+        </div>`;
     }
+
+    function renderTotals() {
+      if (!planData) { orderTotals.innerHTML = ''; return; }
+      const price    = basePrice;
+      const discount = appliedPct > 0 ? price * (appliedPct / 100) : 0;
+      const total    = price - discount;
+      const isAnnual = planData.billing === 'Annual';
+      let html = `<div class="total-row"><span>${isAnnual ? 'Annual subtotal' : 'Monthly subtotal'}</span><span>$${price.toFixed(2)}</span></div>`;
+      if (discount > 0) {
+        html += `<div class="total-row discount"><span>Promo (${appliedCode} −${appliedPct}%)</span><span>−$${discount.toFixed(2)}</span></div>`;
+      }
+      html += `<div class="total-row"><span>Tax</span><span>$0.00</span></div>`;
+      html += `<div class="total-row grand"><span>Total${isAnnual ? ' today' : ' /mo'}</span><span>$${total.toFixed(2)}</span></div>`;
+      orderTotals.innerHTML = html;
+    }
+    renderTotals();
+
+    // ---- Promo code (demo codes) ----
+    const DEMO_CODES = { 'LAUNCH20': 20, 'COMEDY10': 10, 'PUNCHLINE': 15 };
+
+    document.getElementById('promoApplyBtn').addEventListener('click', applyPromo);
+    document.getElementById('promoInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyPromo(); });
+
+    function applyPromo() {
+      const input = document.getElementById('promoInput').value.trim().toUpperCase();
+      const msg   = document.getElementById('promoMsg');
+      if (!input) { msg.className = 'promo-msg err'; msg.textContent = 'Please enter a code.'; return; }
+      if (DEMO_CODES[input]) {
+        appliedCode = input;
+        appliedPct  = DEMO_CODES[input];
+        msg.className   = 'promo-msg ok';
+        msg.textContent = `✓ Code "${input}" applied — ${appliedPct}% off!`;
+        renderTotals();
+      } else {
+        msg.className   = 'promo-msg err';
+        msg.textContent = "That code isn't valid or has expired.";
+      }
+    }
+
+    // ---- Complete order ----
+    document.getElementById('completeBtn').addEventListener('click', () => {
+      if (!planData) { alert('Please select a plan first.'); window.location.href = 'pricing.html'; return; }
+      const discount = appliedPct > 0 ? basePrice * (appliedPct / 100) : 0;
+      const total    = basePrice - discount;
+      alert(`Order complete! Welcome to Punchline ${planData.plan} 🎉\n\nPlan: ${planData.label}\nTotal: $${total.toFixed(2)}\n\n(In production this would process payment via Stripe and redirect to your dashboard.)`);
+      localStorage.removeItem('punchline_checkout_plan');
+      window.location.href = 'signup.html';
+    });
+
     document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
   </script>
 </body>
