@@ -8,9 +8,6 @@
   <style>
     body { background: var(--cream); }
 
-    /* ============================================================
-       AVATAR / USER MENU
-    ============================================================ */
     .user-menu-wrap { position: relative; }
     .user-avatar {
       width: 36px; height: 36px; border-radius: 50%;
@@ -46,9 +43,6 @@
     .ud-item.logout { color: #c0392b; }
     .ud-item.logout:hover { background: #fff0ee; }
 
-    /* ============================================================
-       EDIT TOOLBAR
-    ============================================================ */
     .edit-toolbar {
       display: none; position: sticky; top: 68px; z-index: 90;
       background: var(--navy); border-bottom: 2px solid var(--pink);
@@ -57,26 +51,13 @@
     .edit-toolbar.visible { display: flex; }
     .edit-toolbar span { color: var(--cream); font-size: 0.82rem; opacity: 0.7; margin-right: auto; }
 
-    /* ============================================================
-       HERO
-    ============================================================ */
     .membership-hero { background: var(--navy); padding: 64px 5%; text-align: center; }
     .membership-hero h1 { color: var(--white); font-family: var(--font-brand); font-size: clamp(2.5rem, 7vw, 5rem); }
     .membership-hero p  { color: var(--cream); opacity: 0.75; margin-top: 10px; max-width: 500px; margin-left: auto; margin-right: auto; }
 
-    /* ============================================================
-       MEMBERSHIP SECTION
-    ============================================================ */
     .membership-section { padding: 72px 5%; }
-    .membership-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px; max-width: 1100px; margin: 0 auto;
-    }
+    .membership-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto; }
 
-    /* ============================================================
-       TIER CARD
-    ============================================================ */
     .membership-card {
       background: var(--white); border-radius: var(--radius-lg);
       padding: 36px 28px; box-shadow: var(--shadow);
@@ -89,135 +70,63 @@
     .membership-card.featured .tier-perks li { color: var(--cream); }
     .membership-card.featured .perk-remove { color: rgba(255,255,255,0.5); }
     .membership-card.featured .perk-remove:hover { color: #ff8a8a; }
-    .membership-card.featured .add-perk-row input {
-      background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: var(--white);
-    }
+    .membership-card.featured .add-perk-row input { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: var(--white); }
     .membership-card.featured .add-perk-row input::placeholder { color: rgba(255,255,255,0.35); }
     .membership-card.featured .add-perk-row input:focus { border-color: var(--pink); }
     .membership-card.featured .tier-label { color: rgba(255,255,255,0.5); }
 
-    /* popular ribbon */
-    .hot-badge {
-      position: absolute; top: 16px; right: -28px;
-      background: var(--pink); color: white;
-      font-size: 0.7rem; font-weight: 700; padding: 4px 36px;
-      transform: rotate(45deg); letter-spacing: 0.06em; text-transform: uppercase;
-    }
+    .hot-badge { position: absolute; top: 16px; right: -28px; background: var(--pink); color: white; font-size: 0.7rem; font-weight: 700; padding: 4px 36px; transform: rotate(45deg); letter-spacing: 0.06em; text-transform: uppercase; }
 
-    /* card fields */
-    .tier-name-display {
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--pink);
-    }
+    .tier-name-display { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); }
     .tier-tagline-display { font-family: var(--font-brand); font-size: 1.1rem; color: var(--pink); }
     .tier-price-display   { font-size: 2.8rem; font-weight: 800; color: var(--pink); line-height: 1; }
     .tier-price-display .period { font-size: 0.9rem; font-weight: 400; opacity: 0.6; }
-    .tier-desc   { font-size: 0.87rem; opacity: 0.7; }
-    .tier-label  { font-size: 0.75rem; font-weight: 600; opacity: 0.45; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+    .tier-desc  { font-size: 0.87rem; opacity: 0.7; }
+    .tier-label { font-size: 0.75rem; font-weight: 600; opacity: 0.45; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
 
     .tier-perks { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-    .tier-perks li {
-      display: flex; align-items: flex-start; gap: 8px; font-size: 0.87rem;
-      list-style: none;
-    }
+    .tier-perks li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.87rem; list-style: none; }
     .tier-perks li::before { content: '✓'; color: var(--pink); font-weight: 700; flex-shrink: 0; }
-    .tier-perks li.edit-perk::before { display: none; }
 
-    .perk-remove {
-      display: none;
-      background: none; border: none; cursor: pointer;
-      color: var(--gray-mid); font-size: 0.85rem; padding: 0 0 0 4px;
-      transition: var(--transition); font-family: var(--font-main); margin-left: auto; flex-shrink: 0;
-    }
+    .perk-remove { display: none; background: none; border: none; cursor: pointer; color: var(--gray-mid); font-size: 0.85rem; padding: 0 0 0 4px; transition: var(--transition); font-family: var(--font-main); margin-left: auto; flex-shrink: 0; }
     .perk-remove:hover { color: #c0392b; }
     .edit-mode .perk-remove { display: inline-flex; }
 
-    /* add perk row */
-    .add-perk-row {
-      display: none; align-items: center; gap: 8px; margin-top: 4px;
-    }
+    .add-perk-row { display: none; align-items: center; gap: 8px; margin-top: 4px; }
     .edit-mode .add-perk-row { display: flex; }
-    .add-perk-row input {
-      flex: 1; padding: 7px 10px; border: 2px solid var(--cream-dark);
-      border-radius: var(--radius); font-family: var(--font-main);
-      font-size: 0.82rem; outline: none; background: var(--white); color: var(--navy);
-    }
+    .add-perk-row input { flex: 1; padding: 7px 10px; border: 2px solid var(--cream-dark); border-radius: var(--radius); font-family: var(--font-main); font-size: 0.82rem; outline: none; background: var(--white); color: var(--navy); }
     .add-perk-row input:focus { border-color: var(--pink); }
-    .add-perk-row button {
-      background: var(--pink); color: white; border: none;
-      border-radius: var(--radius); padding: 7px 12px;
-      font-size: 0.82rem; font-weight: 700; cursor: pointer;
-      font-family: var(--font-main); transition: var(--transition); flex-shrink: 0;
-    }
+    .add-perk-row button { background: var(--pink); color: white; border: none; border-radius: var(--radius); padding: 7px 12px; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: var(--font-main); transition: var(--transition); flex-shrink: 0; }
     .add-perk-row button:hover { background: var(--pink-dark); }
 
-    /* card edit controls */
-    .card-edit-controls {
-      display: none; flex-direction: column; gap: 8px; margin-top: 4px;
-    }
+    .card-edit-controls { display: none; flex-direction: column; gap: 8px; margin-top: 4px; }
     .edit-mode .card-edit-controls { display: flex; }
-    .card-edit-controls .edit-field {
-      padding: 8px 10px; border: 2px solid var(--cream-dark);
-      border-radius: var(--radius); font-family: var(--font-main);
-      font-size: 0.88rem; outline: none; background: var(--white); color: var(--navy);
-      transition: var(--transition);
-    }
+    .card-edit-controls .edit-field { padding: 8px 10px; border: 2px solid var(--cream-dark); border-radius: var(--radius); font-family: var(--font-main); font-size: 0.88rem; outline: none; background: var(--white); color: var(--navy); transition: var(--transition); }
     .card-edit-controls .edit-field:focus { border-color: var(--pink); }
-    .membership-card.featured .card-edit-controls .edit-field {
-      background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: var(--white);
-    }
+    .membership-card.featured .card-edit-controls .edit-field { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: var(--white); }
     .membership-card.featured .card-edit-controls .edit-field::placeholder { color: rgba(255,255,255,0.35); }
     .membership-card.featured .card-edit-controls .edit-field:focus { border-color: var(--pink); }
 
-    .card-action-row {
-      display: none; gap: 8px; flex-wrap: wrap; margin-top: 4px;
-    }
+    .card-action-row { display: none; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
     .edit-mode .card-action-row { display: flex; }
-    .btn-feature {
-      background: none; border: 2px solid var(--pink); color: var(--pink);
-      border-radius: var(--radius); padding: 5px 12px; font-size: 0.78rem;
-      font-weight: 700; cursor: pointer; font-family: var(--font-main);
-      transition: var(--transition);
-    }
+    .btn-feature { background: none; border: 2px solid var(--pink); color: var(--pink); border-radius: var(--radius); padding: 5px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: var(--font-main); transition: var(--transition); }
     .btn-feature:hover, .btn-feature.active { background: var(--pink); color: white; }
-    .btn-remove-tier {
-      background: none; border: 2px solid #e74c3c; color: #e74c3c;
-      border-radius: var(--radius); padding: 5px 12px; font-size: 0.78rem;
-      font-weight: 700; cursor: pointer; font-family: var(--font-main);
-      transition: var(--transition);
-    }
+    .btn-remove-tier { background: none; border: 2px solid #e74c3c; color: #e74c3c; border-radius: var(--radius); padding: 5px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: var(--font-main); transition: var(--transition); }
     .btn-remove-tier:hover { background: #e74c3c; color: white; }
 
-    /* cart button */
-    .cart-add {
-      display: flex; align-items: center; gap: 10px;
-      padding: 13px 20px; background: var(--pink); color: white;
-      border: none; border-radius: var(--radius); font-weight: 700; font-size: 0.9rem;
-      cursor: pointer; transition: var(--transition); justify-content: center;
-      text-decoration: none; margin-top: auto;
-    }
+    .cart-add { display: flex; align-items: center; gap: 10px; padding: 13px 20px; background: var(--pink); color: white; border: none; border-radius: var(--radius); font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: var(--transition); justify-content: center; text-decoration: none; margin-top: auto; }
     .cart-add:hover { background: var(--pink-dark); transform: translateY(-1px); }
     .membership-card.featured .cart-add { background: var(--white); color: var(--navy); }
     .membership-card.featured .cart-add:hover { background: var(--cream); }
 
-    /* display fields (hidden in edit mode, shown in preview) */
     .tier-display-fields { display: flex; flex-direction: column; gap: 6px; }
     .edit-mode .tier-display-fields { display: none; }
     .edit-mode .card-edit-controls { display: flex; }
 
-    /* add tier button */
-    .add-tier-wrap {
-      display: none; justify-content: center; margin-top: 12px;
-    }
+    .add-tier-wrap { display: none; justify-content: center; margin-top: 12px; }
     .edit-mode .add-tier-wrap { display: flex; }
 
-    /* ============================================================
-       EDIT MODE FIELD HIGHLIGHT (contenteditable)
-    ============================================================ */
-    .edit-mode [contenteditable="true"] {
-      outline: none; border-bottom: 2px dashed var(--pink);
-      padding-bottom: 2px; cursor: text; border-radius: 3px;
-    }
+    .edit-mode [contenteditable="true"] { outline: none; border-bottom: 2px dashed var(--pink); padding-bottom: 2px; cursor: text; border-radius: 3px; }
     .edit-mode [contenteditable="true"]:hover  { background: rgba(242,39,110,0.06); }
     .edit-mode [contenteditable="true"]:focus  { background: rgba(242,39,110,0.1); border-bottom-style: solid; }
 
@@ -226,10 +135,14 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar">
-    <a href="home2.html" class="logo">← <span style="font-family:var(--font-main);font-size:0.9rem;">Back to Home</span></a>
-    <div class="nav-links" id="navLinks"></div>
+    <a href="home2.html" class="logo">Punch<span>line</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="home2.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="community.html">Community</a>
+      <a href="merch.html">Merch</a>
+    </div>
     <div class="nav-actions">
       <button class="btn btn-outline-white btn-sm" id="editToggleBtn" style="display:none;">✏️ Edit Page</button>
       <div class="user-menu-wrap" id="userMenuWrap" style="display:none;">
@@ -245,33 +158,27 @@
           <button class="ud-item logout" id="logoutBtn">🚪 &nbsp;Log Out</button>
         </div>
       </div>
-      <button class="hamburger" id="hamburger" style="display:none;"><span></span><span></span><span></span></button>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
-  <!-- EDIT TOOLBAR -->
   <div class="edit-toolbar" id="editToolbar">
     <span>✏️ &nbsp;Edit mode — customise your membership tiers</span>
     <button class="btn btn-primary btn-sm" id="saveBtn">💾 Save Changes</button>
     <button class="btn btn-outline-white btn-sm" id="cancelBtn">Cancel</button>
   </div>
 
-  <!-- HERO -->
   <div class="membership-hero">
     <span class="badge badge-pink mb-16">Membership</span>
     <h1>"One of Us"</h1>
     <p>Join <span id="heroCreatorName">the creator</span>'s inner circle. Pick the tier that feels right and get access to the good stuff.</p>
   </div>
 
-  <!-- TIERS -->
   <section class="membership-section">
     <div class="membership-grid" id="membershipGrid"></div>
-
-    <!-- Add tier button (edit mode only) -->
     <div class="add-tier-wrap" id="addTierWrap">
       <button class="btn btn-outline" id="addTierBtn">＋ Add Another Tier</button>
     </div>
-
     <p style="text-align:center;margin-top:32px;font-size:0.82rem;opacity:0.5;">
       All memberships are billed monthly. Cancel anytime from your account settings.
     </p>
@@ -283,25 +190,18 @@
   </footer>
 
   <script>
-  // ================================================================
-  //  SESSION
-  // ================================================================
   const session = JSON.parse(localStorage.getItem('punchline_session') || 'null');
   if (!session) { window.location.href = 'index.html'; }
 
   const users   = JSON.parse(localStorage.getItem('punchline_users') || '{}');
   const userRec = users[session.email] || {};
   const userName = session.name || session.email.split('@')[0];
-
-  // Stage name from home2
-  const PAGE_HOME_KEY = 'punchline_page_' + session.email;
-  const homePageData  = JSON.parse(localStorage.getItem(PAGE_HOME_KEY) || 'null');
-  const stageName     = (homePageData && homePageData.name) ? homePageData.name : userName;
+  const homePageData = JSON.parse(localStorage.getItem('punchline_page_' + session.email) || 'null');
+  const stageName    = (homePageData && homePageData.name) ? homePageData.name : userName;
 
   document.getElementById('heroCreatorName').textContent = stageName;
   document.getElementById('footerName').textContent      = stageName;
 
-  // Avatar
   const avatarImg      = document.getElementById('userAvatarImg');
   const avatarInitials = document.getElementById('userAvatarInitials');
   if (userRec.avatarDataUrl) {
@@ -318,64 +218,37 @@
   document.getElementById('userMenuWrap').style.display  = 'block';
   document.getElementById('editToggleBtn').style.display = 'inline-flex';
 
-  document.getElementById('userAvatar').addEventListener('click', e => {
-    e.stopPropagation();
-    document.getElementById('userDropdown').classList.toggle('open');
-  });
+  document.getElementById('userAvatar').addEventListener('click', e => { e.stopPropagation(); document.getElementById('userDropdown').classList.toggle('open'); });
   document.addEventListener('click', () => document.getElementById('userDropdown').classList.remove('open'));
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    localStorage.removeItem('punchline_session');
-    window.location.href = 'index.html';
-  });
-  document.getElementById('hamburger').addEventListener('click', () => {
-    document.getElementById('navLinks').classList.toggle('open');
-  });
+  document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('punchline_session'); window.location.href = 'index.html'; });
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
 
-  // ================================================================
-  //  DATA
-  // ================================================================
   const MEM_KEY = 'punchline_membership_' + session.email;
+  const DEFAULT_TIERS = [{
+    name: 'Tier 1', tagline: 'The Fan', price: '5',
+    desc: 'For the casual fan who wants to support and stay in the loop.',
+    perks: ['Members-only forum access', 'Monthly newsletter', 'Early content announcements'],
+    featured: false
+  }];
 
-  const DEFAULT_TIERS = [
-    {
-      name:     'Tier 1',
-      tagline:  'The Fan',
-      price:    '5',
-      desc:     'For the casual fan who wants to support and stay in the loop.',
-      perks:    ['Members-only forum access', 'Monthly newsletter', 'Early content announcements'],
-      featured: false
-    }
-  ];
-
-  function loadData() {
-    return JSON.parse(localStorage.getItem(MEM_KEY) || 'null') || { tiers: DEFAULT_TIERS };
-  }
+  function loadData() { return JSON.parse(localStorage.getItem(MEM_KEY) || 'null') || { tiers: DEFAULT_TIERS }; }
   function saveData(d) { localStorage.setItem(MEM_KEY, JSON.stringify(d)); }
 
-  let pageData  = loadData();
-  let editMode  = false;
-  let tempData  = null;
+  let pageData = loadData();
+  let editMode = false;
+  let tempData = null;
 
-  // ================================================================
-  //  RENDER
-  // ================================================================
   function renderTiers(tiers) {
     const grid = document.getElementById('membershipGrid');
     grid.innerHTML = '';
-
     tiers.forEach((tier, idx) => {
       const card = document.createElement('div');
       card.className = 'membership-card' + (tier.featured ? ' featured' : '');
-
-      // Popular ribbon
       if (tier.featured) {
         const ribbon = document.createElement('div');
-        ribbon.className = 'hot-badge';
-        ribbon.textContent = 'Popular';
+        ribbon.className = 'hot-badge'; ribbon.textContent = 'Popular';
         card.appendChild(ribbon);
       }
-
-      // ---- DISPLAY FIELDS (shown in preview mode) ----
       const displayFields = document.createElement('div');
       displayFields.className = 'tier-display-fields';
       displayFields.innerHTML = `
@@ -385,7 +258,6 @@
         <p class="tier-desc">${tier.desc}</p>`;
       card.appendChild(displayFields);
 
-      // ---- EDIT FIELDS (shown in edit mode) ----
       const editFields = document.createElement('div');
       editFields.className = 'card-edit-controls';
       editFields.innerHTML = `
@@ -397,116 +269,82 @@
         <input class="edit-field" data-field="price"   value="${tier.price}"   placeholder="e.g. 9" type="number" min="0">
         <div class="tier-label">Description</div>
         <input class="edit-field" data-field="desc"    value="${tier.desc}"    placeholder="Short description of this tier">`;
-
       editFields.querySelectorAll('.edit-field').forEach(input => {
         input.addEventListener('input', e => {
           tempData.tiers[idx][e.target.dataset.field] = e.target.value;
-          // live-update the display fields
           refreshDisplayFields(card, tempData.tiers[idx]);
         });
       });
       card.appendChild(editFields);
 
-      // ---- PERKS LIST ----
       const perksList = document.createElement('ul');
       perksList.className = 'tier-perks';
-      tier.perks.forEach((perk, pIdx) => {
-        perksList.appendChild(buildPerkItem(perk, idx, pIdx));
-      });
+      tier.perks.forEach((perk, pIdx) => perksList.appendChild(buildPerkItem(perk, idx, pIdx)));
       card.appendChild(perksList);
 
-      // ---- ADD PERK ROW ----
       const addPerkRow = document.createElement('div');
       addPerkRow.className = 'add-perk-row';
       const perkInput = document.createElement('input');
-      perkInput.type = 'text';
-      perkInput.placeholder = 'New perk…';
+      perkInput.type = 'text'; perkInput.placeholder = 'New perk…';
       const perkAddBtn = document.createElement('button');
       perkAddBtn.textContent = '＋';
       perkAddBtn.addEventListener('click', () => {
-        const val = perkInput.value.trim();
-        if (!val) return;
-        tempData.tiers[idx].perks.push(val);
-        renderTiers(tempData.tiers);
+        const val = perkInput.value.trim(); if (!val) return;
+        tempData.tiers[idx].perks.push(val); renderTiers(tempData.tiers);
       });
       perkInput.addEventListener('keydown', e => { if (e.key === 'Enter') perkAddBtn.click(); });
-      addPerkRow.appendChild(perkInput);
-      addPerkRow.appendChild(perkAddBtn);
+      addPerkRow.appendChild(perkInput); addPerkRow.appendChild(perkAddBtn);
       card.appendChild(addPerkRow);
 
-      // ---- CARD ACTION ROW (feature / remove tier) ----
       const actionRow = document.createElement('div');
       actionRow.className = 'card-action-row';
-
       const featureBtn = document.createElement('button');
       featureBtn.className = 'btn-feature' + (tier.featured ? ' active' : '');
       featureBtn.textContent = tier.featured ? '⭐ Featured' : 'Mark as Featured';
       featureBtn.addEventListener('click', () => {
-        // only one featured at a time
         tempData.tiers.forEach((t, i) => t.featured = (i === idx) ? !t.featured : false);
         renderTiers(tempData.tiers);
       });
       actionRow.appendChild(featureBtn);
-
       if (tiers.length > 1) {
         const removeBtn = document.createElement('button');
-        removeBtn.className = 'btn-remove-tier';
-        removeBtn.textContent = '✕ Remove Tier';
+        removeBtn.className = 'btn-remove-tier'; removeBtn.textContent = '✕ Remove Tier';
         removeBtn.addEventListener('click', () => {
-          if (confirm('Remove this tier?')) {
-            tempData.tiers.splice(idx, 1);
-            renderTiers(tempData.tiers);
-          }
+          if (confirm('Remove this tier?')) { tempData.tiers.splice(idx, 1); renderTiers(tempData.tiers); }
         });
         actionRow.appendChild(removeBtn);
       }
       card.appendChild(actionRow);
 
-      // ---- CART BUTTON ----
       const cartBtn = document.createElement('a');
-      cartBtn.href = 'checkout2.html';
-      cartBtn.className = 'cart-add';
+      cartBtn.href = 'checkout2.html'; cartBtn.className = 'cart-add';
       cartBtn.innerHTML = '<span class="cart-icon">🛒</span> Add to Cart';
       card.appendChild(cartBtn);
-
       grid.appendChild(card);
     });
-
-    // Show/hide add tier button
-    document.getElementById('addTierBtn').style.display =
-      (editMode && tiers.length < 4) ? 'inline-flex' : 'none';
+    document.getElementById('addTierBtn').style.display = (editMode && tiers.length < 4) ? 'inline-flex' : 'none';
   }
 
   function buildPerkItem(perk, tierIdx, perkIdx) {
     const li = document.createElement('li');
     li.innerHTML = `<span>${perk}</span>`;
     const removeBtn = document.createElement('button');
-    removeBtn.className = 'perk-remove';
-    removeBtn.textContent = '✕';
-    removeBtn.title = 'Remove perk';
-    removeBtn.addEventListener('click', () => {
-      tempData.tiers[tierIdx].perks.splice(perkIdx, 1);
-      renderTiers(tempData.tiers);
-    });
+    removeBtn.className = 'perk-remove'; removeBtn.textContent = '✕'; removeBtn.title = 'Remove perk';
+    removeBtn.addEventListener('click', () => { tempData.tiers[tierIdx].perks.splice(perkIdx, 1); renderTiers(tempData.tiers); });
     li.appendChild(removeBtn);
     return li;
   }
 
   function refreshDisplayFields(card, tier) {
-    const df = card.querySelector('.tier-display-fields');
-    if (!df) return;
+    const df = card.querySelector('.tier-display-fields'); if (!df) return;
     df.querySelector('.tier-name-display').textContent    = tier.name;
     df.querySelector('.tier-tagline-display').textContent = tier.tagline;
     df.querySelector('.tier-price-display').innerHTML     = `$${tier.price}<span class="period">/mo</span>`;
     df.querySelector('.tier-desc').textContent            = tier.desc;
   }
 
-  // ================================================================
-  //  EDIT MODE
-  // ================================================================
   function enterEditMode() {
-    editMode = true;
-    tempData = JSON.parse(JSON.stringify(pageData));
+    editMode = true; tempData = JSON.parse(JSON.stringify(pageData));
     document.body.classList.add('edit-mode');
     document.getElementById('editToolbar').classList.add('visible');
     document.getElementById('editToggleBtn').textContent = '👁 Preview';
@@ -515,8 +353,7 @@
 
   function exitEditMode(save) {
     if (save) { pageData = tempData; saveData(pageData); }
-    editMode = false;
-    tempData = null;
+    editMode = false; tempData = null;
     document.body.classList.remove('edit-mode');
     document.getElementById('editToolbar').classList.remove('visible');
     document.getElementById('editToggleBtn').textContent = '✏️ Edit Page';
@@ -527,26 +364,13 @@
   document.getElementById('saveBtn').addEventListener('click',   () => exitEditMode(true));
   document.getElementById('cancelBtn').addEventListener('click', () => exitEditMode(false));
 
-  // ================================================================
-  //  ADD TIER
-  // ================================================================
   document.getElementById('addTierBtn').addEventListener('click', () => {
     if (tempData.tiers.length >= 4) return;
     const n = tempData.tiers.length + 1;
-    tempData.tiers.push({
-      name:     `Tier ${n}`,
-      tagline:  '[Tier Name]',
-      price:    String(n * 10),
-      desc:     'Describe what this tier offers.',
-      perks:    ['Perk one', 'Perk two'],
-      featured: false
-    });
+    tempData.tiers.push({ name: `Tier ${n}`, tagline: '[Tier Name]', price: String(n * 10), desc: 'Describe what this tier offers.', perks: ['Perk one', 'Perk two'], featured: false });
     renderTiers(tempData.tiers);
   });
 
-  // ================================================================
-  //  INITIAL RENDER
-  // ================================================================
   renderTiers(pageData.tiers);
   </script>
 
