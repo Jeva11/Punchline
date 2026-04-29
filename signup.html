@@ -487,6 +487,9 @@
         name:     username,
         bio,
         tags,
+        avatarDataUrl: document.getElementById('avatarPreview').style.display === 'block'
+                       ? document.getElementById('avatarPreview').src
+                       : null,
         website:  document.getElementById('website').value.trim(),
         newsletter: document.getElementById('optNewsletter').checked,
         offers:     document.getElementById('optOffers').checked,
