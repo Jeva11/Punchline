@@ -777,21 +777,30 @@
   });
 
   // ================================================================
-  //  CART
+  //  CART  (persisted to sessionStorage so checkout2 can read it)
   // ================================================================
-  let cart = [];
+  const CART_KEY = 'punchline_cart_' + session.email;
+
+  function loadCart() {
+    try { return JSON.parse(sessionStorage.getItem(CART_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function saveCart() {
+    sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+
+  let cart = loadCart();
 
   function addToCart(p) {
     cart.push({ name: p.name, priceUsd: parseFloat(p.price) || 0 });
+    saveCart();
     renderCart();
-    // Scroll sidebar into view on mobile
     document.querySelector('.cart-sidebar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function renderCart() {
-    const list  = document.getElementById('cartItemsList');
-    const badge = document.getElementById('cartBadge');
-    const total = document.getElementById('cartTotal');
+    const list     = document.getElementById('cartItemsList');
+    const badge    = document.getElementById('cartBadge');
+    const total    = document.getElementById('cartTotal');
     const floatNum = document.getElementById('floatCartCount');
 
     list.innerHTML = '';
@@ -812,7 +821,7 @@
       const nameEl  = document.createElement('span'); nameEl.className  = 'ci-name';  nameEl.textContent = item.name;
       const priceEl = document.createElement('span'); priceEl.className = 'ci-price'; priceEl.textContent = fmtPrice(item.priceUsd);
       const rmBtn   = document.createElement('button'); rmBtn.className = 'ci-remove'; rmBtn.textContent = '✕';
-      rmBtn.addEventListener('click', () => { cart.splice(i, 1); renderCart(); });
+      rmBtn.addEventListener('click', () => { cart.splice(i, 1); saveCart(); renderCart(); });
       row.appendChild(nameEl); row.appendChild(priceEl); row.appendChild(rmBtn);
       list.appendChild(row);
     });
@@ -825,7 +834,7 @@
 
   document.getElementById('emptyCartBtn').addEventListener('click', () => {
     if (!cart.length) return;
-    if (confirm('Empty your cart?')) { cart = []; renderCart(); }
+    if (confirm('Empty your cart?')) { cart = []; saveCart(); renderCart(); }
   });
   document.getElementById('cartFloat').addEventListener('click', () => {
     document.querySelector('.cart-sidebar').scrollIntoView({ behavior: 'smooth' });
