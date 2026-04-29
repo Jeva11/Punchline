@@ -269,6 +269,23 @@
     .modal-thumb-row { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; padding: 0 12px; flex-wrap: wrap; }
     .modal-thumb { width: 44px; height: 44px; border-radius: var(--radius); object-fit: cover; border: 2px solid rgba(255,255,255,0.3); cursor: pointer; transition: var(--transition); }
     .modal-thumb:hover, .modal-thumb.active { border-color: var(--pink); }
+
+    /* modal image arrows + dots */
+    .modal-thumb-row { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 0 12px; z-index: 5; }
+    .modal-arrow {
+      background: rgba(255,255,255,0.2); border: none; color: white;
+      width: 32px; height: 32px; border-radius: 50%; font-size: 1.3rem; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: var(--transition); backdrop-filter: blur(4px);
+      font-family: var(--font-main); flex-shrink: 0;
+    }
+    .modal-arrow:hover { background: var(--pink); }
+    .modal-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.4); cursor: pointer; transition: var(--transition); flex-shrink: 0;
+    }
+    .modal-dot.active { background: var(--white); transform: scale(1.2); }
+    .modal-dot:hover  { background: var(--pink); }
     .modal-info { padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; }
     .modal-product-name  { font-size: 1.4rem; font-weight: 800; }
     .modal-product-price { font-size: 1.8rem; font-weight: 800; color: var(--pink); }
@@ -715,20 +732,33 @@
     thumbRow.innerHTML = '';
 
     if (p.images && p.images.length > 0) {
+      let currentImg = 0;
+      function showImg(idx) {
+        currentImg = (idx + p.images.length) % p.images.length;
+        mainImg.src = p.images[currentImg];
+        thumbRow.querySelectorAll('.modal-dot').forEach((d,i) => d.classList.toggle('active', i === currentImg));
+      }
       mainImg.src = p.images[0];
       mainImg.style.display = 'block';
       placeholder.style.display = 'none';
-      p.images.forEach((src, i) => {
-        const th = document.createElement('img');
-        th.className = 'modal-thumb' + (i === 0 ? ' active' : '');
-        th.src = src;
-        th.addEventListener('click', () => {
-          mainImg.src = src;
-          thumbRow.querySelectorAll('.modal-thumb').forEach(t => t.classList.remove('active'));
-          th.classList.add('active');
+      if (p.images.length > 1) {
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'modal-arrow modal-arrow-prev';
+        prevBtn.innerHTML = '&#8249;';
+        prevBtn.addEventListener('click', e => { e.stopPropagation(); showImg(currentImg - 1); });
+        thumbRow.appendChild(prevBtn);
+        p.images.forEach((_, i) => {
+          const dot = document.createElement('span');
+          dot.className = 'modal-dot' + (i === 0 ? ' active' : '');
+          dot.addEventListener('click', e => { e.stopPropagation(); showImg(i); });
+          thumbRow.appendChild(dot);
         });
-        thumbRow.appendChild(th);
-      });
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'modal-arrow modal-arrow-next';
+        nextBtn.innerHTML = '&#8250;';
+        nextBtn.addEventListener('click', e => { e.stopPropagation(); showImg(currentImg + 1); });
+        thumbRow.appendChild(nextBtn);
+      }
     } else {
       mainImg.style.display = 'none';
       placeholder.style.display = '';
