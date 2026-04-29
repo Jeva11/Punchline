@@ -11,12 +11,10 @@
     .user-menu-wrap { position: relative; }
     .user-avatar {
       width: 36px; height: 36px; border-radius: 50%;
-      background: var(--pink); color: var(--white);
-      font-weight: 700; font-size: 0.85rem;
+      background: var(--pink); color: var(--white); font-weight: 700; font-size: 0.85rem;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; border: 2px solid rgba(255,255,255,0.2);
-      transition: var(--transition); user-select: none;
-      letter-spacing: 0.03em; overflow: hidden;
+      transition: var(--transition); user-select: none; letter-spacing: 0.03em; overflow: hidden;
     }
     .user-avatar:hover { border-color: rgba(255,255,255,0.7); transform: scale(1.06); }
     .user-dropdown {
@@ -26,10 +24,7 @@
       animation: dropIn 0.18s cubic-bezier(.4,0,.2,1); z-index: 200;
     }
     .user-dropdown.open { display: block; }
-    @keyframes dropIn {
-      from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-      to   { opacity: 1; transform: none; }
-    }
+    @keyframes dropIn { from { opacity:0; transform:translateY(-8px) scale(0.97); } to { opacity:1; transform:none; } }
     .ud-header { padding: 14px 18px 12px; border-bottom: 1px solid var(--cream-dark); }
     .ud-header .ud-name  { font-weight: 700; font-size: 0.95rem; color: var(--navy); }
     .ud-header .ud-email { font-size: 0.76rem; color: var(--gray-mid); margin-top: 2px; }
@@ -114,7 +109,7 @@
     .btn-remove-tier { background: none; border: 2px solid #e74c3c; color: #e74c3c; border-radius: var(--radius); padding: 5px 12px; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: var(--font-main); transition: var(--transition); }
     .btn-remove-tier:hover { background: #e74c3c; color: white; }
 
-    .cart-add { display: flex; align-items: center; gap: 10px; padding: 13px 20px; background: var(--pink); color: white; border: none; border-radius: var(--radius); font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: var(--transition); justify-content: center; text-decoration: none; margin-top: auto; }
+    .cart-add { display: flex; align-items: center; gap: 10px; padding: 13px 20px; background: var(--pink); color: white; border: none; border-radius: var(--radius); font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: var(--transition); justify-content: center; text-decoration: none; margin-top: auto; font-family: var(--font-main); }
     .cart-add:hover { background: var(--pink-dark); transform: translateY(-1px); }
     .membership-card.featured .cart-add { background: var(--white); color: var(--navy); }
     .membership-card.featured .cart-add:hover { background: var(--cream); }
@@ -223,7 +218,9 @@
   document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('punchline_session'); window.location.href = 'index.html'; });
   document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
 
-  const MEM_KEY = 'punchline_membership_' + session.email;
+  const MEM_KEY  = 'punchline_membership_' + session.email;
+  const CART_KEY = 'punchline_cart_' + session.email;
+
   const DEFAULT_TIERS = [{
     name: 'Tier 1', tagline: 'The Fan', price: '5',
     desc: 'For the casual fan who wants to support and stay in the loop.',
@@ -238,6 +235,16 @@
   let editMode = false;
   let tempData = null;
 
+  function addTierToCart(tier) {
+    const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    cart.push({
+      name: tier.tagline + ' Membership (' + tier.name + ')',
+      priceUsd: parseFloat(tier.price) || 0
+    });
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    window.location.href = 'checkout2.html';
+  }
+
   function renderTiers(tiers) {
     const grid = document.getElementById('membershipGrid');
     grid.innerHTML = '';
@@ -249,6 +256,7 @@
         ribbon.className = 'hot-badge'; ribbon.textContent = 'Popular';
         card.appendChild(ribbon);
       }
+
       const displayFields = document.createElement('div');
       displayFields.className = 'tier-display-fields';
       displayFields.innerHTML = `
@@ -316,10 +324,15 @@
       }
       card.appendChild(actionRow);
 
-      const cartBtn = document.createElement('a');
-      cartBtn.href = 'checkout2.html'; cartBtn.className = 'cart-add';
+      // Cart button — writes to localStorage cart then navigates to checkout
+      const cartBtn = document.createElement('button');
+      cartBtn.className = 'cart-add';
       cartBtn.innerHTML = '<span class="cart-icon">🛒</span> Add to Cart';
+      cartBtn.addEventListener('click', () => {
+        if (!editMode) addTierToCart(tier);
+      });
       card.appendChild(cartBtn);
+
       grid.appendChild(card);
     });
     document.getElementById('addTierBtn').style.display = (editMode && tiers.length < 4) ? 'inline-flex' : 'none';
