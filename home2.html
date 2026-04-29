@@ -308,7 +308,9 @@
 
   const users   = JSON.parse(localStorage.getItem('punchline_users') || '{}');
   const userRec = users[session.email] || {};
-  const userName = session.name || session.email.split('@')[0];
+  const userName  = session.name || session.email.split('@')[0];
+  const homeData  = JSON.parse(localStorage.getItem('punchline_page_' + session.email) || 'null');
+  const stageName = (homeData && homeData.name) ? homeData.name : userName;
 
   // Avatar
   const avatarImg      = document.getElementById('userAvatarImg');
@@ -318,7 +320,7 @@
     avatarImg.style.display = 'block';
     avatarInitials.style.display = 'none';
   } else {
-    const initials = userName.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0,2).join('');
+    const initials = stageName.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0,2).join('');
     avatarInitials.textContent = initials;
     avatarInitials.style.display = 'inline';
   }
@@ -342,7 +344,7 @@
   });
 
   // ================================================================
-  //  PAGE DATA  (per-user, stored under their email key)v one million i think
+  //  PAGE DATA  (per-user, stored under their email key)
   // ================================================================
   const PAGE_KEY = 'punchline_page_' + session.email;
 
@@ -387,7 +389,7 @@
   }
 
   // ================================================================
-  //  WIDGETSv2
+  //  WIDGETS
   // ================================================================
   const WIDGET_META = {
     years:  { icon: '📅', label: 'Years Performing',    placeholder: '5+' },
@@ -552,7 +554,7 @@
   document.getElementById('cancelBtn').addEventListener('click', () => exitEditMode(false));
 
   // ================================================================
-  //  ADD WIDGET v8
+  //  ADD WIDGET
   // ================================================================
   document.getElementById('addWidgetBtn').addEventListener('click', () => {
     const sel  = document.getElementById('widgetSelect');
@@ -573,7 +575,7 @@
   });
 
   // ================================================================
-  //  PHOTO UPLOAD v3
+  //  PHOTO UPLOAD (page photo, not avatar)
   // ================================================================
   document.getElementById('photoUploadBtn').addEventListener('click', () => {
     document.getElementById('pagePhotoInput').click();
