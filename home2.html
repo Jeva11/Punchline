@@ -3,96 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About — [Creator Name]</title>
+  <title>About — Punchline</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
     body { background: var(--cream); }
 
-    /* ---- AVATAR / USER MENU ---- */
+    /* ============================================================
+       AVATAR / USER MENU
+    ============================================================ */
     .user-menu-wrap { position: relative; }
     .user-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      background: var(--pink);
-      color: var(--white);
-      font-weight: 700;
-      font-size: 0.85rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--pink); color: var(--white);
+      font-weight: 700; font-size: 0.85rem;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      border: 2px solid rgba(255,255,255,0.2);
-      transition: var(--transition);
-      user-select: none;
-      letter-spacing: 0.03em;
+      cursor: pointer; border: 2px solid rgba(255,255,255,0.2);
+      transition: var(--transition); user-select: none; letter-spacing: 0.03em;
+      overflow: hidden;
     }
     .user-avatar:hover { border-color: rgba(255,255,255,0.7); transform: scale(1.06); }
-
     .user-dropdown {
-      display: none;
-      position: absolute;
-      top: calc(100% + 10px);
-      right: 0;
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      min-width: 210px;
-      overflow: hidden;
-      animation: dropIn 0.18s cubic-bezier(.4,0,.2,1);
-      z-index: 200;
+      display: none; position: absolute; top: calc(100% + 10px); right: 0;
+      background: var(--white); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg); min-width: 210px; overflow: hidden;
+      animation: dropIn 0.18s cubic-bezier(.4,0,.2,1); z-index: 200;
     }
     .user-dropdown.open { display: block; }
     @keyframes dropIn {
       from { opacity: 0; transform: translateY(-8px) scale(0.97); }
       to   { opacity: 1; transform: none; }
     }
-    .ud-header {
-      padding: 14px 18px 12px;
-      border-bottom: 1px solid var(--cream-dark);
-    }
+    .ud-header { padding: 14px 18px 12px; border-bottom: 1px solid var(--cream-dark); }
     .ud-header .ud-name  { font-weight: 700; font-size: 0.95rem; color: var(--navy); }
     .ud-header .ud-email { font-size: 0.76rem; color: var(--gray-mid); margin-top: 2px; }
-
     .ud-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 11px 18px;
-      font-size: 0.88rem; font-weight: 500;
-      color: var(--navy);
-      cursor: pointer;
-      transition: var(--transition);
-      border: none; background: none;
-      width: 100%; text-align: left;
-      font-family: var(--font-main);
-      text-decoration: none;
+      display: flex; align-items: center; gap: 10px; padding: 11px 18px;
+      font-size: 0.88rem; font-weight: 500; color: var(--navy); cursor: pointer;
+      transition: var(--transition); border: none; background: none;
+      width: 100%; text-align: left; font-family: var(--font-main); text-decoration: none;
     }
     .ud-item:hover { background: var(--gray-light); color: var(--pink); }
     .ud-item.logout { color: #c0392b; }
     .ud-item.logout:hover { background: #fff0ee; }
-    .ud-divider { height: 1px; background: var(--cream-dark); margin: 4px 0; }
 
-    /* ---- PAGE STYLES ---- */
+    /* ============================================================
+       EDIT MODE TOOLBAR
+    ============================================================ */
+    .edit-toolbar {
+      display: none;
+      position: sticky; top: 68px; z-index: 90;
+      background: var(--navy);
+      border-bottom: 2px solid var(--pink);
+      padding: 10px 5%;
+      align-items: center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .edit-toolbar.visible { display: flex; }
+    .edit-toolbar span {
+      color: var(--cream); font-size: 0.82rem; opacity: 0.7; margin-right: auto;
+    }
+
+    /* ============================================================
+       EDIT MODE FIELD STYLES
+    ============================================================ */
+    .edit-mode [contenteditable="true"] {
+      outline: none;
+      border-bottom: 2px dashed var(--pink);
+      padding-bottom: 2px;
+      cursor: text;
+      transition: background 0.2s;
+      border-radius: 3px;
+    }
+    .edit-mode [contenteditable="true"]:hover  { background: rgba(242,39,110,0.06); }
+    .edit-mode [contenteditable="true"]:focus  { background: rgba(242,39,110,0.1); border-bottom-style: solid; }
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
     .about-section {
       max-width: 900px; margin: 0 auto;
       padding: 72px 5%;
       display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
     }
+
+    /* Photo block */
+    .about-img-wrap { position: relative; }
     .about-img {
       background: linear-gradient(135deg, var(--navy-light), #3d1060);
       border-radius: var(--radius-lg); aspect-ratio: 3/4;
       display: flex; align-items: center; justify-content: center;
       color: rgba(255,255,255,0.15); font-size: 0.8rem; letter-spacing: 0.1em;
       border: 2px dashed rgba(255,255,255,0.08);
+      overflow: hidden; position: relative;
     }
-    .about-content h1 { margin-bottom: 20px; }
-    .about-content p { margin-bottom: 16px; opacity: 0.75; }
-    .about-content .stat-row { display: flex; gap: 28px; margin-top: 32px; flex-wrap: wrap; }
-    .stat { text-align: center; }
-    .stat .num { font-size: 2rem; font-weight: 800; color: var(--pink); }
-    .stat .lbl { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.6; margin-top: 4px; }
+    .about-img img { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; }
+    .about-img .placeholder-text { position: relative; z-index: 1; }
+    .photo-upload-btn {
+      display: none;
+      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+      background: var(--pink); color: var(--white);
+      border: none; border-radius: var(--radius);
+      padding: 8px 18px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; font-family: var(--font-main);
+      white-space: nowrap; z-index: 10;
+      transition: var(--transition);
+    }
+    .photo-upload-btn:hover { background: var(--pink-dark); }
+    .edit-mode .photo-upload-btn { display: block; }
+    #pagePhotoInput { display: none; }
 
-    @media (max-width: 700px) { .about-section { grid-template-columns: 1fr; } }
+    /* Content */
+    .about-content h1 { margin-bottom: 12px; }
+    .about-content .bio-para { margin-bottom: 16px; opacity: 0.85; line-height: 1.7; }
+
+    /* ============================================================
+       WIDGET ZONE
+    ============================================================ */
+    .widget-zone { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* Add widget UI — only visible in edit mode */
+    .add-widget-wrap { display: none; }
+    .edit-mode .add-widget-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .add-widget-select {
+      padding: 8px 14px; border-radius: var(--radius);
+      border: 2px solid var(--pink); background: var(--white);
+      font-family: var(--font-main); font-size: 0.88rem; font-weight: 600;
+      color: var(--navy); cursor: pointer; outline: none;
+    }
+
+    /* Individual widget cards */
+    .widget-card {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 20px 24px; box-shadow: var(--shadow);
+      position: relative;
+    }
+    .widget-remove {
+      display: none;
+      position: absolute; top: 10px; right: 12px;
+      background: none; border: none; font-size: 1rem;
+      color: var(--gray-mid); cursor: pointer; transition: var(--transition);
+      font-family: var(--font-main);
+    }
+    .widget-remove:hover { color: #c0392b; }
+    .edit-mode .widget-remove { display: block; }
+
+    /* Stat widget */
+    .widget-stat { display: flex; align-items: center; gap: 16px; }
+    .widget-stat .stat-icon { font-size: 1.8rem; }
+    .widget-stat .stat-num {
+      font-size: 2rem; font-weight: 800; color: var(--pink); line-height: 1;
+    }
+    .widget-stat .stat-lbl {
+      font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.08em; opacity: 0.6; margin-top: 4px;
+    }
+
+    /* Video widget */
+    .widget-video .video-url-input {
+      display: none;
+      width: 100%; padding: 10px 14px;
+      border: 2px solid var(--cream-dark); border-radius: var(--radius);
+      font-family: var(--font-main); font-size: 0.88rem;
+      margin-top: 10px; outline: none;
+    }
+    .widget-video .video-url-input:focus { border-color: var(--pink); }
+    .edit-mode .widget-video .video-url-input { display: block; }
+    .widget-video iframe {
+      width: 100%; aspect-ratio: 16/9; border: none;
+      border-radius: var(--radius); margin-top: 10px; display: none;
+    }
+    .widget-video .video-placeholder {
+      background: var(--navy-light); border-radius: var(--radius);
+      aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.25); font-size: 0.82rem; margin-top: 10px;
+      letter-spacing: 0.06em;
+    }
+    .widget-video h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 4px; }
+    .widget-video p  { font-size: 0.8rem; opacity: 0.55; margin: 0; }
+
+    /* Social links widget */
+    .widget-social h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 14px; }
+    .social-links-list { display: flex; flex-direction: column; gap: 10px; }
+    .social-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .social-row .social-icon { font-size: 1.2rem; width: 24px; flex-shrink: 0; }
+    .social-row .social-handle-display {
+      font-size: 0.9rem; font-weight: 600; color: var(--navy);
+      text-decoration: none;
+    }
+    .social-row .social-handle-display:hover { color: var(--pink); }
+    .social-row .social-input {
+      display: none;
+      flex: 1; padding: 7px 12px;
+      border: 2px solid var(--cream-dark); border-radius: var(--radius);
+      font-family: var(--font-main); font-size: 0.85rem; outline: none;
+    }
+    .social-row .social-input:focus { border-color: var(--pink); }
+    .edit-mode .social-row .social-input   { display: block; }
+    .edit-mode .social-row .social-handle-display { display: none; }
+
+    /* Buttons row */
+    .about-content .btn-row {
+      display: flex; gap: 16px; margin-top: 24px; flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      .about-section { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="home2.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
@@ -102,7 +225,7 @@
       <a href="merch.html">Merch</a>
     </div>
     <div class="nav-actions">
-      <!-- Avatar inserted by JS once session is confirmed -->
+      <button class="btn btn-outline-white btn-sm" id="editToggleBtn" style="display:none;">✏️ Edit Page</button>
       <div class="user-menu-wrap" id="userMenuWrap" style="display:none;">
         <div class="user-avatar" id="userAvatar" role="button" tabindex="0" title="Account menu">
           <img id="userAvatarImg" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
@@ -120,20 +243,51 @@
     </div>
   </nav>
 
+  <!-- EDIT TOOLBAR -->
+  <div class="edit-toolbar" id="editToolbar">
+    <span>✏️ &nbsp;Edit mode — click any text to change it</span>
+    <button class="btn btn-primary btn-sm" id="saveBtn">💾 Save Changes</button>
+    <button class="btn btn-outline-white btn-sm" id="cancelBtn">Cancel</button>
+  </div>
+
+  <!-- PAGE CONTENT -->
   <div class="about-section">
-    <div class="about-img">[ CREATOR PHOTO ]</div>
+
+    <!-- LEFT: photo -->
+    <div class="about-img-wrap">
+      <div class="about-img" id="aboutImgBlock">
+        <img id="pagePhoto" alt="Creator photo">
+        <span class="placeholder-text">[ CREATOR PHOTO ]</span>
+      </div>
+      <button class="photo-upload-btn" id="photoUploadBtn">📷 Change Photo</button>
+      <input type="file" id="pagePhotoInput" accept="image/*">
+    </div>
+
+    <!-- RIGHT: content -->
     <div class="about-content">
       <span class="badge badge-pink mb-16">About Me</span>
-      <h1>[Creator Name]</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.</p>
-      <div class="stat-row">
-        <div class="stat"><div class="num">5+ yrs</div><div class="lbl">Performing</div></div>
-        <div class="stat"><div class="num">200+</div><div class="lbl">Shows</div></div>
-        <div class="stat"><div class="num">50k+</div><div class="lbl">Fans</div></div>
+      <h1 id="creatorName">[Creator Name]</h1>
+      <p class="bio-para" id="bioPara">Tell your audience who you are, what your comedy is about, and what makes you unique. Click to edit this in edit mode.</p>
+
+      <!-- Widget zone -->
+      <div class="widget-zone" id="widgetZone">
+        <!-- widgets injected here -->
       </div>
-      <div class="flex gap-16 mt-24">
+
+      <!-- Add widget (edit mode only) -->
+      <div class="add-widget-wrap" style="margin-top:16px;">
+        <select class="add-widget-select" id="widgetSelect">
+          <option value="">＋ Add a widget…</option>
+          <option value="years">📅 Years Performing</option>
+          <option value="fans">❤️ Fan Count</option>
+          <option value="cities">📍 Cities Performed In</option>
+          <option value="video">🎬 Latest Video</option>
+          <option value="social">🔗 Social Links</option>
+        </select>
+        <button class="btn btn-primary btn-sm" id="addWidgetBtn">Add</button>
+      </div>
+
+      <div class="btn-row">
         <a href="events.html" class="btn btn-primary">See Upcoming Shows</a>
         <a href="community.html" class="btn btn-outline">Join Community</a>
       </div>
@@ -141,63 +295,309 @@
   </div>
 
   <footer>
-    <span>© 2025 [Creator Name] · Powered by Punchline</span>
+    <span>© 2025 Punchline</span>
     <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </footer>
 
   <script>
-    // ---- Session check ----
-    const session = JSON.parse(localStorage.getItem('punchline_session') || 'null');
+  // ================================================================
+  //  SESSION
+  // ================================================================
+  const session = JSON.parse(localStorage.getItem('punchline_session') || 'null');
+  if (!session) { window.location.href = 'index.html'; }
 
-    if (!session) {
-      window.location.href = 'index.html';
+  const users   = JSON.parse(localStorage.getItem('punchline_users') || '{}');
+  const userRec = users[session.email] || {};
+  const userName = session.name || session.email.split('@')[0];
+
+  // Avatar
+  const avatarImg      = document.getElementById('userAvatarImg');
+  const avatarInitials = document.getElementById('userAvatarInitials');
+  if (userRec.avatarDataUrl) {
+    avatarImg.src = userRec.avatarDataUrl;
+    avatarImg.style.display = 'block';
+    avatarInitials.style.display = 'none';
+  } else {
+    const initials = userName.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0,2).join('');
+    avatarInitials.textContent = initials;
+    avatarInitials.style.display = 'inline';
+  }
+  document.getElementById('udName').textContent  = userName;
+  document.getElementById('udEmail').textContent = session.email;
+  document.getElementById('userMenuWrap').style.display = 'block';
+  document.getElementById('editToggleBtn').style.display = 'inline-flex';
+
+  // Dropdown
+  document.getElementById('userAvatar').addEventListener('click', e => {
+    e.stopPropagation();
+    document.getElementById('userDropdown').classList.toggle('open');
+  });
+  document.addEventListener('click', () => document.getElementById('userDropdown').classList.remove('open'));
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('punchline_session');
+    window.location.href = 'index.html';
+  });
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ================================================================
+  //  PAGE DATA  (per-user, stored under their email key)v one million i think
+  // ================================================================
+  const PAGE_KEY = 'punchline_page_' + session.email;
+
+  function loadPageData() {
+    return JSON.parse(localStorage.getItem(PAGE_KEY) || 'null') || {
+      name:    userName,
+      bio:     userRec.bio || 'Tell your audience who you are, what your comedy is about, and what makes you unique.',
+      photo:   userRec.avatarDataUrl || null,
+      widgets: []
+    };
+  }
+
+  function savePageData(data) {
+    localStorage.setItem(PAGE_KEY, JSON.stringify(data));
+  }
+
+  // ================================================================
+  //  RENDER PAGE FROM DATA
+  // ================================================================
+  let pageData   = loadPageData();
+  let editMode   = false;
+  let tempWidgets = [];   // working copy while in edit mode
+
+  function renderPage(data) {
+    document.title = 'About — ' + data.name;
+    document.getElementById('creatorName').textContent = data.name;
+    document.getElementById('bioPara').textContent     = data.bio;
+
+    // Page photo
+    const img         = document.getElementById('pagePhoto');
+    const placeholder = document.querySelector('.about-img .placeholder-text');
+    if (data.photo) {
+      img.src               = data.photo;
+      img.style.display     = 'block';
+      placeholder.style.display = 'none';
     } else {
-      const name     = session.name || session.email.split('@')[0];
-      const initials = name.trim().split(/\s+/).map(w => w[0].toUpperCase()).slice(0, 2).join('');
-
-      // Show photo if saved, otherwise fall back to initials
-      const users   = JSON.parse(localStorage.getItem('punchline_users') || '{}');
-      const userRec = users[session.email];
-      const avatarImg      = document.getElementById('userAvatarImg');
-      const avatarInitials = document.getElementById('userAvatarInitials');
-
-      if (userRec && userRec.avatarDataUrl) {
-        avatarImg.src             = userRec.avatarDataUrl;
-        avatarImg.style.display   = 'block';
-        avatarInitials.style.display = 'none';
-      } else {
-        avatarInitials.textContent   = initials;
-        avatarInitials.style.display = 'inline';
-      }
-
-      document.getElementById('udName').textContent     = name;
-      document.getElementById('udEmail').textContent    = session.email;
-      document.getElementById('userMenuWrap').style.display = 'block';
+      img.style.display     = 'none';
+      placeholder.style.display = '';
     }
 
-    // ---- Dropdown toggle ----
-    document.getElementById('userAvatar').addEventListener('click', function (e) {
-      e.stopPropagation();
-      document.getElementById('userDropdown').classList.toggle('open');
-    });
-    document.getElementById('userAvatar').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ')
-        document.getElementById('userDropdown').classList.toggle('open');
-    });
-    document.addEventListener('click', function () {
-      document.getElementById('userDropdown').classList.remove('open');
-    });
+    renderWidgets(data.widgets);
+  }
 
-    // ---- Logout ----
-    document.getElementById('logoutBtn').addEventListener('click', function () {
-      localStorage.removeItem('punchline_session');
-      window.location.href = 'index.html';
-    });
+  // ================================================================
+  //  WIDGETSv2
+  // ================================================================
+  const WIDGET_META = {
+    years:  { icon: '📅', label: 'Years Performing',    placeholder: '5+' },
+    fans:   { icon: '❤️', label: 'Fan Count',           placeholder: '50k+' },
+    cities: { icon: '📍', label: 'Cities Performed In', placeholder: '20+' },
+    video:  { icon: '🎬', label: 'Latest Video' },
+    social: { icon: '🔗', label: 'Social Links' },
+  };
 
-    // ---- Hamburger ----
-    document.getElementById('hamburger').addEventListener('click', function () {
-      document.getElementById('navLinks').classList.toggle('open');
+  const SOCIAL_PLATFORMS = [
+    { key: 'instagram', icon: '📸', label: 'Instagram', prefix: 'instagram.com/' },
+    { key: 'tiktok',    icon: '🎵', label: 'TikTok',    prefix: 'tiktok.com/@' },
+    { key: 'x',         icon: '🐦', label: 'X / Twitter', prefix: 'x.com/' },
+    { key: 'youtube',   icon: '▶️', label: 'YouTube',   prefix: 'youtube.com/@' },
+    { key: 'facebook',  icon: '👤', label: 'Facebook',  prefix: 'facebook.com/' },
+  ];
+
+  function renderWidgets(widgets) {
+    const zone = document.getElementById('widgetZone');
+    zone.innerHTML = '';
+    widgets.forEach((w, idx) => {
+      const card = buildWidgetCard(w, idx);
+      if (card) zone.appendChild(card);
     });
+  }
+
+  function buildWidgetCard(w, idx) {
+    const card = document.createElement('div');
+    card.className = 'widget-card';
+    card.dataset.idx = idx;
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'widget-remove';
+    removeBtn.textContent = '✕ Remove';
+    removeBtn.addEventListener('click', () => removeWidget(idx));
+    card.appendChild(removeBtn);
+
+    if (w.type === 'years' || w.type === 'fans' || w.type === 'cities') {
+      const meta = WIDGET_META[w.type];
+      card.innerHTML += `
+        <div class="widget-stat">
+          <div class="stat-icon">${meta.icon}</div>
+          <div>
+            <div class="stat-num" ${editMode ? 'contenteditable="true"' : ''} data-field="value">${w.value || meta.placeholder}</div>
+            <div class="stat-lbl">${meta.label}</div>
+          </div>
+        </div>`;
+      card.appendChild(removeBtn);
+      if (editMode) {
+        card.querySelector('[data-field="value"]').addEventListener('blur', e => {
+          tempWidgets[idx].value = e.target.textContent.trim();
+        });
+      }
+
+    } else if (w.type === 'video') {
+      const embedUrl = getYoutubeEmbed(w.url || '');
+      card.innerHTML += `
+        <div class="widget-video">
+          <h4>🎬 Latest Video</h4>
+          <p>Paste a YouTube or Vimeo link below</p>
+          <input class="video-url-input" type="url" placeholder="https://youtube.com/watch?v=..." value="${w.url || ''}">
+          ${embedUrl
+            ? `<iframe src="${embedUrl}" allowfullscreen style="display:block;"></iframe>`
+            : `<div class="video-placeholder">[ Video preview ]</div>`}
+        </div>`;
+      card.appendChild(removeBtn);
+      card.querySelector('.video-url-input').addEventListener('input', e => {
+        tempWidgets[idx].url = e.target.value.trim();
+        // live-update embed
+        const embed = getYoutubeEmbed(e.target.value.trim());
+        const iframeEl = card.querySelector('iframe');
+        const placeholderEl = card.querySelector('.video-placeholder');
+        if (embed) {
+          if (iframeEl) { iframeEl.src = embed; iframeEl.style.display = 'block'; }
+          if (placeholderEl) placeholderEl.style.display = 'none';
+        }
+      });
+
+    } else if (w.type === 'social') {
+      const handles = w.handles || {};
+      let rowsHtml = SOCIAL_PLATFORMS.map(p => {
+        const val = handles[p.key] || '';
+        const href = val ? 'https://' + p.prefix + val.replace(/^@/, '') : '#';
+        return `
+          <div class="social-row">
+            <span class="social-icon">${p.icon}</span>
+            <a class="social-handle-display" href="${href}" target="_blank" rel="noopener">
+              ${val ? '@' + val.replace(/^@/, '') : '<span style="opacity:0.35">Not set</span>'}
+            </a>
+            <input class="social-input" type="text" placeholder="${p.label} handle" value="${val}" data-platform="${p.key}">
+          </div>`;
+      }).join('');
+      card.innerHTML += `<div class="widget-social"><h4>🔗 Social Links</h4><div class="social-links-list">${rowsHtml}</div></div>`;
+      card.appendChild(removeBtn);
+      card.querySelectorAll('.social-input').forEach(input => {
+        input.addEventListener('input', e => {
+          if (!tempWidgets[idx].handles) tempWidgets[idx].handles = {};
+          tempWidgets[idx].handles[e.target.dataset.platform] = e.target.value.trim();
+        });
+      });
+    }
+
+    return card;
+  }
+
+  function getYoutubeEmbed(url) {
+    if (!url) return null;
+    const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+    return null;
+  }
+
+  function removeWidget(idx) {
+    tempWidgets.splice(idx, 1);
+    renderWidgets(tempWidgets);
+  }
+
+  // ================================================================
+  //  EDIT MODE
+  // ================================================================
+  function enterEditMode() {
+    editMode    = true;
+    tempWidgets = JSON.parse(JSON.stringify(pageData.widgets)); // deep copy
+    document.body.classList.add('edit-mode');
+    document.getElementById('editToolbar').classList.add('visible');
+    document.getElementById('editToggleBtn').textContent = '👁 Preview';
+
+    // Make name + bio editable
+    document.getElementById('creatorName').contentEditable = 'true';
+    document.getElementById('bioPara').contentEditable     = 'true';
+
+    // Re-render widgets with edit affordances
+    renderWidgets(tempWidgets);
+  }
+
+  function exitEditMode(save) {
+    if (save) {
+      pageData.name    = document.getElementById('creatorName').textContent.trim();
+      pageData.bio     = document.getElementById('bioPara').textContent.trim();
+      pageData.widgets = tempWidgets;
+      savePageData(pageData);
+    }
+
+    editMode = false;
+    document.body.classList.remove('edit-mode');
+    document.getElementById('editToolbar').classList.remove('visible');
+    document.getElementById('editToggleBtn').textContent = '✏️ Edit Page';
+
+    document.getElementById('creatorName').contentEditable = 'false';
+    document.getElementById('bioPara').contentEditable     = 'false';
+
+    renderPage(pageData);
+  }
+
+  document.getElementById('editToggleBtn').addEventListener('click', () => {
+    editMode ? exitEditMode(false) : enterEditMode();
+  });
+  document.getElementById('saveBtn').addEventListener('click',   () => exitEditMode(true));
+  document.getElementById('cancelBtn').addEventListener('click', () => exitEditMode(false));
+
+  // ================================================================
+  //  ADD WIDGET v8
+  // ================================================================
+  document.getElementById('addWidgetBtn').addEventListener('click', () => {
+    const sel  = document.getElementById('widgetSelect');
+    const type = sel.value;
+    if (!type) return;
+
+    // Only one video and one social allowed
+    if ((type === 'video' || type === 'social') && tempWidgets.find(w => w.type === type)) {
+      alert('You already have a ' + WIDGET_META[type].label + ' widget.');
+      return;
+    }
+
+    const newWidget = { type };
+    if (type === 'social') newWidget.handles = {};
+    tempWidgets.push(newWidget);
+    renderWidgets(tempWidgets);
+    sel.value = '';
+  });
+
+  // ================================================================
+  //  PHOTO UPLOAD v3
+  // ================================================================
+  document.getElementById('photoUploadBtn').addEventListener('click', () => {
+    document.getElementById('pagePhotoInput').click();
+  });
+  document.getElementById('pagePhotoInput').addEventListener('change', function () {
+    if (!this.files || !this.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      pageData.photo = e.target.result;
+      const img         = document.getElementById('pagePhoto');
+      const placeholder = document.querySelector('.about-img .placeholder-text');
+      img.src               = e.target.result;
+      img.style.display     = 'block';
+      placeholder.style.display = 'none';
+      // save immediately so photo persists even if they cancel text edits
+      savePageData(pageData);
+    };
+    reader.readAsDataURL(this.files[0]);
+  });
+
+  // ================================================================
+  //  INITIAL RENDER
+  // ================================================================
+  renderPage(pageData);
   </script>
 
 </body>
