@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout — Punchline</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     body { background: var(--cream); }
     .checkout-layout {
@@ -13,28 +14,50 @@
     }
     .checkout-left h2 { margin-bottom: 28px; }
 
-    .express-checkout {
+    .stripe-banner {
       background: var(--white); border-radius: var(--radius-lg);
-      padding: 28px; margin-bottom: 28px; box-shadow: var(--shadow);
+      padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--shadow); text-align: center;
     }
-    .express-checkout h3 { font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.5; margin-bottom: 16px; text-align: center; }
-    .divider-or { display: flex; align-items: center; gap: 12px; margin: 20px 0; font-size: 0.82rem; opacity: 0.5; }
+    .stripe-banner .powered-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.45; margin-bottom: 10px; }
+    .stripe-wordmark {
+      font-family: 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 2rem; font-weight: 700; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #635BFF 0%, #8B7FFF 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; user-select: none; display: inline-block;
+    }
+    .divider-or { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; font-size: 0.82rem; opacity: 0.45; }
     .divider-or::before, .divider-or::after { content: ''; flex: 1; height: 1px; background: var(--cream-dark); }
 
     .payment-form { background: var(--white); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow); }
     .payment-form h3 { margin-bottom: 20px; }
     .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .card-field {
-      display: flex; align-items: center;
-      border: 2px solid var(--cream-dark); border-radius: var(--radius);
-      padding: 12px 16px; background: var(--white); transition: var(--transition); gap: 10px;
-    }
-    .card-field:focus-within { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(242,39,110,0.12); }
-    .card-field input { border: none; outline: none; flex: 1; font-family: var(--font-main); font-size: 0.95rem; }
-    .secure-note { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; opacity: 0.55; margin-top: 16px; }
-    .complete-btn { width: 100%; padding: 16px; margin-top: 20px; font-size: 1.05rem; }
 
-    /* Order summary */
+    .stripe-element-wrap {
+      border: 2px solid var(--cream-dark); border-radius: var(--radius);
+      padding: 13px 16px; background: var(--white); transition: var(--transition);
+    }
+    .stripe-element-wrap.focused { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(242,39,110,0.12); }
+    .stripe-element-wrap.error   { border-color: #e74c3c; box-shadow: 0 0 0 3px rgba(231,76,60,0.12); }
+
+    .field-error-msg { color: #c0392b; font-size: 0.76rem; margin-top: 5px; display: none; }
+    .field-error-msg.visible { display: block; }
+    .input-ok  { border-color: #27ae60 !important; }
+    .input-err { border-color: #e74c3c !important; box-shadow: 0 0 0 3px rgba(231,76,60,0.12) !important; }
+
+    .secure-note { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; opacity: 0.55; margin-top: 16px; }
+    .complete-btn { width: 100%; padding: 16px; margin-top: 20px; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-spinner {
+      display: none; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
+      border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .payment-msg { border-radius: var(--radius); padding: 14px 18px; font-size: 0.88rem; margin-top: 16px; display: none; line-height: 1.5; }
+    .payment-msg.success { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.3); color: #27ae60; display: block; }
+    .payment-msg.error   { background: rgba(231,76,60,0.1);  border: 1px solid rgba(231,76,60,0.3);  color: #c0392b;  display: block; }
+
     .order-summary {
       background: var(--white); border-radius: var(--radius-lg);
       padding: 28px; box-shadow: var(--shadow); position: sticky; top: 88px;
@@ -45,7 +68,7 @@
       padding: 16px 18px; margin-bottom: 20px; display: flex; gap: 14px; align-items: center;
     }
     .plan-icon { font-size: 1.8rem; }
-    .plan-name { font-weight: 700; font-size: 1rem; }
+    .plan-name    { font-weight: 700; font-size: 1rem; }
     .plan-billing { font-size: 0.78rem; opacity: 0.55; margin-top: 2px; }
     .plan-price-display { font-size: 1.5rem; font-weight: 800; color: var(--pink); margin-left: auto; white-space: nowrap; }
 
@@ -62,17 +85,10 @@
     .promo-msg.ok  { color: #27ae60; }
     .promo-msg.err { color: #c0392b; }
 
-    .no-plan-msg {
-      background: rgba(242,39,110,0.08); border: 2px dashed var(--pink);
-      border-radius: var(--radius); padding: 20px; text-align: center;
-      font-size: 0.9rem; margin-bottom: 20px;
-    }
+    .no-plan-msg { background: rgba(242,39,110,0.08); border: 2px dashed var(--pink); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
 
-    @media (max-width: 900px) {
-      .checkout-layout { grid-template-columns: 1fr; }
-      .order-summary { position: static; }
-    }
-    @media (max-width: 600px) { .card-row { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) { .checkout-layout { grid-template-columns: 1fr; } .order-summary { position: static; } }
+    @media (max-width: 600px)  { .card-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -92,142 +108,263 @@
     <div class="checkout-left">
       <h2>Complete Your Order</h2>
 
-      <!-- Stripe wordmark -->
-      <div class="express-checkout">
-        <h3>Powered by</h3>
-        <div style="display:flex;align-items:center;justify-content:center;padding:10px 0;">
-          <div style="font-family:'Helvetica Neue',Helvetica,sans-serif;font-size:2rem;font-weight:700;letter-spacing:-0.03em;background:linear-gradient(135deg,#635BFF 0%,#8B7FFF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none;">stripe</div>
-        </div>
-        <div class="divider-or">pay with card below</div>
+      <div class="stripe-banner">
+        <div class="powered-label">Powered by</div>
+        <div class="stripe-wordmark">stripe</div>
+        <div class="divider-or">enter your details below</div>
       </div>
 
       <div class="payment-form">
         <h3>Payment Details</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@example.com"></div>
+
         <div class="form-group">
-          <label>Card Number</label>
-          <div class="card-field">
-            <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
-            <div style="display:flex;gap:6px;align-items:center;">
-              <div style="width:32px;height:20px;border-radius:3px;background:#1a1a2e;color:white;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;">VISA</div>
-              <div style="width:32px;height:20px;border-radius:3px;background:#eb5c11;color:white;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;">MC</div>
-            </div>
+          <label for="emailInput">Email Address</label>
+          <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email">
+          <div class="field-error-msg" id="emailErr">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Card Details</label>
+          <div class="stripe-element-wrap" id="cardWrap">
+            <div id="cardElement"></div>
+          </div>
+          <div class="field-error-msg" id="cardErr"></div>
+          <div style="font-size:0.74rem;opacity:0.45;margin-top:6px;">
+            Test card: 4242 4242 4242 4242 · any future date · any 3-digit CVC
           </div>
         </div>
-        <div class="card-row">
-          <div class="form-group"><label>Expiry Date</label><input type="text" placeholder="MM / YY" maxlength="7"></div>
-          <div class="form-group"><label>CVC</label><input type="text" placeholder="•••" maxlength="4"></div>
+
+        <div class="form-group">
+          <label for="nameInput">Name on Card</label>
+          <input type="text" id="nameInput" placeholder="Full name as it appears on card" autocomplete="cc-name">
+          <div class="field-error-msg" id="nameErr">Please enter the name on your card.</div>
         </div>
-        <div class="form-group"><label>Name on Card</label><input type="text" placeholder="Full name as it appears on card"></div>
-        <div class="secure-note">🔒 Your payment info is encrypted and never stored on our servers.</div>
-        <button class="btn btn-primary complete-btn" id="completeBtn">Complete Order →</button>
+
+        <div class="secure-note">🔒 Card details are handled directly by Stripe and never touch our servers.</div>
+
+        <button class="btn btn-primary complete-btn" id="completeBtn">
+          <span id="btnLabel">Complete Order →</span>
+          <span class="btn-spinner" id="btnSpinner"></span>
+        </button>
+
+        <div class="payment-msg" id="paymentMsg"></div>
       </div>
     </div>
 
-    <!-- ORDER SUMMARY -->
     <div class="order-summary">
       <h3>Order Summary</h3>
       <div id="planDisplay"></div>
-
       <div class="promo-row">
         <input type="text" id="promoInput" placeholder="Promo code">
         <button class="btn btn-outline btn-sm" id="promoApplyBtn">Apply</button>
       </div>
       <div class="promo-msg" id="promoMsg"></div>
-
       <div class="order-totals" id="orderTotals"></div>
-
       <p style="font-size:0.78rem;opacity:0.5;margin-top:16px;line-height:1.5;">
-        By completing your purchase you agree to our <a href="#" style="color:var(--pink);">Terms of Service</a>. Cancel anytime from your account settings.
+        By completing your purchase you agree to our
+        <a href="#" style="color:var(--pink);">Terms of Service</a>.
+        Cancel anytime from your account settings.
       </p>
     </div>
   </div>
 
   <footer>
     <span>© 2025 Punchline. All rights reserved.</span>
-    <div class="footer-links">
-      <a href="#">Privacy</a><a href="#">Terms</a>
-    </div>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </footer>
 
   <script>
-    // ---- Load plan from localStorage ----
-    const planData = JSON.parse(localStorage.getItem('punchline_checkout_plan') || 'null');
+  // ================================================================
+  //  STRIPE — publishable key is safe in frontend code
+  // ================================================================
+  const PUBLISHABLE_KEY = 'pk_test_51KKXU3L4Rq1vkGD7anLWd9Zqf1ziO0BiXUTcAqRiyfdTlcQjSY7t61eA05umBHLI07Dl9cavK1qQxh3p6ekZj59200pBxIX0SL';
+  const stripe   = Stripe(PUBLISHABLE_KEY);
+  const elements = stripe.elements();
 
-    const planDisplay  = document.getElementById('planDisplay');
-    const orderTotals  = document.getElementById('orderTotals');
+  const cardElement = elements.create('card', {
+    style: {
+      base: {
+        fontFamily: "'Montserrat', sans-serif",
+        fontSize: '15px',
+        color: '#1A1A2E',
+        '::placeholder': { color: '#aaa' },
+      },
+      invalid: { color: '#c0392b', iconColor: '#c0392b' },
+    },
+    hidePostalCode: true,
+  });
+  cardElement.mount('#cardElement');
 
-    let basePrice    = 0;
-    let appliedCode  = '';
-    let appliedPct   = 0;
-
-    if (planData) {
-      basePrice = parseFloat(planData.price);
-      planDisplay.innerHTML = `
-        <div class="plan-display">
-          <div class="plan-icon">🎙️</div>
-          <div>
-            <div class="plan-name">Punchline ${planData.plan}</div>
-            <div class="plan-billing">${planData.billing} plan${planData.billing === 'Annual' ? ' · billed yearly' : ' · billed monthly'}</div>
-          </div>
-          <div class="plan-price-display">$${parseFloat(planData.monthly).toFixed(2)}<span style="font-size:0.75rem;font-weight:400;opacity:0.6;">/mo</span></div>
-        </div>`;
+  cardElement.on('focus',  () => document.getElementById('cardWrap').classList.add('focused'));
+  cardElement.on('blur',   () => document.getElementById('cardWrap').classList.remove('focused'));
+  cardElement.on('change', e => {
+    const wrap   = document.getElementById('cardWrap');
+    const errMsg = document.getElementById('cardErr');
+    if (e.error) {
+      wrap.classList.add('error');
+      errMsg.textContent = e.error.message;
+      errMsg.classList.add('visible');
     } else {
-      planDisplay.innerHTML = `
-        <div class="no-plan-msg">
-          No plan selected. <a href="pricing.html" style="color:var(--pink);font-weight:600;">← Choose a plan</a>
-        </div>`;
+      wrap.classList.remove('error');
+      errMsg.classList.remove('visible');
     }
+  });
 
-    function renderTotals() {
-      if (!planData) { orderTotals.innerHTML = ''; return; }
-      const price    = basePrice;
-      const discount = appliedPct > 0 ? price * (appliedPct / 100) : 0;
-      const total    = price - discount;
-      const isAnnual = planData.billing === 'Annual';
-      let html = `<div class="total-row"><span>${isAnnual ? 'Annual subtotal' : 'Monthly subtotal'}</span><span>$${price.toFixed(2)}</span></div>`;
-      if (discount > 0) {
-        html += `<div class="total-row discount"><span>Promo (${appliedCode} −${appliedPct}%)</span><span>−$${discount.toFixed(2)}</span></div>`;
+  // ================================================================
+  //  PLAN DATA
+  // ================================================================
+  const planData = JSON.parse(localStorage.getItem('punchline_checkout_plan') || 'null');
+  let basePrice = 0, appliedCode = '', appliedPct = 0;
+
+  if (planData) {
+    basePrice = parseFloat(planData.price);
+    document.getElementById('planDisplay').innerHTML = `
+      <div class="plan-display">
+        <div class="plan-icon">🎙️</div>
+        <div>
+          <div class="plan-name">Punchline ${planData.plan}</div>
+          <div class="plan-billing">${planData.billing} plan${planData.billing === 'Annual' ? ' · billed yearly' : ' · billed monthly'}</div>
+        </div>
+        <div class="plan-price-display">$${parseFloat(planData.monthly).toFixed(2)}<span style="font-size:0.75rem;font-weight:400;opacity:0.6;">/mo</span></div>
+      </div>`;
+  } else {
+    document.getElementById('planDisplay').innerHTML = `
+      <div class="no-plan-msg">No plan selected. <a href="pricing.html" style="color:var(--pink);font-weight:600;">← Choose a plan</a></div>`;
+  }
+
+  function renderTotals() {
+    if (!planData) { document.getElementById('orderTotals').innerHTML = ''; return; }
+    const discount = appliedPct > 0 ? basePrice * (appliedPct / 100) : 0;
+    const total    = basePrice - discount;
+    const isAnnual = planData.billing === 'Annual';
+    let html = `<div class="total-row"><span>${isAnnual ? 'Annual subtotal' : 'Monthly subtotal'}</span><span>$${basePrice.toFixed(2)}</span></div>`;
+    if (discount > 0) html += `<div class="total-row discount"><span>Promo (${appliedCode} −${appliedPct}%)</span><span>−$${discount.toFixed(2)}</span></div>`;
+    html += `<div class="total-row"><span>Tax</span><span>$0.00</span></div>`;
+    html += `<div class="total-row grand"><span>Total${isAnnual ? ' today' : ' /mo'}</span><span>$${total.toFixed(2)}</span></div>`;
+    document.getElementById('orderTotals').innerHTML = html;
+  }
+  renderTotals();
+
+  // ================================================================
+  //  PROMO CODES
+  // ================================================================
+  const DEMO_CODES = { 'LAUNCH20': 20, 'COMEDY10': 10, 'PUNCHLINE': 15 };
+
+  document.getElementById('promoApplyBtn').addEventListener('click', applyPromo);
+  document.getElementById('promoInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyPromo(); });
+
+  function applyPromo() {
+    const input = document.getElementById('promoInput').value.trim().toUpperCase();
+    const msg   = document.getElementById('promoMsg');
+    if (!input) { msg.className = 'promo-msg err'; msg.textContent = 'Please enter a code.'; return; }
+    if (DEMO_CODES[input]) {
+      appliedCode = input; appliedPct = DEMO_CODES[input];
+      msg.className = 'promo-msg ok';
+      msg.textContent = `✓ Code "${input}" applied — ${appliedPct}% off!`;
+      renderTotals();
+    } else {
+      msg.className = 'promo-msg err';
+      msg.textContent = "That code isn't valid or has expired.";
+    }
+  }
+
+  // ================================================================
+  //  HELPERS
+  // ================================================================
+  function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+
+  function setLoading(on) {
+    document.getElementById('completeBtn').disabled = on;
+    document.getElementById('btnSpinner').style.display = on ? 'block' : 'none';
+    document.getElementById('btnLabel').textContent = on ? 'Processing…' : 'Complete Order →';
+  }
+
+  function showMsg(type, text) {
+    const el = document.getElementById('paymentMsg');
+    el.className   = 'payment-msg ' + type;
+    el.textContent = text;
+  }
+
+  // ================================================================
+  //  SUBMIT
+  // ================================================================
+  document.getElementById('completeBtn').addEventListener('click', async () => {
+    if (!planData) { window.location.href = 'pricing.html'; return; }
+
+    // Validate email + name
+    const emailEl  = document.getElementById('emailInput');
+    const nameEl   = document.getElementById('nameInput');
+    const emailErr = document.getElementById('emailErr');
+    const nameErr  = document.getElementById('nameErr');
+    [emailEl, nameEl].forEach(el => el.classList.remove('input-err', 'input-ok'));
+    [emailErr, nameErr].forEach(el => el.classList.remove('visible'));
+    let valid = true;
+    if (!isValidEmail(emailEl.value)) { emailEl.classList.add('input-err'); emailErr.classList.add('visible'); valid = false; }
+    else emailEl.classList.add('input-ok');
+    if (!nameEl.value.trim()) { nameEl.classList.add('input-err'); nameErr.classList.add('visible'); valid = false; }
+    else nameEl.classList.add('input-ok');
+    if (!valid) return;
+
+    const discount    = appliedPct > 0 ? basePrice * (appliedPct / 100) : 0;
+    const totalUSD    = basePrice - discount;
+    const amountCents = Math.round(totalUSD * 100);
+
+    setLoading(true);
+
+    try {
+      // Ask server.js to create a PaymentIntent
+      const res = await fetch('/create-payment-intent', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount:      amountCents,
+          currency:    'usd',
+          description: `Punchline ${planData.plan} (${planData.billing})`,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Server error creating payment.');
       }
-      html += `<div class="total-row"><span>Tax</span><span>$0.00</span></div>`;
-      html += `<div class="total-row grand"><span>Total${isAnnual ? ' today' : ' /mo'}</span><span>$${total.toFixed(2)}</span></div>`;
-      orderTotals.innerHTML = html;
-    }
-    renderTotals();
 
-    // ---- Promo code (demo codes) ----
-    const DEMO_CODES = { 'LAUNCH20': 20, 'COMEDY10': 10, 'PUNCHLINE': 15 };
+      const { clientSecret } = await res.json();
 
-    document.getElementById('promoApplyBtn').addEventListener('click', applyPromo);
-    document.getElementById('promoInput').addEventListener('keydown', e => { if (e.key === 'Enter') applyPromo(); });
+      // Confirm payment with Stripe (handles 3DS authentication if needed)
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name:  nameEl.value.trim(),
+            email: emailEl.value.trim(),
+          },
+        },
+      });
 
-    function applyPromo() {
-      const input = document.getElementById('promoInput').value.trim().toUpperCase();
-      const msg   = document.getElementById('promoMsg');
-      if (!input) { msg.className = 'promo-msg err'; msg.textContent = 'Please enter a code.'; return; }
-      if (DEMO_CODES[input]) {
-        appliedCode = input;
-        appliedPct  = DEMO_CODES[input];
-        msg.className   = 'promo-msg ok';
-        msg.textContent = `✓ Code "${input}" applied — ${appliedPct}% off!`;
-        renderTotals();
+      if (error) {
+        showMsg('error', error.message);
+        document.getElementById('cardWrap').classList.add('error');
+        document.getElementById('cardErr').textContent = error.message;
+        document.getElementById('cardErr').classList.add('visible');
+      } else if (paymentIntent.status === 'succeeded') {
+        showMsg('success', `✓ Payment of $${totalUSD.toFixed(2)} confirmed! Welcome to Punchline ${planData.plan}. Redirecting…`);
+        localStorage.removeItem('punchline_checkout_plan');
+        setTimeout(() => { window.location.href = 'signup.html'; }, 2500);
+      }
+
+    } catch (err) {
+      // server.js not running — show helpful message
+      if (err.message.includes('fetch') || err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+        showMsg('error', '⚠️ Payment server not reachable. Make sure you have run: npm install && node server.js');
       } else {
-        msg.className   = 'promo-msg err';
-        msg.textContent = "That code isn't valid or has expired.";
+        showMsg('error', err.message);
       }
+    } finally {
+      setLoading(false);
     }
+  });
 
-    // ---- Complete order ----
-    document.getElementById('completeBtn').addEventListener('click', () => {
-      if (!planData) { alert('Please select a plan first.'); window.location.href = 'pricing.html'; return; }
-      const discount = appliedPct > 0 ? basePrice * (appliedPct / 100) : 0;
-      const total    = basePrice - discount;
-      alert(`Order complete! Welcome to Punchline ${planData.plan} 🎉\n\nPlan: ${planData.label}\nTotal: $${total.toFixed(2)}\n\n(In production this would process payment via Stripe and redirect to your dashboard.)`);
-      localStorage.removeItem('punchline_checkout_plan');
-      window.location.href = 'signup.html';
-    });
-
-    document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
+  document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
   </script>
 </body>
 </html>
