@@ -162,7 +162,7 @@
       <div class="order-totals" id="orderTotals"></div>
       <p style="font-size:0.78rem;opacity:0.5;margin-top:16px;line-height:1.5;">
         By completing your purchase you agree to our
-        <a href="#" style="color:var(--pink);">Terms of Service</a>.
+        <a href="#" style="color:var(--pink);" onclick="event.preventDefault();openLegal('terms')">Terms of Service</a>.
         Cancel anytime from your account settings.
       </p>
     </div>
@@ -366,6 +366,6 @@
 
   document.getElementById('hamburger').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
   </script>
-  <script src="legal.js"></script>
+<script src="legal.js"></script>
 </body>
 </html>
