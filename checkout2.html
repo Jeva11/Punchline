@@ -255,14 +255,14 @@
       <div class="promo-msg" id="promoMsg"></div>
       <div class="order-totals" id="orderTotals"></div>
       <p style="font-size:0.76rem;opacity:0.5;margin-top:14px;">
-        By completing your purchase you agree to our <a href="#" style="color:var(--pink);">Terms</a> and <a href="#" style="color:var(--pink);">Privacy Policy</a>.
+        By completing your purchase you agree to our <a href="#" style="color:var(--pink);" onclick="event.preventDefault();openLegal('terms')">Terms</a> and <a href="#" style="color:var(--pink);" onclick="event.preventDefault();openLegal('privacy')">Privacy Policy</a>.
       </p>
     </div>
   </div>
 
   <footer>
     <span>© 2025 <span id="footerName">Punchline</span> · Powered by Punchline</span>
-    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Returns</a></div>
+    <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </footer>
 
   <!-- SIMULATION MODAL -->
@@ -480,6 +480,6 @@
   // ================================================================
   renderSummary();
   </script>
-  <script src="legal.js"></script>
+<script src="legal.js"></script>
 </body>
 </html>
