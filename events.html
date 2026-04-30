@@ -250,6 +250,15 @@
       .event-row-actions { width: 100%; }
       .add-event-grid { grid-template-columns: 1fr; }
     }
+
+    /* active nav link */
+    .nav-active {
+      color: var(--pink) !important;
+      font-weight: 700;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-active::after { display: none !important; }
   </style>
 </head>
 <body>
@@ -259,7 +268,7 @@
     <a href="home2.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
       <a href="home2.html">Home</a>
-      <a href="home2.html">About</a>
+      <a class="nav-active">Events</a>
       <a href="community.html">Community</a>
       <a href="merch.html">Merch</a>
     </div>

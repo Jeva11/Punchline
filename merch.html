@@ -356,6 +356,15 @@
       .modal-body { grid-template-columns: 1fr; }
       .modal-images { border-radius: var(--radius-lg) var(--radius-lg) 0 0; min-height: 220px; }
     }
+
+    /* active nav link */
+    .nav-active {
+      color: var(--pink) !important;
+      font-weight: 700;
+      pointer-events: none;
+      cursor: default;
+    }
+    .nav-active::after { display: none !important; }
   </style>
 </head>
 <body>
@@ -366,9 +375,9 @@
     <a href="home2.html" class="logo">Punch<span>line</span></a>
     <div class="nav-links" id="navLinks">
       <a href="home2.html">Home</a>
-      <a href="home2.html">About</a>
       <a href="events.html">Events</a>
       <a href="community.html">Community</a>
+      <a class="nav-active">Merch</a>
     </div>
     <div class="nav-actions">
       <button class="btn btn-outline-white btn-sm" id="editToggleBtn" style="display:none;">✏️ Edit Page</button>
@@ -945,7 +954,7 @@
   });
 
   // ================================================================
-  //  ADD PRODUCT FORM needs testing again
+  //  ADD PRODUCT FORM
   // ================================================================
   let newProdTags   = [];
   let newProdImages = []; // base64 — only in memory until saved
